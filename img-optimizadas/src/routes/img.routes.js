@@ -24,8 +24,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage})
 
-api.post('/upload',upload.single('file'),(req,res)=>{
-    console.log('-->',req.file)
+api.post('/upload', upload.single('file'),(req,res)=>{
 
     helperIMG(req.file.path, `MICRO-resize-${req.file.fieldname}.png`,20)
     helperIMG(req.file.path, `SMALL-resize-${req.file.fieldname}.png`,100)
