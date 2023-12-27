@@ -5,6 +5,7 @@ const app = express();
 // IMPORTACION RUTAS
 const usuarioRoutes = require("./src/routes/users.routes");
 const imgsROutes = require("./src/routes/img.routes")
+const mainPage = require("./src/routes/main.routes")
 
 
 // MIDDLEWARES
@@ -15,7 +16,7 @@ app.use(express.json());
 app.use(cors());
 
 // CARGA DE RUTAS localhost:3000/api/productos
-app.use("/api", usuarioRoutes,imgsROutes);
+app.use("/api", usuarioRoutes,imgsROutes,mainPage);
 
 
 module.exports = app;

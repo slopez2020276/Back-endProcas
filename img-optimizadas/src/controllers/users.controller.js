@@ -9,13 +9,12 @@ function RegistrarAd(req, res) {
   usuarioModelo.rol = "Admin";
   usuarioModelo.password = "12345";
 
-  Usuario.find({ email: 'Admin' }).exec((err, buscarUsuario) => {
+  Usuario.find({ rol: 'Admin' }).exec((err, buscarUsuario) => {
     if (err) return console.log("ERROR en la peticion");
 
-    if ( buscarUsuario.length >= 1) {
-      console.log("Usuario Super Admin creado con anterioridad");
-      console.log(buscarUsuario)
-    } else {
+    if ( buscarUsuario.length == 0) {
+
+
       bcrypt.hash(usuarioModelo.password, null, null, (err, passCrypt) => {
         usuarioModelo.password = passCrypt;
       });
@@ -27,6 +26,11 @@ function RegistrarAd(req, res) {
           console.log("Usuario Super Admin Creado");
         }
       });
+
+
+     
+    } else {
+      console.log("Usuario Super Admin creado con anterioridad");
     }
   });
 }
