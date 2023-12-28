@@ -1,5 +1,5 @@
 exports.verAdmin = function(req, res, next) {
-    if (req.user.rol !== "ADMIN")
+    if (req.user.rol !== "Admin")
         return res.status(403).send({ mensaje: "Solo puede acceder el Admin" });
 
     next();
@@ -20,7 +20,7 @@ exports.verGerente = function(req, res, next) {
 }
 
 exports.verHoteles = function(req, res, next) {
-    var autorizados = ['ADMIN', 'Usuario', 'Gerente'];
+    var autorizados = ['Admin', 'Usuario', 'Gerente'];
 
     if (!autorizados.includes(req.user.rol))
         return res.status(403).send({ mensaje: "Solo puede acceder el gerente" });
@@ -29,7 +29,7 @@ exports.verHoteles = function(req, res, next) {
 }
 
 exports.verHabitaciones = function(req, res, next) {
-    var autorizados = ['ADMIN', 'Usuario', 'Gerente'];
+    var autorizados = ['Admin', 'Usuario', 'Gerente'];
 
     if (!autorizados.includes(req.user.rol))
         return res.status(403).send({ mensaje: "Solo puede acceder el gerente" });
@@ -38,7 +38,7 @@ exports.verHabitaciones = function(req, res, next) {
 }
 
 exports.verEventos = function(req, res, next) {
-    var autorizados = ['ADMIN', 'Usuario', 'Gerente'];
+    var autorizados = ['Admin', 'Usuario', 'Gerente'];
 
     if (!autorizados.includes(req.user.rol))
         return res.status(403).send({ mensaje: "Solo puede acceder el gerente" });
@@ -47,7 +47,7 @@ exports.verEventos = function(req, res, next) {
 }
 
 exports.verServicios = function(req, res, next) {
-    var autorizados = ['ADMIN', 'Usuario', 'Gerente'];
+    var autorizados = ['Admin', 'Usuario', 'Gerente'];
 
     if (!autorizados.includes(req.user.rol))
         return res.status(403).send({ mensaje: "Solo puede acceder el gerente" });

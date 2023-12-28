@@ -81,9 +81,7 @@ function mostrarMainPage(req,res){
             return res.status(500).send({"message":"error en la peticion"})
         }else if (pageFinded){
             
-            return res.status(200).send({"MainPage":pageFinded})
-
-
+            return res.status(200).send({ MainPage :pageFinded})
         }
     })
 
