@@ -5,7 +5,7 @@ const usuarioController = require("./src/controllers/users.controller");
 const lineaController = require("./src/controllers/lineaTiempo.controller")
 const noticasController = require("./src/controllers/noticias.controller")
 const mainPage = require("./src/controllers/mainPage.controller")
-
+const historiaController = require('./src/controllers/historia.controller')
 mongoose.Promise = global.Promise;
 mongoose
   .connect('mongodb://localhost/procasa' , {
@@ -14,13 +14,7 @@ mongoose
   })
   .then(() => {
     console.log("Se ha conectado correctamente a la base de datos.");
-        usuarioController.RegistrarAd()
-
-
-        lineaController.crearEventosLineaDeTiempoDefult()
-
-
-        noticasController.crearNocitiasDefult()
+     mainPage.DefultFINAL()
 
 
       const PORT = process.env.PORT || 3002
@@ -28,7 +22,6 @@ mongoose
       console.log(
         'El servidor está levantado en el puerto '+PORT 
       );
-      mainPage.crearMainPageDefult()
 
     });
   })

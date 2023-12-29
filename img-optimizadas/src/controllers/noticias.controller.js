@@ -48,6 +48,50 @@ function crearNocitiasDefult (req,res){
 }
 
 
+function obtenerNoticias(req,res){
+    LineaTimepo.find({},(err,lineFiended)=>{
+        if(err){
+            return res.status(200).send({message:'error en la peticion'})
+        }else if(lineFiended){
+            return res.status(200).send({LineaTiempo:lineFiended})
+        }
+
+    })
+}
+
+function editarNoticias(req,res){
+    let  idNocicia = req.params.idNoticia
+    let parametros = req.body
+    
+    LineaTimepo.findByIdAndUpdate(idNocicia,parametros,{new:true},(err,noticiaFinded)=>{
+        if(err){
+            return res.status(200).send({messege:'error en la petion'})
+        }else if (noticiaFinded){
+            return res.status(200).send({lineaUpdated:noticiaFinded})
+        }else{
+            return res.status(200).send({message:'error al editar'})
+
+        }
+    })
+
+
+}
+
+function eliminarNoticias(req,res){
+    let idNotica = req.params.idNotica
+    
+    LineaTimepo.findByIdAndDelete(idNotica,(err,noticiaDeleted)=>{
+        if(err){
+            return res.status(200).send({message:'error en la peticion'})
+        }else if(noticiaDeleted){
+            return res.status(200).send({message:'se elimino correctamente'})
+        }
+    })
+}
+
 module.exports = {
-    crearNocitiasDefult
+    crearNocitiasDefult,
+    editarNoticias,
+    obtenerNoticias,
+    eliminarNoticias
 }

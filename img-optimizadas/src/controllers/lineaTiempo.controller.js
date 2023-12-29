@@ -46,7 +46,51 @@ function crearEventosLineaDeTiempoDefult() {
 
 }
 
+function obtenerTiempo(req,res){
+    LineaTimepo.find({},(err,lineFiended)=>{
+        if(err){
+            return res.status(200).send({message:'error en la peticion'})
+        }else if(lineFiended){
+            return res.status(200).send({lineFiended})
+        }
+
+    })
+}
+
+function editarLineaTiempo(req,res){
+    let  idlinea = req.params.idLinea
+    let parametros = req.body
+    
+    LineaTimepo.findByIdAndUpdate(idlinea,parametros,{new:true},(err,lienaUpdeted)=>{
+        if(err){
+            return res.status(200).send({messege:'error en la petion'})
+        }else if (lienaUpdeted){
+            return res.status(200).send({lineaUpdated:lienaUpdeted})
+        }else{
+            return res.status(200).send({message:'error al editar'})
+
+        }
+    })
+
+
+}
+
+function eliminarLineaTiempo(req,res){
+    let idLinea = req.params.idLinea
+    
+    LineaTimepo.findByIdAndDelete(idLinea,(err,eliminarLinea)=>{
+        if(err){
+            return res.status(200).send({message:'error en la peticion'})
+        }else if(eliminarLinea){
+            return res.status(200).send({message:'se elimino correctamente'})
+        }
+    })
+}
+
 module.exports = {
-    crearEventosLineaDeTiempoDefult
+    crearEventosLineaDeTiempoDefult,
+    obtenerTiempo,
+    editarLineaTiempo,
+    eliminarLineaTiempo
 }
 

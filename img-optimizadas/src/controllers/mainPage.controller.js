@@ -2,7 +2,18 @@ const MainPage = require("../models/mainPage.model")
 const Noticias = require("../models/noticias.model")
 const LineaTiempo = require("../models/lineaTiempo.model")
 
+const noticasController = require('./noticias.controller')
+const historiaController = require('./historia.controller')
+const lineaTiempoController = require ('./lineaTiempo.controller')
+const usuarioController = require('./users.controller')
+
+
+const Historia = require("../models/noticias.model")
+const lineaTiempoModel = require("../models/lineaTiempo.model")
+
 function crearMainPageDefult (req,res){
+
+
 
     MainPage.find({},(err,pageFinded)=>{
         if(err){
@@ -73,6 +84,18 @@ function crearMainPageDefult (req,res){
 }
 
 
+
+function DefultFINAL(){
+
+    noticasController.crearNocitiasDefult()
+    historiaController.crearHistoraDefult()
+    lineaTiempoController.crearEventosLineaDeTiempoDefult()
+    usuarioController.RegistrarAd()
+
+
+}
+
+
 function mostrarMainPage(req,res){
     
     crearMainPageDefult()
@@ -87,7 +110,28 @@ function mostrarMainPage(req,res){
 
 }
 
+
+function editarPage (req,res){
+    var idPage = req.params.idPage;
+    let parametros = req.body;
+    MainPage.findByIdAndUpdate(idPage,parametros,{new:true},(err,pageUpdated)=>{
+        if(err){
+            return res.status(500).send({mesagge: 'error en la peticion'})
+
+        }else if (pageUpdated){
+            return res.status(200).send({mainPage: pageUpdated})
+
+        }else{
+            return res.status(500).send({message: 'error al editar la pagina principal'})
+        }
+    })
+}
+
+
+
 module.exports = {
     crearMainPageDefult,
     mostrarMainPage,
+    editarPage,
+    DefultFINAL,
 }
