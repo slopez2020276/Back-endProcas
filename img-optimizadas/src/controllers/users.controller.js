@@ -9,13 +9,12 @@ function RegistrarAd(req, res) {
   usuarioModelo.rol = "Admin";
   usuarioModelo.password = "12345";
 
-  Usuario.find({ email: 'Admin' }).exec((err, buscarUsuario) => {
+  Usuario.find({ rol: 'Admin' }).exec((err, buscarUsuario) => {
     if (err) return console.log("ERROR en la peticion");
 
-    if ( buscarUsuario.length >= 1) {
-      console.log("Usuario Super Admin creado con anterioridad");
-      console.log(buscarUsuario)
-    } else {
+    if ( buscarUsuario.length == 0) {
+
+
       bcrypt.hash(usuarioModelo.password, null, null, (err, passCrypt) => {
         usuarioModelo.password = passCrypt;
       });
@@ -27,6 +26,11 @@ function RegistrarAd(req, res) {
           console.log("Usuario Super Admin Creado");
         }
       });
+
+
+     
+    } else {
+      console.log("Usuario Super Admin creado con anterioridad");
     }
   });
 }
@@ -74,7 +78,7 @@ function RegistrarUsuario(req, res) {
 function Login(req, res) {
   var parametros = req.body;
   Usuario.findOne({ email: parametros.email }, (err, usuarioEncontrado) => {
-    if (err) return res.status(500).send({ mensaje: "Error en la peticion" });
+    if (err) return res.status(400).send({ message: "Error en la peticion" });
     if (usuarioEncontrado) {
       bcrypt.compare(
         parametros.password,
@@ -91,15 +95,15 @@ function Login(req, res) {
             }
           } else {
             return res
-              .status(500)
-              .send({ mensaje: "Las contraseña no coincide" });
+              .status(200)
+              .send({ message: "Las contraseña no coincide" });
           }
         }
       );
     } else {
       return res
-        .status(500)
-        .send({ mensaje: "Error, el correo no se encuentra registrado." });
+        .status(200)
+        .send({ message: "Error, el correo no se encuentra registrado." });
     }
   });
 }
@@ -112,7 +116,7 @@ function crearGerente(req, res) {
     Usuario.find({ email: parametros.email }, (err, gerenteEncontrado) => {
       if (gerenteEncontrado.length > 0) {
         return res
-          .status(500)
+          .status(400)
           .send({ message: "Este correo esta en uso por otro administrador" });
       } else {
         usuarioModel.nombre = parametros.nombre;
@@ -128,11 +132,11 @@ function crearGerente(req, res) {
             usuarioModel.save((err, gerenteGuardado) => {
               if (err)
                 return res
-                  .status(500)
+                  .status(400)
                   .send({ mensaje: "Error en la peticion" });
               if (!gerenteGuardado)
                 return res
-                  .status(500)
+                  .status(400)
                   .send({ mensaje: "Error al guardar el gerente" });
               return res.status(200).send({ gerente: "gerenteGuardado" });
             });
