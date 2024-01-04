@@ -1,4 +1,6 @@
+const e = require('express')
 const LineaTimepo = require('../models/lineaTiempo.model')
+const { param } = require('../routes/img.routes')
 
 function crearEventosLineaDeTiempoDefult() {
 
@@ -87,10 +89,26 @@ function eliminarLineaTiempo(req,res){
     })
 }
 
+function obtenerLineaTiempoxId(req,res){
+
+    let idLinea = req.params.idLinea
+
+    LineaTimepo.findById(idLinea,(err,lineaFiend)=>{
+        if(err){return res.status(400).send({mesagge:'error en la peticion'})
+        }else if(lineaFiend){
+            return res.status(200).send({lineaFiend:lineaFiend})
+        }else{
+            return res.status(400).send({messaga:'error al obtener la linea de tiempo'})
+        }
+    })
+
+}
+
 module.exports = {
     crearEventosLineaDeTiempoDefult,
     obtenerTiempo,
     editarLineaTiempo,
-    eliminarLineaTiempo
+    eliminarLineaTiempo,
+    obtenerLineaTiempoxId
 }
 
