@@ -23,7 +23,7 @@ function crearNocitiasDefult (req,res){
          noticia2.prioridad = 2
 
          
-         noticia3.titleLineaTiempo = 'Titulo de la noticia 3'
+         noticia3.titulo = 'Titulo de la noticia 3'
          noticia3.imgPhat = 'url de la img'
          noticia3.prioridad = 3
 
@@ -49,11 +49,11 @@ function crearNocitiasDefult (req,res){
 
 
 function obtenerNoticias(req,res){
-    LineaTimepo.find({},(err,lineFiended)=>{
+    Noticas.find({},(err,lineFiended)=>{
         if(err){
             return res.status(200).send({message:'error en la peticion'})
         }else if(lineFiended){
-            return res.status(200).send({LineaTiempo:lineFiended})
+            return res.status(200).send({noticas:lineFiended})
         }
 
     })
@@ -63,7 +63,7 @@ function editarNoticias(req,res){
     let  idNocicia = req.params.idNoticia
     let parametros = req.body
     
-    LineaTimepo.findByIdAndUpdate(idNocicia,parametros,{new:true},(err,noticiaFinded)=>{
+    Noticas.findByIdAndUpdate(idNocicia,parametros,{new:true},(err,noticiaFinded)=>{
         if(err){
             return res.status(200).send({messege:'error en la petion'})
         }else if (noticiaFinded){
@@ -76,10 +76,10 @@ function editarNoticias(req,res){
 
 
 }
-function editarNoticias(req,res){
+function buscarNoticasxId(req,res){
     let  idNocicia = req.params.idNoticia
     
-    LineaTimepo.findById(idNocicia,(err,noticiaFinded)=>{
+    Noticas.findById(idNocicia,(err,noticiaFinded)=>{
         if(err){
             return res.status(200).send({messege:'error en la petion'})
         }else if (noticiaFinded){

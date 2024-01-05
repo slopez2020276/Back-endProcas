@@ -28,10 +28,10 @@ function crearEventosLineaDeTiempoDefult() {
             lineaTiempo3.ImgPathLineaTiempo = 'url de la imgen evento 3'
             lineaTiempo3.descriptionLineaTiempo = 'descripcion evento 3'
 
-            lineaTiempo1.save((err, linea1Saved) => {
+            lineaTiempo1.save((err, noticia) => {
                 if (err) {
                     return console.log('error en la peticon')
-                } else if (linea1Saved) {
+                } else if (noticia) {
                     lineaTiempo2.save()
                     lineaTiempo3.save()
                     return console.log('se crearon los eventos de predetermindos porfavor de la orden de editarlos')
@@ -104,11 +104,32 @@ function obtenerLineaTiempoxId(req,res){
 
 }
 
+function agregarLineaTiempo(req,res){
+
+    	    let parametros = req.body
+            let lineaTiempo1 = new LineaTimepo()
+        
+            lineaTiempo1.titleLineaTiempo = parametros.titleLineaTiempo
+            lineaTiempo1.ImgPathLineaTiempo = parametros.ImgPathLineaTiempo
+            lineaTiempo1.descriptionLineaTiempo = parametros.descriptionLineaTiempo
+
+            lineaTiempo1.save((err, noticia) => {
+                if (err) {
+                    return res.status(400).send({message:'error en la peticon'})
+                } else if (noticia) {
+                    return res.status(200).send({noticia:noticia})
+                }else{
+                    return res.status(200).send({message:'error al crear la noticia'})
+                }
+            })
+}
+
 module.exports = {
     crearEventosLineaDeTiempoDefult,
     obtenerTiempo,
     editarLineaTiempo,
     eliminarLineaTiempo,
-    obtenerLineaTiempoxId
+    obtenerLineaTiempoxId,
+    agregarLineaTiempo
 }
 
