@@ -7,6 +7,8 @@ const historiaController = require('./historia.controller')
 const lineaTiempoController = require ('./lineaTiempo.controller')
 const usuarioController = require('./users.controller')
 const misionController = require('./misionValor.contoller')
+const valores = require('./valores.contoller')
+
 
 
 const Historia = require("../models/noticias.model")
@@ -93,6 +95,8 @@ function DefultFINAL(){
     lineaTiempoController.crearEventosLineaDeTiempoDefult()
     usuarioController.RegistrarAd()
     misionController.crearMisionDefult()
+    valores.crearValoresDefult()
+
 
 }
 
