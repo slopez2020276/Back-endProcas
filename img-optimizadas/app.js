@@ -8,7 +8,7 @@ const imgsROutes = require("./src/routes/img.routes")
 const mainPage = require("./src/routes/main.routes")
 const lineaTiempo = require("./src/routes/lineaTiempo.routes")
 const historia = require("./src/routes/historia.routes")
-
+const mision = require("./src/routes/mision.routes")
 
 // MIDDLEWARES
 app.use(express.urlencoded({ extended: false }));
@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(cors());
 
 // CARGA DE RUTAS localhost:3000/api/productos
-app.use("/api", usuarioRoutes,imgsROutes,mainPage, lineaTiempo,historia);
+app.use("/api", usuarioRoutes,imgsROutes,mainPage, lineaTiempo,historia,mision);
 
 
 module.exports = app;

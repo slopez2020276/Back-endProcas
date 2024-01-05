@@ -67,7 +67,7 @@ function editarNoticias(req,res){
         if(err){
             return res.status(200).send({messege:'error en la petion'})
         }else if (noticiaFinded){
-            return res.status(200).send({lineaUpdated:noticiaFinded})
+            return res.status(200).send({noticia:noticiaFinded})
         }else{
             return res.status(200).send({message:'error al editar'})
 
@@ -76,6 +76,23 @@ function editarNoticias(req,res){
 
 
 }
+function editarNoticias(req,res){
+    let  idNocicia = req.params.idNoticia
+    
+    LineaTimepo.findById(idNocicia,(err,noticiaFinded)=>{
+        if(err){
+            return res.status(200).send({messege:'error en la petion'})
+        }else if (noticiaFinded){
+            return res.status(200).send({noticia:noticiaFinded})
+        }else{
+            return res.status(200).send({message:'error al editar'})
+
+        }
+    })
+
+
+}
+
 
 function eliminarNoticias(req,res){
     let idNotica = req.params.idNotica
