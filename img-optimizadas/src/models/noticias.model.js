@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const noticiaSchema = Schema({
   titulo: String,
   imgPhat: String,
-  prioridad: Number,
+  descripcion: String,
 });
 
 module.exports = mongoose.model("noticias", noticiaSchema);

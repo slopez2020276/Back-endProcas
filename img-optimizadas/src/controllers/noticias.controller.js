@@ -15,17 +15,17 @@ function crearNocitiasDefult (req,res){
 
          noticia1.titulo = 'Titulo noticia 1'
          noticia1.imgPhat = 'url img'
-         noticia1.prioridad = 1
+         noticia1.descripcion = 'descripcion 1'
 
 
          noticia2.titulo = 'Titulo evento 2'
          noticia2.imgPhat = 'url de la imgen'
-         noticia2.prioridad = 2
+         noticia2.descripcion = 'descripcion 2'
 
          
          noticia3.titulo = 'Titulo de la noticia 3'
          noticia3.imgPhat = 'url de la img'
-         noticia3.prioridad = 3
+         noticia3.descripcion = 'descripcion 3'
 
          noticia1.save((err,noticia1Saved)=>{
             if(err){
@@ -46,6 +46,28 @@ function crearNocitiasDefult (req,res){
 
 
 }
+
+
+function agregarNoticias(req,res){
+
+    let parametros = req.body
+    let noticiasmodel = new Noticas()
+
+    noticiasmodel.titulo = parametros.titulo
+    noticiasmodel.imgPhat = parametros.imgPhat
+    noticiasmodel.descripcion = parametros.descripcion
+
+    noticiasmodel.save((err, noticia) => {
+        if (err) {
+            return res.status(400).send({message:'error en la peticon'})
+        } else if (noticia) {
+            return res.status(200).send({noticia:noticia})
+        }else{
+            return res.status(200).send({message:'error al crear la noticia'})
+        }
+    })
+}
+
 
 
 function obtenerNoticias(req,res){
@@ -84,8 +106,9 @@ function buscarNoticasxId(req,res){
             return res.status(200).send({messege:'error en la petion'})
         }else if (noticiaFinded){
             return res.status(200).send({noticia:noticiaFinded})
+            console.log
         }else{
-            return res.status(200).send({message:'error al editar'})
+            return res.status(200).send({message:'error al buscar la noticia'})
 
         }
     })
@@ -110,5 +133,7 @@ module.exports = {
     crearNocitiasDefult,
     editarNoticias,
     obtenerNoticias,
-    eliminarNoticias
+    eliminarNoticias,
+    buscarNoticasxId,
+    agregarNoticias
 }
