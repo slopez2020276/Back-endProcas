@@ -8,6 +8,7 @@ const lineaTiempoController = require ('./lineaTiempo.controller')
 const usuarioController = require('./users.controller')
 const misionController = require('./misionValor.contoller')
 const valores = require('./valores.contoller')
+const ubicaciaones = require('./ubicaciones.contoller')
 
 
 
@@ -96,7 +97,7 @@ function DefultFINAL(){
     usuarioController.RegistrarAd()
     misionController.crearMisionDefult()
     valores.crearValoresDefult()
-
+    ubicaciaones.crearUbidefult()
 
 }
 
@@ -106,7 +107,7 @@ function mostrarMainPage(req,res){
     crearMainPageDefult()
     MainPage.find({},(err,pageFinded)=>{
         if(err){
-            return res.status(500).send({"message":"error en la peticion"})
+            return res.status(400).send({"message":"error en la peticion"})
         }else if (pageFinded){
             
             return res.status(200).send({ MainPage :pageFinded})

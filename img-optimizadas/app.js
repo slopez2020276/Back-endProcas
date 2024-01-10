@@ -21,6 +21,7 @@ const mision = require("./src/routes/mision.routes")
 const noticas = require('./src/routes/noticias.routes')
 const valores = require('./src/routes/volores.routes')
 const subs = require('./src/routes/susbribe.routes')
+const ubicaciones = require('./src/routes/ubicaciones.routes')
 
 // MIDDLEWARES
 app.use(express.urlencoded({ extended: false }));
@@ -30,7 +31,7 @@ app.use(express.json());
 app.use(cors());
 
 // CARGA DE RUTAS localhost:3000/api/productos
-app.use("/api", usuarioRoutes,imgsROutes,mainPage, lineaTiempo,historia,mision,noticas,valores,subs);
+app.use("/api", usuarioRoutes,imgsROutes,mainPage, lineaTiempo,historia,mision,noticas,valores,subs,ubicaciones);
 
 
 module.exports = app;
