@@ -1,46 +1,21 @@
-const express = require('express')
-const cors = require('cors')
-const multer = require('multer')
-const sharp = require('sharp')
 
-const app = express()
+const fs = require('node:fs')
+function nuevaimgprueba(req,res){
+    console.log(req.file)
+    saveImage(req.file)
 
-app.use(cors())
-const PORT = 3000
+    res.send('nice')
+    
 
-const helperIMG = (filePath, filename,size = 300)=>{
-    return sharp(filePath)
-        .resize(size )
-        .toFile(`./optimize/${filename}`)
 }
 
-const storage = multer.diskStorage({
-    destination:(req,file, cb)=>{
-        cb(null,'./uploads')
-    },
-    filename: (req,file,cb)=>{
-         const ext = file.originalname.split('.').pop()
-         cb(null,`${Date.now()}.${ext}`)
-    }
 
-})
+function saveImage(file){
+    const newPath = `./new/${file.originalname}`
+    fs.renameSync(file.path, newPath);
+    return newPath;
+}
 
-const upload = multer({storage})
-
-app.post('/upload',upload.single('file'),(req,res)=>{
-    console.log('-->',req.file)
-
-    helperIMG(req.file.path, `MICRO-resize-${req.file.fieldname}.png`,20)
-    helperIMG(req.file.path, `SMALL-resize-${req.file.fieldname}.png`,100)
-    helperIMG(req.file.path, `MEDIUM-resize-${req.file.fieldname}.png`,500)
-    helperIMG(req.file.path, `LARGE-resize-${req.file.fieldname}.png`,1000)
-
-
-    res.send({data:'imagen Cargada'}) 
-
-})
-
-
-app.listen(PORT,() => {
-    console.log('listo por el puerto: ',PORT)
-})
+module.exports = {
+    nuevaimgprueba
+}

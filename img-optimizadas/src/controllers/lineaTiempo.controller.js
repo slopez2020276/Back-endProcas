@@ -84,7 +84,11 @@ function eliminarLineaTiempo(req,res){
         if(err){
             return res.status(200).send({message:'error en la peticion'})
         }else if(eliminarLinea){
+            
             return res.status(200).send({message:'se elimino correctamente'})
+        }else{
+            console.log(idLinea)
+            return res.status(200).send({message:'error al eliminar'})
         }
     })
 }
