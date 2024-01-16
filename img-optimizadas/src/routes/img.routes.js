@@ -7,7 +7,7 @@ const upload = multer({dest: 'new/'})
 
 
 api.post('/upload/single',upload.single('imagenPerfil'),imgpruebaController.nuevaimgprueba)
-
+api.get('/getImg',imgpruebaController.nuevo)
 
 function saveImage(file){
     const newPath = `./new/${file.originalname}`

@@ -4,7 +4,7 @@ function nuevaimgprueba(req,res){
     console.log(req.file)
     saveImage(req.file)
 
-    res.send('nice')
+    res.send('nice ')
     
 
 }
@@ -16,6 +16,11 @@ function saveImage(file){
     return newPath;
 }
 
+function nuevo(req,res){
+    res.send('hola mundo <button>ok</button>  ')
+}
+
 module.exports = {
-    nuevaimgprueba
+    nuevaimgprueba,
+    nuevo
 }

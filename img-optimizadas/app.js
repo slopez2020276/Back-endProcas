@@ -22,7 +22,7 @@ app.use(morgan("dev"));
 
 // CABECERAS
 app.use(cors());
-
+app.use
 // CARGA DE RUTAS localhost:3000/api/productos
 app.use("/api", usuarioRoutes,imgsROutes,mainPage, lineaTiempo,historia,mision,noticas,valores,subs,ubicaciones);
 
