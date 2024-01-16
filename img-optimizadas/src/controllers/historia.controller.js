@@ -8,7 +8,9 @@ function crearHistoraDefult (){
         }else if (HistoriaFiended.length == 0){
             let histriaModel = new Historia()
             histriaModel.EncalceVideo = 'https://www.youtube.com/watch?v=f0hN3s9XvI0'
-            histriaModel.DescripcionHistoria = 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tempora, beatae sed! Eum, debitis? Voluptatibus fugit, provident quisquam, reiciendis eligendi quae illo, tempora repudiandae blanditiis earum voluptas architecto? Vitae, provident praesentium!  modificar esto'
+            histriaModel.DescripcionHistoria = 'Lorem, ipsum dolor sit amet '
+            histriaModel.imgPathPrincipal = 'asd'
+            histriaModel.imgPathFondo = 'asd'
             histriaModel.save((err,noticia1Saved)=>{
             if(err){
                 return console.log('error en la peticon 2')
