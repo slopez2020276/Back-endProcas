@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const path = require('path')
 const app = express();
 
 // IMPORTACION RUTAS
@@ -17,14 +18,15 @@ const ubicaciones = require('./src/routes/ubicaciones.routes')
 
 // MIDDLEWARES
 app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 app.use(morgan("dev"));
+app.use(express.json());
 
 // CABECERAS
 app.use(cors());
-app.use
 // CARGA DE RUTAS localhost:3000/api/productos
 app.use("/api", usuarioRoutes,imgsROutes,mainPage, lineaTiempo,historia,mision,noticas,valores,subs,ubicaciones);
+
+app.use('/uploads',express.static(path.resolve('uploads')));
 
 
 module.exports = app;

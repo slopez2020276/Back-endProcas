@@ -1,6 +1,7 @@
 const Historia = require('../models/historia.model')
 
 
+
 function crearHistoraDefult (){
     Historia.find((err,HistoriaFiended)=>{
         if(err){
@@ -29,7 +30,7 @@ function crearHistoraDefult (){
 
 
 
-function obtenerHistoria(req,res){
+async function obtenerHistoria(req,res){
     Historia.find({},(err,historiaFiend)=>{
         if(err){
             return res.status(200).send({message:'error en la peticion'})
@@ -70,6 +71,13 @@ function eliminarhistoria(req,res){
     })
 }
 
+ function createHistoria(req,res){
+    console.log(req.body)
+    return res.json({
+        message:'photo successfully saved'
+    })
+}
+
 
 
 module.exports ={
@@ -77,4 +85,5 @@ module.exports ={
     eliminarhistoria,
     obtenerHistoria,
     editarhistoria,
+    createHistoria
 }
