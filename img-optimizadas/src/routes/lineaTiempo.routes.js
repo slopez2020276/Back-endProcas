@@ -8,7 +8,7 @@ api.get('/mostrarLineaTiempo',LineaTiempoController.obtenerTiempo);
 api.put('/editarLineaTiempo/:idLinea',md_auteticacion.Auth,LineaTiempoController.editarLineaTiempo)
 api.delete('/eliminarLineaTiempo/:idLinea',LineaTiempoController.eliminarLineaTiempo)
 api.get('/obtenerLineaXid/:idLinea',md_auteticacion.Auth, LineaTiempoController.obtenerLineaTiempoxId)
-api.post('/agregarEventoLineadeTiempo',multer.single('image'),LineaTiempoController.agregarLineaTiempo)
+api.post('/agregarEventoLineadeTiempo',multer.single('ImgPathLineaTiempo'),LineaTiempoController.agregarLineaTiempo)
 
 
 

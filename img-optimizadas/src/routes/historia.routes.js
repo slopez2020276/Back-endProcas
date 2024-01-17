@@ -11,4 +11,4 @@ api.delete('/eliminarHistoria/:idHistoria',md_auteticacion.Auth,historriaControl
 api.post('/agregarHistoria',multer.single('image') ,historriaController.createHistoria)
 
 
-module.exports = api;
+module.exports = api; 

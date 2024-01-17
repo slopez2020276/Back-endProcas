@@ -116,9 +116,10 @@ async function agregarLineaTiempo(req,res){
 
     	    let parametros = req.body
             let lineaTiempo1 = new LineaTimepo()
+            let ImgPathLine = req.file.path 
         
             lineaTiempo1.titleLineaTiempo = req.body.titleLineaTiempo
-            lineaTiempo1.ImgPathLineaTiempo =(req.file.path) 
+            lineaTiempo1.ImgPathLineaTiempo = ImgPathLine 
             lineaTiempo1.descriptionLineaTiempo = req.body.descriptionLineaTiempo
 
             await lineaTiempo1.save((err, noticia) => {
