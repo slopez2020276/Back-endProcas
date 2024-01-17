@@ -1,6 +1,8 @@
 const e = require('express')
 const LineaTimepo = require('../models/lineaTiempo.model')
 const { param } = require('../routes/img.routes')
+const path = require('path')
+const fs = require('fs-extra')
 
 function crearEventosLineaDeTiempoDefult() {
 
@@ -84,6 +86,8 @@ function eliminarLineaTiempo(req,res){
         if(err){
             return res.status(200).send({message:'error en la peticion'})
         }else if(eliminarLinea){
+            fs.unlink(path.resolve (eliminarLinea.ImgPathLineaTiempo))
+
             
             return res.status(200).send({message:'se elimino correctamente'})
         }else{
@@ -107,17 +111,18 @@ function obtenerLineaTiempoxId(req,res){
     })
 
 }
-
-function agregarLineaTiempo(req,res){
+ 
+async function agregarLineaTiempo(req,res){
 
     	    let parametros = req.body
             let lineaTiempo1 = new LineaTimepo()
+            let ImgPathLine = req.file.path 
         
-            lineaTiempo1.titleLineaTiempo = parametros.titleLineaTiempo
-            lineaTiempo1.ImgPathLineaTiempo = parametros.ImgPathLineaTiempo
-            lineaTiempo1.descriptionLineaTiempo = parametros.descriptionLineaTiempo
+            lineaTiempo1.titleLineaTiempo = req.body.titleLineaTiempo
+            lineaTiempo1.ImgPathLineaTiempo = ImgPathLine 
+            lineaTiempo1.descriptionLineaTiempo = req.body.descriptionLineaTiempo
 
-            lineaTiempo1.save((err, noticia) => {
+            await lineaTiempo1.save((err, noticia) => {
                 if (err) {
                     return res.status(400).send({message:'error en la peticon'})
                 } else if (noticia) {

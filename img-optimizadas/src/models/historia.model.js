@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const Schema = mongoose.Schema;
 
 const historia = Schema({
@@ -7,5 +8,7 @@ const historia = Schema({
   imgPathPrincipal: String,
   imgPathFondo: String,
 });
+
+
 
 module.exports = mongoose.model("historia", historia);

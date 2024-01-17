@@ -26,5 +26,8 @@
     "sharp": "^0.33.1",
     "timeago.js": "^4.0.2",
     "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/mongoose": "^5.11.97"
   }
 }
