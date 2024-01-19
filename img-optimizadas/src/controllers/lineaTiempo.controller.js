@@ -1,5 +1,6 @@
 const e = require('express')
 const LineaTimepo = require('../models/lineaTiempo.model')
+const Historia = require('../models/historia.model')
 const { param } = require('../routes/img.routes')
 const path = require('path')
 const fs = require('fs-extra')
@@ -17,17 +18,17 @@ function crearEventosLineaDeTiempoDefult() {
             let lineaTiempo3 = new LineaTimepo()
 
             lineaTiempo1.titleLineaTiempo = 'Titulo evento 1'
-            lineaTiempo1.ImgPathLineaTiempo = 'url de la imgen evento 1'
+            lineaTiempo1.ImgPathLineaTiempo = 'imgsDefult/imgdefult.png'
             lineaTiempo1.descriptionLineaTiempo = 'descripcion evento 1'
 
 
             lineaTiempo2.titleLineaTiempo = 'Titulo evento 2'
-            lineaTiempo2.ImgPathLineaTiempo = 'url de la imgen evento 2'
+            lineaTiempo2.ImgPathLineaTiempo = 'imgsDefult/imgdefult.png'
             lineaTiempo2.descriptionLineaTiempo = 'descripcion evento 2'
 
 
             lineaTiempo3.titleLineaTiempo = 'Titulo evento 3'
-            lineaTiempo3.ImgPathLineaTiempo = 'url de la imgen evento 3'
+            lineaTiempo3.ImgPathLineaTiempo = 'imgsDefult/imgdefult.png'
             lineaTiempo3.descriptionLineaTiempo = 'descripcion evento 3'
 
             lineaTiempo1.save((err, noticia) => {
@@ -55,7 +56,21 @@ function obtenerTiempo(req,res){
         if(err){
             return res.status(200).send({message:'error en la peticion'})
         }else if(lineFiended){
-            return res.status(200).send({lineFiended})
+
+            Historia.find((err,historifiend)=>{
+                if(err){
+                    return res.status(404).send({mesagge:'error en la peticion'})
+                }else if(historifiend){
+                    return res.status(200).send( [{historia:historifiend},{linea:lineFiended}])
+                }else{
+                    return res.status(404).send({message:'error en la peticion '})
+                }
+                
+            })
+
+
+        }else{
+            return res.status(200).send({message:'error al motrar la line de tiempo '})
         }
 
     })
@@ -64,19 +79,57 @@ function obtenerTiempo(req,res){
 function editarLineaTiempo(req,res){
     let  idlinea = req.params.idLinea
     let parametros = req.body
-    
-    LineaTimepo.findByIdAndUpdate(idlinea,parametros,{new:true},(err,lienaUpdeted)=>{
+    LineaTimepo.findById(idlinea,(err,lineaSinEditar)=>{
         if(err){
-            return res.status(200).send({messege:'error en la petion'})
-        }else if (lienaUpdeted){
-            return res.status(200).send({lineaUpdated:lienaUpdeted})
+            return res.status(404).send({message:'error en la peticion 1'})
+        }else if (lineaSinEditar){
+          if(req.file){
+            if(lineaSinEditar.ImgPathLineaTiempo === 'imgsDefult/imgdefult.png'){
+                console.log('con image y la ulr SI ES LA DEFULT')
+                let {titleLineaTiempo,descriptionLineaTiempo } = parametros
+                let   ImgPathLineaTiempo = req.file.path 
+                LineaTimepo.findByIdAndUpdate(idlinea,{titleLineaTiempo,descriptionLineaTiempo,ImgPathLineaTiempo:req.file.path },{new:true},(err,lienaUpdeted)=>{
+                    if(err){
+                        return res.status(200).send({messege:'error en la petion 2'})
+                    }else if (lienaUpdeted){
+                        return res.status(200).send({lineaUpdated:lienaUpdeted})
+                    }else{
+                        return res.status(200).send({message:'error al editar'})
+                    }
+                })
+            }else{
+                console.log('con imagen y la url de la imgen es NO ES LA DEFULT')
+                fs.unlink(path.resolve (lineaSinEditar.ImgPathLineaTiempo))
+                let {titleLineaTiempo,descriptionLineaTiempo } = parametros
+                LineaTimepo.findByIdAndUpdate(idlinea,{titleLineaTiempo,descriptionLineaTiempo,ImgPathLineaTiempo:req.file.path },{new:true},(err,lienaUpdeted)=>{
+                    if(err){
+                        return res.status(200).send({messege:'error en la petion 2'})
+                    }else if (lienaUpdeted){
+                        
+                        return res.status(200).send({lineaUpdated:lienaUpdeted})
+                    }else{
+                        return res.status(200).send({message:'error al editar'})
+            
+                    }
+                })
+            }
+          }else{
+            console.log('sin imagen')
+            LineaTimepo.findByIdAndUpdate(idlinea,parametros,{new:true},(err,lienaUpdeted)=>{
+                if(err){
+                    return res.status(200).send({messege:'error en la petion'})
+                }else if (lienaUpdeted){
+                    
+                    return res.status(200).send({lineaUpdated:lienaUpdeted})
+                }else{
+                    return res.status(200).send({message:'error al editar'})
+                }
+            })
+          }
         }else{
-            return res.status(200).send({message:'error al editar'})
-
+            return res.status(404).send({message:'la linea de timepo no se encuentra registrada'})
         }
     })
-
-
 }
 
 function eliminarLineaTiempo(req,res){

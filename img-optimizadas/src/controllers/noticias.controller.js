@@ -1,4 +1,6 @@
 const Noticas = require("../models/noticias.model")
+const path = require('path')
+const fs = require('fs-extra')
 
 
 function crearNocitiasDefult (req,res){
@@ -14,17 +16,17 @@ function crearNocitiasDefult (req,res){
             let noticia3 = new Noticas()
 
          noticia1.titulo = 'Titulo noticia 1'
-         noticia1.imgPhat = 'url img'
+         noticia1.imgPhat = 'imgsDefult/imgdefult.png'
          noticia1.descripcion = 'descripcion 1'
 
 
          noticia2.titulo = 'Titulo evento 2'
-         noticia2.imgPhat = 'url de la imgen'
+         noticia2.imgPhat = 'imgsDefult/imgdefult.png'
          noticia2.descripcion = 'descripcion 2'
 
          
          noticia3.titulo = 'Titulo de la noticia 3'
-         noticia3.imgPhat = 'url de la img'
+         noticia3.imgPhat = 'imgsDefult/imgdefult.png'
          noticia3.descripcion = 'descripcion 3'
 
          noticia1.save((err,noticia1Saved)=>{
@@ -52,9 +54,9 @@ function agregarNoticias(req,res){
 
     let parametros = req.body
     let noticiasmodel = new Noticas()
-
+    let imgPatha = req.file.path
     noticiasmodel.titulo = parametros.titulo
-    noticiasmodel.imgPhat = parametros.imgPhat
+    noticiasmodel.imgPhat = imgPatha
     noticiasmodel.descripcion = parametros.descripcion
 
     noticiasmodel.save((err, noticia) => {
@@ -118,11 +120,11 @@ function buscarNoticasxId(req,res){
 
 
 function eliminarNoticias(req,res){
-    let idNotica = req.params.idNotica
+    let idNotica = req.params.idNoticia
     
-    LineaTimepo.findByIdAndDelete(idNotica,(err,noticiaDeleted)=>{
+    Noticas.findByIdAndDelete(idNotica,(err,noticiaDeleted)=>{
         if(err){
-            return res.status(200).send({message:'error en la peticion'})
+            return res.status(404).send({message:'error en la peticion'})
         }else if(noticiaDeleted){
             return res.status(200).send({message:'se elimino correctamente'})
         }

@@ -23,10 +23,12 @@ app.use(express.json());
 
 // CABECERAS
 app.use(cors());
+
 // CARGA DE RUTAS localhost:3000/api/productos
 app.use("/api", usuarioRoutes,imgsROutes,mainPage, lineaTiempo,historia,mision,noticas,valores,subs,ubicaciones);
 
 app.use('/uploads',express.static(path.resolve('uploads')));
+app.use('/imgsDefult',express.static(path.resolve('imgsDefult')));
 
 
 module.exports = app;

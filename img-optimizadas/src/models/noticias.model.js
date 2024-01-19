@@ -2,8 +2,9 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const noticiaSchema = Schema({
-  titulo: String,
   imgPhat: String,
+  fecha: Date,
+  title:String,
   descripcion: String,
 });
 
