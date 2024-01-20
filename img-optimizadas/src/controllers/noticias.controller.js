@@ -114,19 +114,23 @@ function buscarNoticasxId(req,res){
 
         }
     })
-
-
 }
 
 
 function eliminarNoticias(req,res){
-    let idNotica = req.params.idNoticia
+    let idNoticia = req.params.idNoticia
     
-    Noticas.findByIdAndDelete(idNotica,(err,noticiaDeleted)=>{
+    Noticas.findByIdAndDelete(idNoticia,(err,eliminarLinea)=>{
         if(err){
-            return res.status(404).send({message:'error en la peticion'})
-        }else if(noticiaDeleted){
+            return res.status(200).send({message:'error en la peticion'})
+        }else if(eliminarLinea){
+            fs.unlink(path.resolve (eliminarLinea.ImgPathLineaTiempo))
+
+            
             return res.status(200).send({message:'se elimino correctamente'})
+        }else{
+            console.log(idNoticia)
+            return res.status(200).send({message:'error al eliminar'})
         }
     })
 }
