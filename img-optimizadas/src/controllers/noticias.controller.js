@@ -15,17 +15,17 @@ function crearNocitiasDefult (req,res){
             let noticia2 = new Noticas()
             let noticia3 = new Noticas()
 
-         noticia1.titulo = 'Titulo noticia 1'
+         noticia1.title = 'title noticia 1'
          noticia1.imgPhat = 'imgsDefult/imgdefult.png'
          noticia1.descripcion = 'descripcion 1'
 
 
-         noticia2.titulo = 'Titulo evento 2'
+         noticia2.title = 'title evento 2'
          noticia2.imgPhat = 'imgsDefult/imgdefult.png'
          noticia2.descripcion = 'descripcion 2'
 
          
-         noticia3.titulo = 'Titulo de la noticia 3'
+         noticia3.title = 'title de la noticia 3'
          noticia3.imgPhat = 'imgsDefult/imgdefult.png'
          noticia3.descripcion = 'descripcion 3'
 
@@ -107,6 +107,7 @@ function editarNoticias(req,res){
                 })
             }else{
                 console.log('con imagen y la url de la imgen es NO ES LA DEFULT')
+                
                 fs.unlink(path.resolve (NoticiaSinEditar.imgPhat))
                 let {title,descripcion } = parametros
                 Noticas.findByIdAndUpdate(idNoticia,{title,descripcion,imgPhat:req.file.path },{new:true},(err,NoticiaUpdated)=>{
