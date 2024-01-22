@@ -55,7 +55,7 @@ function agregarNoticias(req,res){
     let parametros = req.body
     let noticiasmodel = new Noticas()
     let imgPatha = req.file.path
-    noticiasmodel.titulo = parametros.titulo
+    noticiasmodel.title = parametros.title
     noticiasmodel.imgPhat = imgPatha
     noticiasmodel.descripcion = parametros.descripcion
 
@@ -84,20 +84,60 @@ function obtenerNoticias(req,res){
 }
 
 function editarNoticias(req,res){
-    let  idNocicia = req.params.idNoticia
-    let parametros = req.body
-    
-    Noticas.findByIdAndUpdate(idNocicia,parametros,{new:true},(err,noticiaFinded)=>{
-        if(err){
-            return res.status(200).send({messege:'error en la petion'})
-        }else if (noticiaFinded){
-            return res.status(200).send({noticia:noticiaFinded})
-        }else{
-            return res.status(200).send({message:'error al editar'})
 
+    
+    let  idNoticia = req.params.idNoticia
+    let parametros = req.body
+    Noticas.findById(idNoticia,(err,NoticiaSinEditar)=>{
+        if(err){
+            return res.status(404).send({message:'error en la peticion 1'})
+        }else if (NoticiaSinEditar){
+          if(req.file){
+            if(NoticiaSinEditar.imgPhat === 'imgsDefult/imgdefult.png'){
+                console.log('con image y la ulr SI ES LA DEFULT')
+                let {title,descripcion } = parametros
+                Noticas.findByIdAndUpdate(idNoticia,{title,descripcion,imgPhat:req.file.path },{new:true},(err,NoticiaUpdated)=>{
+                    if(err){
+                        return res.status(200).send({messege:'error en la petion 2'})
+                    }else if (NoticiaUpdated){
+                        return res.status(200).send({lineaUpdated:NoticiaUpdated})
+                    }else{
+                        return res.status(200).send({message:'error al editar'})
+                    }
+                })
+            }else{
+                console.log('con imagen y la url de la imgen es NO ES LA DEFULT')
+                fs.unlink(path.resolve (NoticiaSinEditar.imgPhat))
+                let {title,descripcion } = parametros
+                Noticas.findByIdAndUpdate(idNoticia,{title,descripcion,imgPhat:req.file.path },{new:true},(err,NoticiaUpdated)=>{
+                    if(err){
+                        return res.status(200).send({messege:'error en la petion 2'})
+                    }else if (NoticiaUpdated){
+                        
+                        return res.status(200).send({lineaUpdated:NoticiaUpdated})
+                    }else{
+                        return res.status(200).send({message:'error al editar'})
+            
+                    }
+                })
+            }
+          }else{
+            console.log('sin imagen')
+            Noticas.findByIdAndUpdate(idNoticia,parametros,{new:true},(err,NoticiaUpdated)=>{
+                if(err){
+                    return res.status(200).send({messege:'error en la petion'})
+                }else if (NoticiaUpdated){
+                    
+                    return res.status(200).send({lineaUpdated:NoticiaUpdated})
+                }else{
+                    return res.status(200).send({message:'error al editar'})
+                }
+            })
+          }
+        }else{
+            return res.status(404).send({message:'la linea de timepo no se encuentra registrada'})
         }
     })
-
 
 }
 function buscarNoticasxId(req,res){
@@ -117,14 +157,14 @@ function buscarNoticasxId(req,res){
 }
 
 
-function eliminarNoticias(req,res){
-    let idNoticia = req.params.idNoticia
+function eliminarNoticias(req,res){ 
+     let idNoticia = req.params.idNoticia
     
-    Noticas.findByIdAndDelete(idNoticia,(err,eliminarLinea)=>{
+    Noticas.findByIdAndDelete(idNoticia,(err,NoticiasDeleted)=>{
         if(err){
             return res.status(200).send({message:'error en la peticion'})
-        }else if(eliminarLinea){
-            fs.unlink(path.resolve (eliminarLinea.ImgPathLineaTiempo))
+        }else if(NoticiasDeleted){
+            fs.unlink(path.resolve (NoticiasDeleted.imgPhat))
 
             
             return res.status(200).send({message:'se elimino correctamente'})
