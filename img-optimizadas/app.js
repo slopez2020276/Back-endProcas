@@ -29,6 +29,8 @@ app.use("/api", usuarioRoutes,imgsROutes,mainPage, lineaTiempo,historia,mision,n
 
 app.use('/uploads',express.static(path.resolve('uploads')));
 app.use('/imgsDefult',express.static(path.resolve('imgsDefult')));
+app.use('/optilize',express.static(path.resolve(' ')));
+
 
 
 module.exports = app;

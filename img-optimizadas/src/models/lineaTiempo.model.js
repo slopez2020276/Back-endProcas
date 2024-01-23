@@ -6,7 +6,10 @@ const lineaTiempo = Schema({
   titleLineaTiempo: String,
   subTitleLineaTiempo: String,
   descriptionLineaTiempo: String,
-  fecha: Date,
+  fecha: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 module.exports = mongoose.model("lineaTiempo", lineaTiempo);

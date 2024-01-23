@@ -7,7 +7,10 @@ const mainPageSchema = Schema({
   idLineaTiempo : [{ type: Schema.Types.ObjectId, ref: "lineaTiempo"  }] ,
   textVision: String,
   textMision: String,
-  idNoticias: [{ type: Schema.Types.ObjectId, ref: "noticias"  }]
+  fecha: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 module.exports = mongoose.model("mainPage", mainPageSchema);

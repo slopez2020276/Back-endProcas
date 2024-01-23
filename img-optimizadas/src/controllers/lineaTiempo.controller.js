@@ -77,6 +77,7 @@ function obtenerTiempo(req,res){
 }
 
 function editarLineaTiempo(req,res){
+
     let  idlinea = req.params.idLinea
     let parametros = req.body
     LineaTimepo.findById(idlinea,(err,lineaSinEditar)=>{
@@ -174,6 +175,8 @@ async function agregarLineaTiempo(req,res){
             lineaTiempo1.titleLineaTiempo = req.body.titleLineaTiempo
             lineaTiempo1.ImgPathLineaTiempo = ImgPathLine 
             lineaTiempo1.descriptionLineaTiempo = req.body.descriptionLineaTiempo
+            lineaTiempo1.fecha = req.body.fecha
+            console.log(req.body.fecha)
 
             await lineaTiempo1.save((err, noticia) => {
                 if (err) {

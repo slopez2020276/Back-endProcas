@@ -6,6 +6,11 @@ const noticiaSchema = Schema({
   fecha: Date,
   title:String,
   descripcion: String,
+  prioridad:Number,
+  fecha: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 module.exports = mongoose.model("noticias", noticiaSchema);
