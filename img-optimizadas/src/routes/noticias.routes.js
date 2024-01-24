@@ -6,9 +6,10 @@ const multer = require('../../libs/multer');
 
 
 api.get('/ObtnerNoticias',NoticiasController.obtenerNoticias);
+api.get('/obtenernoticiasid/:idNoticia',NoticiasController.buscarNoticasxId)
+api.get('/otenerNoticciasAll',NoticiasController.obtenerNoticiasPrincipalesYRestantes)
 api.put('/editarNoticiasxId/:idNoticia',multer.single('imgPhat'),NoticiasController.editarNoticias)
 api.delete('/eliminarNoticia/:idNoticia',NoticiasController.eliminarNoticias)
-api.get('/obtenernoticiasid/:idNoticia',NoticiasController.buscarNoticasxId)
 api.post('/agregarNOticias',multer.single('imgPhat'),NoticiasController.agregarNoticias)
 
 

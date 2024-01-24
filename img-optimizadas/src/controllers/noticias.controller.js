@@ -18,16 +18,18 @@ function crearNocitiasDefult (req,res){
          noticia1.title = 'title noticia 1'
          noticia1.imgPhat = 'imgsDefult/imgdefult.png'
          noticia1.descripcion = 'descripcion 1'
+         noticia1.tipo = 'principal'
 
 
          noticia2.title = 'title evento 2'
          noticia2.imgPhat = 'imgsDefult/imgdefult.png'
          noticia2.descripcion = 'descripcion 2'
-
+         noticia2.tipo = 'principal'
          
          noticia3.title = 'title de la noticia 3'
          noticia3.imgPhat = 'imgsDefult/imgdefult.png'
          noticia3.descripcion = 'descripcion 3'
+         noticia3.tipo = 'principal'
 
          noticia1.save((err,noticia1Saved)=>{
             if(err){
@@ -58,6 +60,7 @@ function agregarNoticias(req,res){
     noticiasmodel.title = parametros.title
     noticiasmodel.imgPhat = imgPatha
     noticiasmodel.descripcion = parametros.descripcion
+    noticiasmodel.tipo= parametros.tipo
 
     noticiasmodel.save((err, noticia) => {
         if (err) {
@@ -73,14 +76,41 @@ function agregarNoticias(req,res){
 
 
 function obtenerNoticias(req,res){
-    Noticas.find({},(err,lineFiended)=>{
+    let tipoPrincipal = 'principal'
+    Noticas.find({tipo:tipoPrincipal},(err,lineFiended)=>{
         if(err){
             return res.status(200).send({message:'error en la peticion'})
         }else if(lineFiended){
             return res.status(200).send({noticas:lineFiended})
         }
 
-    })
+    }).sort({fecha:-1}).limit(6)
+}
+
+function obtenerNoticiasPrincipalesYRestantes(req, res) {
+    const tipoPrincipal = 'principal';  // Ajusta esto según tu configuración
+
+    // Consulta para obtener las 6 noticias principales
+    const consultaPrincipales = Noticas.find({ tipo: tipoPrincipal })
+        .sort({ fecha: -1 })  // Ordenar por fecha de forma descendente
+        .limit(6);  // Limitar el número de resultados a 6
+
+    // Consulta para obtener las demás noticias (que no son principales)
+    const consultaRestantes = Noticas.find({ tipo: { $ne: tipoPrincipal } })
+        .sort({ fecha: -1 });  // Ordenar por fecha de forma descendente
+
+    // Ejecutar ambas consultas de forma simultánea
+    Promise.all([consultaPrincipales, consultaRestantes])
+        .then(resultados => {
+            const [noticiasPrincipales, noticiasRestantes] = resultados;
+            const todasLasNoticias = noticiasPrincipales.concat(noticiasRestantes);
+            
+            return res.status(200).send({ noticias: todasLasNoticias });
+        })
+        .catch(err => {
+            console.error('Error en la petición:', err);
+            return res.status(500).send({ message: 'Error en la petición' });
+        });
 }
 
 function editarNoticias(req,res){
@@ -182,5 +212,6 @@ module.exports = {
     obtenerNoticias,
     eliminarNoticias,
     buscarNoticasxId,
-    agregarNoticias
+    agregarNoticias,
+    obtenerNoticiasPrincipalesYRestantes
 }

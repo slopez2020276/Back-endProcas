@@ -9,6 +9,6 @@ api.get('/mostrarHistoria',historriaController.obtenerHistoria);
 api.put('/editarHistoria/:idHistoria',multer.single('imgPathPrincipal'),historriaController.editarhistoria)
 api.delete('/eliminarHistoria/:idHistoria',md_auteticacion.Auth,historriaController.eliminarhistoria)
 api.post('/agregarHistoria',multer.single('image') ,historriaController.createHistoria)
-
+api.put('/editarFondo/:idHistoria',multer.single('imgPathFondo'),historriaController.EditarFondo)
 
 module.exports = api; 

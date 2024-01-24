@@ -6,7 +6,7 @@ const noticiaSchema = Schema({
   fecha: Date,
   title:String,
   descripcion: String,
-  prioridad:Number,
+  tipo:String,
   fecha: {
     type: Date,
     default: Date.now
