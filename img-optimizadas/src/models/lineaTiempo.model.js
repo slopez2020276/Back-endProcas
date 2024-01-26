@@ -6,6 +6,7 @@ const lineaTiempo = Schema({
   titleLineaTiempo: String,
   subTitleLineaTiempo: String,
   descriptionLineaTiempo: String,
+  mostrarPor:String,
   fecha: {
     type: Date,
     default: Date.now

@@ -5,8 +5,15 @@ const Schema = mongoose.Schema;
 const historia = Schema({
   EncalceVideo: String,
   DescripcionHistoria: String,
-  imgPathPrincipal: String,
-  imgPathFondo: String,
+  imgPathFondo:String,
+  imgPathPrincipal:String,
+  imgPathPrincipalLarge: String,
+  imgPathPrincipalMedium: String,
+  imgPathPrincipalSmall: String,
+  imgPathFondoLarge: String,
+  imgPathFondoMedion:String,
+  imgPathPrincipalSmall:String,
+
 });
 
 

@@ -42,6 +42,7 @@ function RegistrarUsuario(req, res) {
   if (parametros.email && parametros.password) {
     usuarioModel.email = parametros.email;
     usuarioModel.rol = "Usuario";
+    usuarioModel.nombre = parametros.nombre
 
     Usuario.find({ email: parametros.email }, (err, usuarioEncontrado) => {
       if (usuarioEncontrado.length == 0) {

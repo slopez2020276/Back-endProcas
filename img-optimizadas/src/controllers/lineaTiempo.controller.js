@@ -4,6 +4,7 @@ const Historia = require('../models/historia.model')
 const { param } = require('../routes/img.routes')
 const path = require('path')
 const fs = require('fs-extra')
+const sharp = require('sharp')
 
 function crearEventosLineaDeTiempoDefult() {
 
@@ -20,16 +21,19 @@ function crearEventosLineaDeTiempoDefult() {
             lineaTiempo1.titleLineaTiempo = 'Titulo evento 1'
             lineaTiempo1.ImgPathLineaTiempo = 'imgsDefult/imgdefult.png'
             lineaTiempo1.descriptionLineaTiempo = 'descripcion evento 1'
+            lineaTiempo1.mostrarPor = 'anio'
 
 
             lineaTiempo2.titleLineaTiempo = 'Titulo evento 2'
             lineaTiempo2.ImgPathLineaTiempo = 'imgsDefult/imgdefult.png'
             lineaTiempo2.descriptionLineaTiempo = 'descripcion evento 2'
+            lineaTiempo2.mostrarPor = 'anioyMes'
 
 
             lineaTiempo3.titleLineaTiempo = 'Titulo evento 3'
             lineaTiempo3.ImgPathLineaTiempo = 'imgsDefult/imgdefult.png'
             lineaTiempo3.descriptionLineaTiempo = 'descripcion evento 3'
+            lineaTiempo3.mostrarPor = 'anioyMes'
 
             lineaTiempo1.save((err, noticia) => {
                 if (err) {
@@ -50,31 +54,50 @@ function crearEventosLineaDeTiempoDefult() {
 
 
 }
+function obtenerFechaFormateada(lineaTiempo) {
+    const fecha = lineaTiempo.fecha;
+    const mostrarPor = lineaTiempo.mostrarPor;
+  
+    if (mostrarPor === 'anio') {
+      return fecha.getFullYear().toString();
+    } else if (mostrarPor === 'anioyMes') {
+      const year = fecha.getFullYear().toString();
+      const month = (fecha.getMonth() + 1).toString().padStart(2, '0');
+      return `${year}-${month}`;
+    } else {
+      return fecha.toISOString();
+    }
+  }
 
-function obtenerTiempo(req,res){
-    LineaTimepo.find({},(err,lineFiended)=>{
-        if(err){
-            return res.status(200).send({message:'error en la peticion'})
-        }else if(lineFiended){
+  function obtenerTiempo(req, res) {
+    LineaTimepo.find({}, (err, lineFiended) => {
+      if (err) {
+        return res.status(200).send({ message: 'error en la peticion' });
+      } else if (lineFiended) {
+        Historia.find((err, historifiend) => {
+          if (err) {
+            return res.status(404).send({ message: 'error en la peticion' });
+          } else if (historifiend) {
+            // Formatear fechas para cada objeto de línea de tiempo
+            const lineasFormateadas = lineFiended.map(linea => {
+              return {
+                ...linea.toObject(),
+                fechaFormateada: obtenerFechaFormateada(linea)
+              };
+            });
+  
+            return res.status(200).send([{ historia: historifiend }, { lineas: lineasFormateadas }]);
+          } else {
+            return res.status(404).send({ message: 'error en la peticion' });
+          }
+        });
+      } else {
+        return res.status(200).send({ message: 'error al mostrar la línea de tiempo' });
+      }
+    });
+  }
 
-            Historia.find((err,historifiend)=>{
-                if(err){
-                    return res.status(404).send({mesagge:'error en la peticion'})
-                }else if(historifiend){
-                    return res.status(200).send( [{historia:historifiend},{linea:lineFiended}])
-                }else{
-                    return res.status(404).send({message:'error en la peticion '})
-                }
-                
-            })
 
-
-        }else{
-            return res.status(200).send({message:'error al motrar la line de tiempo '})
-        }
-
-    })
-}
 
 function editarLineaTiempo(req,res){
 
@@ -166,14 +189,21 @@ function obtenerLineaTiempoxId(req,res){
 
 }
  
+function helperImg(filepath,filename,sizel = 300,sizeW){
+    return sharp(filepath).resize(sizel,sizeW)
+    .toFile(`./optimize/${filename}`)
+}
+
 async function agregarLineaTiempo(req,res){
 
     	    let parametros = req.body
             let lineaTiempo1 = new LineaTimepo()
-            let ImgPathLine = req.file.path 
+            let ImgPathLine = req.file.filename
+
         
             lineaTiempo1.titleLineaTiempo = req.body.titleLineaTiempo
-            lineaTiempo1.ImgPathLineaTiempo = ImgPathLine 
+            lineaTiempo1.ImgPathLineaTiempo =`optimize\\medium-${ImgPathLine}`
+            
             lineaTiempo1.descriptionLineaTiempo = req.body.descriptionLineaTiempo
             lineaTiempo1.fecha = req.body.fecha
             console.log(req.body.fecha)
@@ -182,7 +212,14 @@ async function agregarLineaTiempo(req,res){
                 if (err) {
                     return res.status(400).send({message:'error en la peticon'})
                 } else if (noticia) {
+                    helperImg(req.file.path,`micro-${req.file.filename}`,20,20)
+                    helperImg(req.file.path,`small-${req.file.filename}`,100,)
+                    helperImg(req.file.path,`medium-${req.file.filename}`,500)
+                    helperImg(req.file.path,`large-${req.file.filename}`,1000)
+
+                    console.log(req.file)
                     return res.status(200).send({noticia:noticia})
+                    
                 }else{
                     return res.status(200).send({message:'error al crear la noticia'})
                 }
