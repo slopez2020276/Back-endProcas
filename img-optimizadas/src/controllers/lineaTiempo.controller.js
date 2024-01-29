@@ -33,7 +33,7 @@ function crearEventosLineaDeTiempoDefult() {
             lineaTiempo3.titleLineaTiempo = 'Titulo evento 3'
             lineaTiempo3.ImgPathLineaTiempo = 'imgsDefult/imgdefult.png'
             lineaTiempo3.descriptionLineaTiempo = 'descripcion evento 3'
-            lineaTiempo3.mostrarPor = 'anioyMes'
+            lineaTiempo3.mostrarPor = 'anioMesDia'
 
             lineaTiempo1.save((err, noticia) => {
                 if (err) {
@@ -64,11 +64,16 @@ function obtenerFechaFormateada(lineaTiempo) {
       const year = fecha.getFullYear().toString();
       const month = (fecha.getMonth() + 1).toString().padStart(2, '0');
       return `${year}-${month}`;
+    } else if (mostrarPor === 'anioMesDia') {
+      const year = fecha.getFullYear().toString();
+      const month = (fecha.getMonth() + 1).toString().padStart(2, '0');
+      const day = fecha.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
     } else {
       return fecha.toISOString();
     }
   }
-
+  
   function obtenerTiempo(req, res) {
     LineaTimepo.find({}, (err, lineFiended) => {
       if (err) {
@@ -86,6 +91,9 @@ function obtenerFechaFormateada(lineaTiempo) {
               };
             });
   
+            // Ordenar eventos desde la más antigua hasta la más reciente
+            lineasFormateadas.sort((a, b) => new Date(a.fecha) - new Date(  ));
+  
             return res.status(200).send([{ historia: historifiend }, { lineas: lineasFormateadas }]);
           } else {
             return res.status(404).send({ message: 'error en la peticion' });
@@ -96,8 +104,8 @@ function obtenerFechaFormateada(lineaTiempo) {
       }
     });
   }
-
-
+  
+  
 
 function editarLineaTiempo(req,res){
 
@@ -206,6 +214,7 @@ async function agregarLineaTiempo(req,res){
             
             lineaTiempo1.descriptionLineaTiempo = req.body.descriptionLineaTiempo
             lineaTiempo1.fecha = req.body.fecha
+            lineaTiempo1.mostrarPor = req.body.mostrarPor
             console.log(req.body.fecha)
 
             await lineaTiempo1.save((err, noticia) => {

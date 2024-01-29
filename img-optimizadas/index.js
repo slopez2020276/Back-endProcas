@@ -10,7 +10,7 @@ const mainPage = require("./src/controllers/mainPage.controller")
 const historiaController = require('./src/controllers/historia.controller')
 mongoose.Promise = global.Promise;
 mongoose
-  .connect('mongodb://localhost/procasa' , {
+  .connect('mongodb+srv://desjr:desjr@cluster0.qmiwvug.mongodb.net/?retryWrites=true&w=majority' , {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
