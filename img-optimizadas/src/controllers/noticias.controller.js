@@ -191,19 +191,42 @@ function buscarNoticasxId(req,res){
 function eliminarNoticias(req,res){ 
      let idNoticia = req.params.idNoticia
     
-    Noticas.findByIdAndDelete(idNoticia,(err,NoticiasDeleted)=>{
+    Noticas.findById(idNoticia,(err,noticiasFiend)=>{
         if(err){
-            return res.status(200).send({message:'error en la peticion'})
-        }else if(NoticiasDeleted){
-            fs.unlink(path.resolve (NoticiasDeleted.imgPhat))
-
-            
-            return res.status(200).send({message:'se elimino correctamente'})
+            return res.status(404).send({message:'error en la petiocion'})
         }else{
-            console.log(idNoticia)
-            return res.status(200).send({message:'error al eliminar'})
+            if(noticiasFiend.imgPhat === 'imgsDefult/imgdefult.png'){
+
+
+                Noticas.findByIdAndDelete(idNoticia,(err,NoticiasDeleted)=>{
+                    if(err){
+                        return res.status(200).send({message:'error en la peticion'})
+                    }else if(NoticiasDeleted){
+                     return res.status(200).send({message:'se elimino correctamente'})            
+                    }else{
+                        console.log(idNoticia)
+                        return res.status(200).send({message:'error al eliminar'})
+                    }
+                })
+            }else{
+                fs.unlink(path.resolve (noticiasFiend.imgPhat))
+                Noticas.findByIdAndDelete(idNoticia,(err,NoticiasDeleted)=>{
+                    if(err){
+                            return res.status(200).send({message:'error en la peticion'})
+                    }else if(NoticiasDeleted){
+                             return res.status(200).send({message:'se elimino correctamente'})
+                    }else{
+                        console.log(idNoticia)
+                        return res.status(200).send({message:'error al eliminar'})
+                    }
+                })
+            }
         }
+
+
     })
+
+    
 }
 
 module.exports = {

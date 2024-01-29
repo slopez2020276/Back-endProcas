@@ -7,5 +7,4 @@ const api = express.Router();
 api.get("/obtenerUbicaciones",controladorUsuario.obtnerUbiAll);
 api.post("/crearUbicacion",md_auteticacion.Auth,controladorUsuario.agregarUbicacion);
 
-
 module.exports = api;
