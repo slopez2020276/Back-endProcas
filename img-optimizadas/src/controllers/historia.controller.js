@@ -11,7 +11,7 @@ function crearHistoraDefult (){
             let histriaModel = new Historia()
             histriaModel.EncalceVideo = 'https://www.youtube.com/watch?v=f0hN3s9XvI0'
             histriaModel.DescripcionHistoria = 'Lorem, ipsum dolor sit amet '
-            histriaModel.imgPathPrincipal = 'imgsDefult/imgdefult.png'
+            histriaModel.imgPathPrincipal = 'imgsDefult/imgDefult.png'
             histriaModel.imgPathFondo = 'imgsDefult/textura-defult.png'
             histriaModel.save((err,noticia1Saved)=>{
             if(err){
@@ -51,7 +51,7 @@ function editarhistoria(req,res){
             return res.status(404).send({message:'error en la peticion 1'})
         }else if (historiaSinEditar){
           if(req.file){
-            if(historiaSinEditar.imgPathPrincipal === 'imgsDefult/imgdefult.png'){
+            if(historiaSinEditar.imgPathPrincipal === 'imgsDefult/imgDefult.png'){
                 console.log('con image y la ulr SI ES LA DEFULT')
                 let {EncalceVideo,DescripcionHistoria, } = parametros
                 Historia.findByIdAndUpdate(idHistoria,{EncalceVideo,DescripcionHistoria,imgPathPrincipal:req.file.path },{new:true},(err,historiaUpdated)=>{

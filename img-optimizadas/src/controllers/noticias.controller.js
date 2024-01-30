@@ -16,18 +16,18 @@ function crearNocitiasDefult (req,res){
             let noticia3 = new Noticas()
 
          noticia1.title = 'title noticia 1'
-         noticia1.imgPhat = 'imgsDefult/imgdefult.png'
+         noticia1.imgPhat = 'imgsDefult/imgDefult.png'
          noticia1.descripcion = 'descripcion 1'
          noticia1.tipo = 'principal'
 
 
          noticia2.title = 'title evento 2'
-         noticia2.imgPhat = 'imgsDefult/imgdefult.png'
+         noticia2.imgPhat = 'imgsDefult/imgDefult.png'
          noticia2.descripcion = 'descripcion 2'
          noticia2.tipo = 'principal'
          
          noticia3.title = 'title de la noticia 3'
-         noticia3.imgPhat = 'imgsDefult/imgdefult.png'
+         noticia3.imgPhat = 'imgsDefult/imgDefult.png'
          noticia3.descripcion = 'descripcion 3'
          noticia3.tipo = 'principal'
 
@@ -123,7 +123,7 @@ function editarNoticias(req,res){
             return res.status(404).send({message:'error en la peticion 1'})
         }else if (NoticiaSinEditar){
           if(req.file){
-            if(NoticiaSinEditar.imgPhat === 'imgsDefult/imgdefult.png'){
+            if(NoticiaSinEditar.imgPhat === 'imgsDefult/imgDefult.png'){
                 console.log('con image y la ulr SI ES LA DEFULT')
                 let {title,descripcion } = parametros
                 Noticas.findByIdAndUpdate(idNoticia,{title,descripcion,imgPhat:req.file.path },{new:true},(err,NoticiaUpdated)=>{
@@ -195,7 +195,7 @@ function eliminarNoticias(req,res){
         if(err){
             return res.status(404).send({message:'error en la petiocion'})
         }else{
-            if(noticiasFiend.imgPhat === 'imgsDefult/imgdefult.png'){
+            if(noticiasFiend.imgPhat === 'imgsDefult/imgDefult.png'){
 
 
                 Noticas.findByIdAndDelete(idNoticia,(err,NoticiasDeleted)=>{

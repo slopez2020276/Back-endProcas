@@ -187,7 +187,6 @@ function eliminarLineaTiempo(req,res){
                     }
                 })
 
-
             }else{
                 LineaTimepo.findByIdAndDelete(idLinea,(err,eliminarLinea)=>{
                     if(err){
