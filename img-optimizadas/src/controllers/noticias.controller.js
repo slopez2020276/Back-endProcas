@@ -195,31 +195,38 @@ function eliminarNoticias(req,res){
         if(err){
             return res.status(404).send({message:'error en la petiocion'})
         }else{
-            if(noticiasFiend.imgPhat === 'imgsDefult/imgDefult.png'){
+
+            if(noticiasFiend){
+                if(noticiasFiend.imgPhat === 'imgsDefult/imgDefult.png'){
 
 
-                Noticas.findByIdAndDelete(idNoticia,(err,NoticiasDeleted)=>{
-                    if(err){
-                        return res.status(200).send({message:'error en la peticion'})
-                    }else if(NoticiasDeleted){
-                     return res.status(200).send({message:'se elimino correctamente'})            
-                    }else{
-                        console.log(idNoticia)
-                        return res.status(200).send({message:'error al eliminar'})
-                    }
-                })
-            }else{
-                fs.unlink(path.resolve (noticiasFiend.imgPhat))
-                Noticas.findByIdAndDelete(idNoticia,(err,NoticiasDeleted)=>{
-                    if(err){
+                    Noticas.findByIdAndDelete(idNoticia,(err,NoticiasDeleted)=>{
+                        if(err){
                             return res.status(200).send({message:'error en la peticion'})
-                    }else if(NoticiasDeleted){
-                             return res.status(200).send({message:'se elimino correctamente'})
-                    }else{
-                        console.log(idNoticia)
-                        return res.status(200).send({message:'error al eliminar'})
-                    }
-                })
+                        }else if(NoticiasDeleted){
+                         return res.status(200).send({message:'se elimino correctamente'})            
+                        }else{
+                            console.log(idNoticia)
+                            return res.status(200).send({message:'error al eliminar'})
+                        }
+                    })                
+                    
+                }else{
+                    fs.unlink(path.resolve (noticiasFiend.imgPhat))
+                    Noticas.findByIdAndDelete(idNoticia,(err,NoticiasDeleted)=>{
+                        if(err){
+                            return res.status(200).send({message:'error en la peticion'})
+                        }else if(NoticiasDeleted){
+                            return res.status(200).send({message:'se elimino correctamente'})
+                        }else{
+                            console.log(idNoticia)
+                            return res.status(200).send({message:'error al eliminar'})
+                        }
+                    })
+                }
+            }else{
+
+                return res.status(200).send({message:'error al encontrar la noticias'})
             }
         }
 
