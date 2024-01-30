@@ -60,7 +60,7 @@ function agregarNoticias(req,res){
     noticiasmodel.title = parametros.title
     noticiasmodel.imgPhat = imgPatha
     noticiasmodel.descripcion = parametros.descripcion
-    noticiasmodel.tipo= parametros.tipo
+    noticiasmodel.tipo = parametros = 'principal'
 
     noticiasmodel.save((err, noticia) => {
         if (err) {
