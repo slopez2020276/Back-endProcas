@@ -19,19 +19,19 @@ function crearEventosLineaDeTiempoDefult() {
             let lineaTiempo3 = new LineaTimepo()
 
             lineaTiempo1.titleLineaTiempo = 'Titulo evento 1'
-            lineaTiempo1.ImgPathLineaTiempo = 'imgsDefult/imgdefult.png'
+            lineaTiempo1.ImgPathLineaTiempo = 'imgsDefult/imgDefult.png'
             lineaTiempo1.descriptionLineaTiempo = 'descripcion evento 1'
             lineaTiempo1.mostrarPor = 'anio'
 
 
             lineaTiempo2.titleLineaTiempo = 'Titulo evento 2'
-            lineaTiempo2.ImgPathLineaTiempo = 'imgsDefult/imgdefult.png'
+            lineaTiempo2.ImgPathLineaTiempo = 'imgsDefult/imgDefult.png'
             lineaTiempo2.descriptionLineaTiempo = 'descripcion evento 2'
             lineaTiempo2.mostrarPor = 'anioyMes'
 
 
             lineaTiempo3.titleLineaTiempo = 'Titulo evento 3'
-            lineaTiempo3.ImgPathLineaTiempo = 'imgsDefult/imgdefult.png'
+            lineaTiempo3.ImgPathLineaTiempo = 'imgsDefult/imgDefult.png'
             lineaTiempo3.descriptionLineaTiempo = 'descripcion evento 3'
             lineaTiempo3.mostrarPor = 'anioMesDia'
 
@@ -165,21 +165,52 @@ function editarLineaTiempo(req,res){
 }
 
 function eliminarLineaTiempo(req,res){
+
+    
     let idLinea = req.params.idLinea
     
-    LineaTimepo.findByIdAndDelete(idLinea,(err,eliminarLinea)=>{
+    LineaTimepo.findById(idLinea,(err,lineaFiend)=>{
         if(err){
-            return res.status(200).send({message:'error en la peticion'})
-        }else if(eliminarLinea){
-            fs.unlink(path.resolve (eliminarLinea.ImgPathLineaTiempo))
+            return res.status(404).send({message:'error en la peticion'})
+        }else if(lineaFiend){
 
-            
-            return res.status(200).send({message:'se elimino correctamente'})
-        }else{
-            console.log(idLinea)
-            return res.status(200).send({message:'error al eliminar'})
+            if(lineaFiend.ImgPathLineaTiempo === 'imgsDefult/imgDefult.png'){
+
+                LineaTimepo.findByIdAndDelete(idLinea,(err,eliminarLinea)=>{
+                    if(err){
+                        return res.status(200).send({message:'error en la peticion'})
+                    }else if(eliminarLinea){
+                        return res.status(200).send({message:'se elimino correctamente'})
+                    }else{
+                        console.log(idLinea)
+                        return res.status(200).send({message:'error al eliminar'})
+                    }
+                })
+
+
+            }else{
+                LineaTimepo.findByIdAndDelete(idLinea,(err,eliminarLinea)=>{
+                    if(err){
+                        return res.status(200).send({message:'error en la peticion'})
+                    }else if(eliminarLinea){
+                        fs.unlink(path.resolve (lineaFiend.ImgPathLineaTiempo))
+                        return res.status(200).send({message:'se elimino correctamente'})
+                    }else{
+                        console.log(idLinea)
+                        return res.status(200).send({message:'error al eliminar'})
+                    }
+                })
+            }
+
+           
+
+        }else{  
+            return res.status(404).send({message:'error no se encontro la linea de tiempo'})
+
         }
+
     })
+  
 }
 
 function obtenerLineaTiempoxId(req,res){

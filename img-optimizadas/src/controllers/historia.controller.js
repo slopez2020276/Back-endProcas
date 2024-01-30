@@ -106,7 +106,7 @@ function EditarFondo(req,res){
             return res.status(404).send({message:'error en la peticion 1'})
         }else if (historiaSinEditar){
           if(req.file){
-            if(historiaSinEditar.imgPathFondo === 'textura-defult/imgdefult.png'){
+            if(historiaSinEditar.imgPathFondo === 'imgsDefult/textura-defult.png'){
                 console.log('con image y la ulr SI ES LA DEFULT')
                 let {EncalceVideo,DescripcionHistoria, } = parametros
                 Historia.findByIdAndUpdate(idHistoria,{imgPathFondo:req.file.path },{new:true},(err,historiaUpdated)=>{
