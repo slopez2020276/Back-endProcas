@@ -109,6 +109,8 @@ function obtenerFechaFormateada(lineaTiempo) {
 
 function editarLineaTiempo(req,res){
 
+    
+
     let  idlinea = req.params.idLinea
     let parametros = req.body
     LineaTimepo.findById(idlinea,(err,lineaSinEditar)=>{
@@ -116,7 +118,7 @@ function editarLineaTiempo(req,res){
             return res.status(404).send({message:'error en la peticion 1'})
         }else if (lineaSinEditar){
           if(req.file){
-            if(lineaSinEditar.ImgPathLineaTiempo === 'imgsDefult/imgdefult.png'){
+            if(lineaSinEditar.ImgPathLineaTiempo === 'imgsDefult/imgDefult.png'){
                 console.log('con image y la ulr SI ES LA DEFULT')
                 let {titleLineaTiempo,descriptionLineaTiempo } = parametros
                 let   ImgPathLineaTiempo = req.file.path 

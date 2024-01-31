@@ -60,7 +60,7 @@ function agregarNoticias(req,res){
     noticiasmodel.title = parametros.title
     noticiasmodel.imgPhat = imgPatha
     noticiasmodel.descripcion = parametros.descripcion
-    noticiasmodel.tipo = parametros = 'principal'
+    noticiasmodel.tipo = parametros.tipo
 
     noticiasmodel.save((err, noticia) => {
         if (err) {
@@ -88,7 +88,7 @@ function obtenerNoticias(req,res){
 }
 
 function obtenerNoticiasPrincipalesYRestantes(req, res) {
-    const tipoPrincipal = 'principal';  // Ajusta esto según tu configuración
+    const tipoPrincipal = 'principal'; 
 
     // Consulta para obtener las 6 noticias principales
     const consultaPrincipales = Noticas.find({ tipo: tipoPrincipal })
