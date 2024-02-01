@@ -25,8 +25,6 @@ function crearUbidefult (){
             return console.log("se encontraron registros sobre los ubi ")
         }
     })
-
-
 }
 
 
@@ -41,6 +39,40 @@ function obtnerUbiAll(req,res){
         }
 
     })
+}
+
+function obtenerUbicacionProcas(req,res){
+
+    Ubicaciones.find({tipoTienda:'procasa'},(err,ubicaciaonesFiend)=>{
+
+        if(err){
+            return res.status(400).send({message:'error en la peticion'})
+        }else if(ubicaciaonesFiend){
+            return res.status(200).send({ubi:ubicaciaonesFiend})
+
+        }else{
+            return res.status(400).send({message:'No se encontraron Ubicaciones en Procasa'})
+        }
+    })
+
+
+
+}
+
+function ObtnerMeatHose(req,res){
+    Ubicaciones.find({tipoTienda:'meatHouse'},(err,ubicaciaonesFiend)=>{
+
+        if(err){
+            return res.status(400).send({message:'error en la peticion'})
+        }else if(ubicaciaonesFiend){
+            return res.status(200).send({ubi:ubicaciaonesFiend})
+
+        }else{
+            return res.status(400).send({message:'No se encontraron Ubicaciones en meatHouse'})
+        }
+    })
+
+
 }
 
 function editarubi(req,res){
@@ -78,13 +110,14 @@ function agregarUbicacion(req,res){
 
     let parametros = req.body
     let UbiModel = new Ubicaciones()
+    let imgPathRelative = req.file.path
 
     UbiModel.tipoTienda = parametros.tipoTienda
     UbiModel.nombreTienda = parametros.nombreTienda
     UbiModel.codenadasLng = parametros.codenadasLng
     UbiModel.codenadaslat = parametros.codenadaslat
     UbiModel.descripcion = parametros.descripcion
-    UbiModel.imgPath = 'imgpath'
+    UbiModel.imgPath = imgPathRelative
     UbiModel.save((err, ubiSaved) => {
         if (err) {
             return res.status(400).send({message:'error en la peticon'})
@@ -95,10 +128,25 @@ function agregarUbicacion(req,res){
         }
     })
 }
-function eliminarMision(req,res){
-    let idNotica = req.params.idNotica
+
+
+function ObtnerUbicacionxID(req, res){
+    let idUbicacion = req.params.idUbicacion
     
-    Ubicaciones.findByIdAndDelete(idNotica,(err,noticiaDeleted)=>{
+    Ubicaciones.findById(idUbicacion,(err,ubicaciaonesFiend)=>{
+        if(err){
+            return res.status(200).send({message:'error en la peticion'})
+        }else if(ubicaciaonesFiend){
+            return res.status(200).send({ubi:ubicaciaonesFiend})
+        }else{
+            return res.status(200).send({message:'error al obtener la ubcacion'})
+        }
+    })
+}
+function eliminarMision(req,res){
+    let idUbicacion = req.params.idUbicacion
+    
+    Ubicaciones.findByIdAndDelete(idUbicacion,(err,noticiaDeleted)=>{
         if(err){
             return res.status(200).send({message:'error en la peticion'})
         }else if(noticiaDeleted){
@@ -113,5 +161,8 @@ module.exports = {
     obtnerUbiAll,
     eliminarMision,
     obtenerMisionxID,
-    agregarUbicacion
+    agregarUbicacion,
+    ObtnerMeatHose,
+    obtenerUbicacionProcas,
+    ObtnerUbicacionxID
 }

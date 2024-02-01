@@ -157,6 +157,7 @@ function EditarUsuario(req, res) {
   var parametros = req.body;
 
   Usuario.findOne({ idUser: idUser }, (err, usuarioEncontrado) => {
+
     Usuario.findByIdAndUpdate(idUser,{$set: {email: parametros.email,},},{ new: true },
       (err, usuarioActualizado) => {
         if (err)
@@ -187,6 +188,21 @@ function EditarUsuario(req, res) {
   });
 }
 
+function editUser(req, res){
+  idUser = req.params.idUsers
+  parametros = req.body
+  Usuario.findByIdAndUpdate(idUser,parametros,(err,usuariosUpdated)=>{
+    if(err){
+      return res.status(404).send({message:'error en la peticion'})
+    }else if (usuariosUpdated){
+      return res.status(200).send({message:'usuario actualizado con exito'})
+    }else{
+      return res.status(400).send({message:'error al actualizar el usuario'})
+    }
+  })
+
+}
+
 
 
 function ObtenerUsuario(req, res) {
@@ -199,11 +215,11 @@ function ObtenerUsuarioId(req, res) {
   var idUsuario = req.params.idUsuario;
 
   Usuario.findById(idUsuario, (err, usuarioEncontrado) => {
-    if (err) return res.status(500).send({ mensaje: "Error en la peticion" });
+    if (err) return res.status(400).send({ mensaje: "Error en la peticion" });
     if (!usuarioEncontrado)
-      return res.status(500).send({ mensaje: "Error al obtener Usuario" });
+      return res.status(400).send({ mensaje: "Error al obtener Usuario" });
 
-    return res.status(200).send({ empresa: usuarioEncontrado });
+    return res.status(200).send({ User: usuarioEncontrado });
   });
 }
 
@@ -266,5 +282,6 @@ module.exports = {
   eliminarUsuario,
   crearGerente,
   ObtenerUsuarios,
-  ObterneruserLog
+  ObterneruserLog,
+  editUser
 };
