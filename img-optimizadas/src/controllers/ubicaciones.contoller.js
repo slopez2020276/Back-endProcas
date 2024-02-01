@@ -7,7 +7,7 @@ function crearUbidefult (){
             return console.log("error en la peticion 1")            
         }else if (ubicaciaonesFiend.length == 0){
             let UbiModel = new Ubicaciones()
-         UbiModel.tipoTienda = 'Tienda Pruea'
+         UbiModel.tipoTienda = 'procasa'
          UbiModel.nombreTienda = 'Tienda desde la base'
          UbiModel.codenadasLng = -90.528741
          UbiModel.codenadaslat = 14.603684
@@ -60,7 +60,7 @@ function obtenerUbicacionProcas(req,res){
 }
 
 function ObtnerMeatHose(req,res){
-    Ubicaciones.find({tipoTienda:'meatHouse'},(err,ubicaciaonesFiend)=>{
+    Ubicaciones.find({tipoTienda:'meathhouse'},(err,ubicaciaonesFiend)=>{
 
         if(err){
             return res.status(400).send({message:'error en la peticion'})
