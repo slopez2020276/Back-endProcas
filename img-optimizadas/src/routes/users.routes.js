@@ -8,7 +8,7 @@ api.post('/registrarUsuario', controladorUsuario.RegistrarUsuario);
 api.get("/obtenerUsuarios",controladorUsuario.ObtenerUsuarios);
 api.get("/obtenerUsuarioId/:idUsuario",controladorUsuario.ObtenerUsuarioId);
 api.post('/registrarUsuario/',controladorUsuario.RegistrarUsuario)
-api.put('/editarUsuario/:idUser' ,controladorUsuario.editUser);
+api.put('/editarUsuario/:idUsers' ,controladorUsuario.editUser);
 
 
 

@@ -10,6 +10,7 @@ api.get("/obtenerProcasa",ControllerUbicaion.obtenerUbicacionProcas);
 api.get("/obtenerUbiccacionxID/:idUbicacion",ControllerUbicaion.ObtnerUbicacionxID)
 api.post("/crearUbicacion",multer.single('imgPath'),md_auteticacion.Auth,ControllerUbicaion.agregarUbicacion);
 
+api.put("/editarUbicacion/:idUbicacion",multer.single('imgPath'),ControllerUbicaion.editarUbicaciones);
 
 
 module.exports = api;

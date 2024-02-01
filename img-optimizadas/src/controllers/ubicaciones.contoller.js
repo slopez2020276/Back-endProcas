@@ -1,4 +1,6 @@
 const Ubicaciones = require("../models/ubicaciaones.model")
+const fs = require('fs-extra')
+const path = require('path')
 
 
 function crearUbidefult (){
@@ -60,7 +62,7 @@ function obtenerUbicacionProcas(req,res){
 }
 
 function ObtnerMeatHose(req,res){
-    Ubicaciones.find({tipoTienda:'meathhouse'},(err,ubicaciaonesFiend)=>{
+    Ubicaciones.find({tipoTienda:'meathouse'},(err,ubicaciaonesFiend)=>{
 
         if(err){
             return res.status(400).send({message:'error en la peticion'})
@@ -72,6 +74,79 @@ function ObtnerMeatHose(req,res){
         }
     })
 
+
+}
+function editarUbicaciones(req,res){
+
+    
+    let  idUbicacion = req.params.idUbicacion
+    let parametros = req.body
+    Ubicaciones.findById(idUbicacion,(err,UbicacionSinEditar)=>{
+        if(err){
+            return res.status(404).send({message:'error en la peticion 1'})
+        }else if (UbicacionSinEditar){
+          if(req.file){
+            if(UbicacionSinEditar.imgPath === 'imgsDefult/imgDefult.png'){
+                console.log('con image y la ulr SI ES LA DEFULT')
+                let {nombre } = parametros
+                Ubicaciones.findByIdAndUpdate(idUbicacion,{
+                    
+                    nombreTienda:req.body.nombreTienda,
+                    codenadasLng:req.body.codenadasLng,
+                    codenadaslat:req.body.codenadaslat,
+                    tipoTienda:req.body.tipoTienda,
+                    descripcion:req.body.descripcion,
+                    imgPath:req.body.imgPath,
+                },{new:true},(err,NoticiaUpdated)=>{
+                    if(err){
+                        return res.status(200).send({messege:'error en la petion 2'})
+                    }else if (NoticiaUpdated){
+                        return res.status(200).send({lineaUpdated:NoticiaUpdated})
+                    }else{
+                        return res.status(200).send({message:'error al editar'})
+                    }
+                })
+            }else{
+                console.log('con imagen y la url de la imgen es NO ES LA DEFULT')
+                let {nombre } = parametros
+                fs.unlink(path.resolve (UbicacionSinEditar.imgPath))
+               
+                Ubicaciones.findByIdAndUpdate(idUbicacion,{
+                    nombreTienda:req.body.nombreTienda,
+                    codenadasLng:req.body.codenadasLng,
+                    codenadaslat:req.body.codenadaslat,
+                    tipoTienda:req.body.tipoTienda,
+                    descripcion:req.body.descripcion,
+                    imgPath:req.body.imgPath,
+                   },{new:true},(err,NoticiaUpdated)=>{
+                    if(err){
+                        return res.status(200).send({messege:'error en la petion 2'})
+                    }else if (NoticiaUpdated){
+                        
+                        return res.status(200).send({lineaUpdated:NoticiaUpdated})
+                    }else{
+                        return res.status(200).send({message:'error al editar'})
+            
+                    }
+                })
+            }
+          }else{
+            console.log('sin imagen')
+            Ubicaciones.findByIdAndUpdate(idUbicacion,parametros,{new:true},(err,NoticiaUpdated)=>{
+                if(err){
+                    return res.status(200).send({messege:'error en la petion'})
+                }else if (NoticiaUpdated){
+                    
+                    return res.status(200).send({lineaUpdated:NoticiaUpdated})
+                }else{
+                    return res.status(200).send({message:'error al editar'})
+                }
+            })
+          }
+        }else{
+            return res.status(404).send({message:'la linea de timepo no se encuentra registrada'})
+        }
+    })
 
 }
 
@@ -93,7 +168,7 @@ function editarubi(req,res){
 
 }
 function obtenerMisionxID(req,res){
-    let  idMision = req.params.idNoticia
+    let  idMision = req.params.idUbicacion
     Ubicaciones.findById(idMision,(err,MisionUpdated)=>{
         if(err){
             return res.status(200).send({messege:'error en la petion'})
@@ -164,5 +239,6 @@ module.exports = {
     agregarUbicacion,
     ObtnerMeatHose,
     obtenerUbicacionProcas,
-    ObtnerUbicacionxID
+    ObtnerUbicacionxID,
+    editarUbicaciones
 }
