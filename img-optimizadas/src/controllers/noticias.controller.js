@@ -75,42 +75,100 @@ function agregarNoticias(req,res){
 
 
 
-function obtenerNoticias(req,res){
-    let tipoPrincipal = 'principal'
-    Noticas.find({tipo:tipoPrincipal},(err,lineFiended)=>{
-        if(err){
-            return res.status(200).send({message:'error en la peticion'})
-        }else if(lineFiended){
-            return res.status(200).send({noticas:lineFiended})
-        }
+async function obtenerNoticias(req, res) {
+    const tipoPrincipal = 'principal';
 
-    }).sort({fecha:-1}).limit(6)
+    try {
+        // Consulta para obtener las noticias principales
+        const noticiasPrincipales = await Noticas.find({ tipo: tipoPrincipal })
+            .sort({ fecha: -1 })  // Ordenar por fecha de forma descendente
+            .limit(6);  // Limitar el número de resultados a 6
+
+        // Obtener la fecha actual
+        const fechaActual = new Date();
+
+        // Calcular la diferencia en tiempo para cada noticia principal
+        const noticiasPrincipalesConDiferencia = noticiasPrincipales.map((noticia) => {
+            const diferenciaEnMilisegundos = fechaActual - noticia.fecha;
+            let diferenciaTexto;
+
+            if (diferenciaEnMilisegundos >= 24 * 60 * 60 * 1000) {
+                const diferenciaEnDias = Math.floor(diferenciaEnMilisegundos / (24 * 60 * 60 * 1000));
+                diferenciaTexto = `${diferenciaEnDias} día${diferenciaEnDias !== 1 ? 's' : ''}`;
+            } else if (diferenciaEnMilisegundos >= 60 * 60 * 1000) {
+                const diferenciaEnHoras = Math.floor(diferenciaEnMilisegundos / (60 * 60 * 1000));
+                diferenciaTexto = `${diferenciaEnHoras} hora${diferenciaEnHoras !== 1 ? 's' : ''}`;
+            } else if (diferenciaEnMilisegundos >= 60 * 1000) {
+                const diferenciaEnMinutos = Math.floor(diferenciaEnMilisegundos / (60 * 1000));
+                diferenciaTexto = `${diferenciaEnMinutos} minuto${diferenciaEnMinutos !== 1 ? 's' : ''}`;
+            } else {
+                const diferenciaEnSegundos = Math.floor(diferenciaEnMilisegundos / 1000);
+                diferenciaTexto = `${diferenciaEnSegundos} segundo${diferenciaEnSegundos !== 1 ? 's' : ''}`;
+            }
+
+            return {
+                ...noticia._doc,  // Copiar propiedades existentes
+                diferenciaEnTexto: diferenciaTexto,
+            };
+        });
+
+        res.status(200).send({ noticias: noticiasPrincipalesConDiferencia });
+    } catch (error) {
+        console.error('Error en la petición:', error);
+        res.status(500).send({ message: 'Error en la petición' });
+    }
 }
 
-function obtenerNoticiasPrincipalesYRestantes(req, res) {
-    const tipoPrincipal = 'principal'; 
 
-    // Consulta para obtener las 6 noticias principales
-    const consultaPrincipales = Noticas.find({ tipo: tipoPrincipal })
-        .sort({ fecha: -1 })  // Ordenar por fecha de forma descendente
-        .limit(6);  // Limitar el número de resultados a 6
+async function obtenerNoticiasPrincipalesYRestantes(req, res) {
+    const tipoPrincipal = 'principal';
 
-    // Consulta para obtener las demás noticias (que no son principales)
-    const consultaRestantes = Noticas.find({ tipo: { $ne: tipoPrincipal } })
-        .sort({ fecha: -1 });  // Ordenar por fecha de forma descendente
+    try {
+        // Consulta para obtener las 6 noticias principales
+        const noticiasPrincipales = await Noticas.find({ tipo: tipoPrincipal })
+            .sort({ fecha: -1 })  // Ordenar por fecha de forma descendente
+            .limit(6);  // Limitar el número de resultados a 6
 
-    // Ejecutar ambas consultas de forma simultánea
-    Promise.all([consultaPrincipales, consultaRestantes])
-        .then(resultados => {
-            const [noticiasPrincipales, noticiasRestantes] = resultados;
-            const todasLasNoticias = noticiasPrincipales.concat(noticiasRestantes);
-            
-            return res.status(200).send({ noticias: todasLasNoticias });
-        })
-        .catch(err => {
-            console.error('Error en la petición:', err);
-            return res.status(500).send({ message: 'Error en la petición' });
+        // Consulta para obtener las demás noticias (que no son principales)
+        const noticiasRestantes = await Noticas.find({ tipo: { $ne: tipoPrincipal } })
+            .sort({ fecha: -1 });  // Ordenar por fecha de forma descendente
+
+        // Obtener la fecha actual
+        const fechaActual = new Date();
+
+        // Calcular la diferencia en tiempo para cada noticia principal
+        const noticiasPrincipalesConDiferencia = noticiasPrincipales.map((noticia) => {
+            const diferenciaEnMilisegundos = fechaActual - noticia.fecha;
+            let diferenciaTexto;
+
+            if (diferenciaEnMilisegundos >= 24 * 60 * 60 * 1000) {
+                const diferenciaEnDias = Math.floor(diferenciaEnMilisegundos / (24 * 60 * 60 * 1000));
+                diferenciaTexto = `${diferenciaEnDias} día${diferenciaEnDias !== 1 ? 's' : ''}`;
+            } else if (diferenciaEnMilisegundos >= 60 * 60 * 1000) {
+                const diferenciaEnHoras = Math.floor(diferenciaEnMilisegundos / (60 * 60 * 1000));
+                diferenciaTexto = `${diferenciaEnHoras} hora${diferenciaEnHoras !== 1 ? 's' : ''}`;
+            } else if (diferenciaEnMilisegundos >= 60 * 1000) {
+                const diferenciaEnMinutos = Math.floor(diferenciaEnMilisegundos / (60 * 1000));
+                diferenciaTexto = `${diferenciaEnMinutos} minuto${diferenciaEnMinutos !== 1 ? 's' : ''}`;
+            } else {
+                const diferenciaEnSegundos = Math.floor(diferenciaEnMilisegundos / 1000);
+                diferenciaTexto = `${diferenciaEnSegundos} segundo${diferenciaEnSegundos !== 1 ? 's' : ''}`;
+            }
+
+            return {
+                ...noticia._doc,  // Copiar propiedades existentes
+                diferenciaEnTexto: diferenciaTexto,
+            };
         });
+
+        // Combinar todas las noticias
+        const todasLasNoticias = noticiasPrincipalesConDiferencia.concat(noticiasRestantes);
+
+        res.status(200).send({ noticias: todasLasNoticias });
+    } catch (error) {
+        console.error('Error en la petición:', error);
+        res.status(500).send({ message: 'Error en la petición' });
+    }
 }
 
 function editarNoticias(req,res){
