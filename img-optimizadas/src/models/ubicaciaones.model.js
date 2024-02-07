@@ -3,11 +3,14 @@ const Schema = mongoose.Schema;
 
 const Ubicaciones = Schema({
   tipoTienda: String,
+  direccion: String,
+  telefono: String,
+  horario: String,
   nombreTienda: String,
-  codenadasLng: Number,
-  codenadaslat: Number,
   descripcion: String,
   imgPath:String,
+  enlaceMaps:String,
+  enlaceWaze:String,
 });
 
 module.exports = mongoose.model("Ubicaciones", Ubicaciones);

@@ -9,7 +9,7 @@ const usuarioController = require('./users.controller')
 const misionController = require('./misionValor.contoller')
 const valores = require('./valores.contoller')
 const ubicaciaones = require('./ubicaciones.contoller')
-
+const sharp = require('sharp')
 
 
 const Historia = require("../models/noticias.model")

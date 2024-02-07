@@ -234,38 +234,60 @@ function helperImg(filepath,filename,sizel = 300,sizeW){
     .toFile(`./optimize/${filename}`)
 }
 
-async function agregarLineaTiempo(req,res){
 
-    	    let parametros = req.body
-            let lineaTiempo1 = new LineaTimepo()
-            let ImgPathLine = req.file.filename
+async function agregarLineaTiempo(req, res) {
+  try {
+    let parametros = req.body;
+    let lineaTiempo1 = new LineaTimepo();
+    let ImgPathLine = req.file.filename;
 
-        
-            lineaTiempo1.titleLineaTiempo = req.body.titleLineaTiempo
-            lineaTiempo1.ImgPathLineaTiempo =`optimize\\medium-${ImgPathLine}`
-            
-            lineaTiempo1.descriptionLineaTiempo = req.body.descriptionLineaTiempo
-            lineaTiempo1.fecha = req.body.fecha
-            lineaTiempo1.mostrarPor = req.body.mostrarPor
-            console.log(req.body.fecha)
+    lineaTiempo1.titleLineaTiempo = req.body.titleLineaTiempo;
+    lineaTiempo1.ImgPathLineaTiempo = `optimize\\medium-${ImgPathLine}`;
 
-            await lineaTiempo1.save((err, noticia) => {
-                if (err) {
-                    return res.status(400).send({message:'error en la peticon'})
-                } else if (noticia) {
-                    helperImg(req.file.path,`micro-${req.file.filename}`,20,20)
-                    helperImg(req.file.path,`small-${req.file.filename}`,100,)
-                    helperImg(req.file.path,`medium-${req.file.filename}`,500)
-                    helperImg(req.file.path,`large-${req.file.filename}`,1000)
+    lineaTiempo1.descriptionLineaTiempo = req.body.descriptionLineaTiempo;
+    lineaTiempo1.fecha = req.body.fecha;
+    lineaTiempo1.mostrarPor = req.body.mostrarPor;
+    console.log(req.body.fecha);
 
-                    console.log(req.file)
-                    return res.status(200).send({noticia:noticia})
-                    
-                }else{
-                    return res.status(200).send({message:'error al crear la noticia'})
-                }
-            })
+    // Manipulación y redimensionamiento de la imagen antes de guardarla
+    const imagePath = req.file.path;
+    const targetWidth = 3000; // Puedes ajustar el tamaño deseado
+    const targetHeight = 3000; // Puedes ajustar el tamaño deseado
+
+    const metadata = await sharp(imagePath).metadata();
+    const currentWidth = metadata.width;
+    const currentHeight = metadata.height;
+
+    const leftPadding = Math.max(0, Math.floor((targetWidth - currentWidth) / 2));
+    const topPadding = Math.max(0, Math.floor((targetHeight - currentHeight) / 2));
+
+    const resizedImage = await sharp({
+      create: {
+        width: targetWidth,
+        height: targetHeight,
+        channels: 3,
+        background: { r: 255, g: 255, b: 255 } // Color de fondo
+      }
+    })
+    .composite([
+      {
+        input: imagePath,
+        top: topPadding,
+        left: leftPadding,
+      }
+    ])
+    .toFile(`optimize\\medium-${ImgPathLine}`);
+
+    await lineaTiempo1.save();
+
+    console.log(req.file);
+    return res.status(200).send({ noticia: lineaTiempo1 });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: 'Error al procesar la imagen o al crear la noticia' });
+  }
 }
+
 
 module.exports = {
     crearEventosLineaDeTiempoDefult,

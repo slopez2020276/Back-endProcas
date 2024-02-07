@@ -11,10 +11,14 @@ function crearUbidefult (){
             let UbiModel = new Ubicaciones()
          UbiModel.tipoTienda = 'procasa'
          UbiModel.nombreTienda = 'Tienda desde la base'
-         UbiModel.codenadasLng = -90.528741
-         UbiModel.codenadaslat = 14.603684
+         UbiModel.direccion = 'direccion defult'
+         UbiModel.telefono = 'telefono defult '
+         UbiModel.horario = 'horario defult'
          UbiModel.descripcion = 'descripcion desde la base'
          UbiModel.imgPath = 'imgpath'
+         UbiModel.enlaceMaps = '#'
+         UbiModel.enlaceWaze = '#'
+
          UbiModel.save((err,valorSaved)=>{
             if(err){
                 return console.log('error en la peticon 2')
@@ -68,13 +72,10 @@ function ObtnerMeatHose(req,res){
             return res.status(400).send({message:'error en la peticion'})
         }else if(ubicaciaonesFiend){
             return res.status(200).send({ubi:ubicaciaonesFiend})
-
         }else{
             return res.status(400).send({message:'No se encontraron Ubicaciones en meatHouse'})
         }
     })
-
-
 }
 function editarUbicaciones(req,res){
 
@@ -188,10 +189,13 @@ function agregarUbicacion(req,res){
     let imgPathRelative = req.file.path
 
     UbiModel.tipoTienda = parametros.tipoTienda
+    UbiModel.direccion = parametros.direccion
+    UbiModel.telefono = parametros.telefono
     UbiModel.nombreTienda = parametros.nombreTienda
-    UbiModel.codenadasLng = parametros.codenadasLng
-    UbiModel.codenadaslat = parametros.codenadaslat
     UbiModel.descripcion = parametros.descripcion
+    UbiModel.enlaceMaps = parametros.enlaceMaps
+    UbiModel.enlaceWaze = parametros.enlaceWaze
+    UbiModel.horario = parametros.horario
     UbiModel.imgPath = imgPathRelative
     UbiModel.save((err, ubiSaved) => {
         if (err) {

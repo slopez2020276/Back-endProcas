@@ -13,7 +13,7 @@ const historia = Schema({
   imgPathFondoLarge: String,
   imgPathFondoMedion:String,
   imgPathPrincipalSmall:String,
-
+  colorFondo: String,
 });
 
 
