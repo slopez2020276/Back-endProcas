@@ -10,9 +10,7 @@ const unetes = Schema({
     type: Date,
     default: Date.now
   },
-  funciones:[{
-   
-  }],
+  funciones:[String],
   educacion:String,
   experecia:String,
 
@@ -20,3 +18,5 @@ const unetes = Schema({
 });
 
 module.exports = mongoose.model("unetes", unetes);
+
+

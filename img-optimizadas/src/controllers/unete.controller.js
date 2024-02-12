@@ -41,7 +41,91 @@ function obtenerUnete(req,res){
 }
 
 
+function editarFunciones(req, res) {
+    let id = req.params.id;
+    const  nuevasFunciones  = req.body.funciones;
+  
+    Unete.findByIdAndUpdate(
+      id,
+      { $set: { funciones: nuevasFunciones } },
+      { new: true },
+      (err, uneteActualizado) => {
+        if (err) {
+          return res.status(400).send({ message: 'Error en la petición' });
+        } else if (uneteActualizado) {
+          return res.status(200).send({ unete: uneteActualizado });
+        } else {
+          return res.status(200).send({ message: 'Error al actualizar el unete' });
+        }
+      }
+    );
+  }
+
+
+  function agregarFuncionesAUnete(req, res) {
+    try {
+      const { id,  } = req.body;
+      nuevasFunciones =   req.body.funciones;
+  
+      // Verificar que nuevasFunciones sea un array válido
+      const funcionesArray = Array.isArray(nuevasFunciones) ? nuevasFunciones : [];
+  
+      // Encuentra el Unete por su ID y actualiza las funciones
+      Unete.findOneAndUpdate(
+        { _id: id },
+        { $push: { funciones: { $each: funcionesArray } } },
+        { new: true },
+        (err, uneteActualizado) => {
+          if (err) {
+            console.error('Error al agregar funciones al Unete:', err);
+            return res.status(500).send({ message: 'Error en el servidor' });
+          }
+  
+          if (!uneteActualizado) {
+            return res.status(404).send({ message: 'Unete no encontrado' });
+          }
+  
+          res.status(200).send({ unete: uneteActualizado });
+        }
+      );
+    } catch (error) {
+      console.error('Error al procesar la solicitud:', error);
+      res.status(400).send({ message: 'Error en la solicitud' });
+    }
+  }
+
+  function editarUnete(req, res) {
+    try {
+      const { id, nuevasPropiedades } = req.body;
+  
+      // Encuentra el Unete por su ID y actualiza las propiedades
+      Unete.findOneAndUpdate(
+        { _id: id },
+        { $set: nuevasPropiedades },
+        { new: true },
+        (err, uneteActualizado) => {
+          if (err) {
+            console.error('Error al editar el Unete:', err);
+            return res.status(500).send({ message: 'Error en el servidor' });
+          }
+  
+          if (!uneteActualizado) {
+            return res.status(404).send({ message: 'Unete no encontrado' });
+          }
+  
+          res.status(200).send({ unete: uneteActualizado });
+        }
+      );
+    } catch (error) {
+      console.error('Error al procesar la solicitud:', error);
+      res.status(400).send({ message: 'Error en la solicitud' });
+    }
+  }
+
 module.exports = {
     CrearEmpleo,
-    obtenerUnete    
+    obtenerUnete,
+    editarFunciones,   
+    agregarFuncionesAUnete,
+    editarUnete
 }
