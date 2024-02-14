@@ -9,6 +9,7 @@ const usuarioController = require('./users.controller')
 const misionController = require('./misionValor.contoller')
 const valores = require('./valores.contoller')
 const ubicaciaones = require('./ubicaciones.contoller')
+const unete = require('./unete.controller')
 const sharp = require('sharp')
 
 
@@ -98,6 +99,7 @@ function DefultFINAL(){
     misionController.crearMisionDefult()
     valores.crearValoresDefult()
     ubicaciaones.crearUbidefult()
+    unete.PlazaPorDefecto()
 
 }
 
