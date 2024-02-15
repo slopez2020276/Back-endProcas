@@ -189,17 +189,19 @@ function obtenerFuncionesxid(req, res) {
 
 
   function agregarFuncionesAUnete(req, res) {
+
+
     try {
       const { id,  } = req.params;
-      nuevasFunciones =   req.body.funciones;
+      nuevasFunciones =   req.body.funcion;
   
       // Verificar que nuevasFunciones sea un array válido
-      const funcionesArray = Array.isArray(nuevasFunciones) ? nuevasFunciones : [];
+    
   
       // Encuentra el Unete por su ID y actualiza las funciones
       Unete.findOneAndUpdate(
         { _id: id },
-        { $push: { funciones: { $each: funcionesArray } } },
+        { $push: { funciones:  nuevasFunciones  } },
         { new: true },
         (err, uneteActualizado) => {
           if (err) {
