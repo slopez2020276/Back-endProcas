@@ -13,6 +13,7 @@ const unetes = Schema({
   funciones:[String],
   educacion:String,
   experecia:String,
+  enlaceFormualario :String,
 
 
 });

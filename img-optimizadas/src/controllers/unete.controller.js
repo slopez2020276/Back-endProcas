@@ -16,6 +16,7 @@ function PlazaPorDefecto(){
       PlazaModel.funciones = ['Desarrollar software', 'Mantener software', 'Probar software']
       PlazaModel.educacion = 'Ingenieria en Sistemas'
       PlazaModel.experecia = '2 años'
+      PlazaModel.enlaceFormualario = 'https://forms.gle/kwy2Yp7ZrQ8QHCER6'
     
     
       PlazaModel.save((err,uneteGuardado)=>{
@@ -48,6 +49,7 @@ function CrearEmpleo (req,res){
     UneteModel.funciones = req.body.funciones
     UneteModel.educacion = req.body.educacion
     UneteModel.experecia = req.body.experecia
+    UneteModel.enlaceFormualario = req.body.enlaceFormualario
 
     UneteModel.save((err,uneteGuardado)=>{
         if(err){
@@ -185,6 +187,8 @@ function obtenerFuncionesxid(req, res) {
         }
     });
 }
+
+
 
 
 
