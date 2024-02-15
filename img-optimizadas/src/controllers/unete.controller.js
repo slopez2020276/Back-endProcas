@@ -17,6 +17,7 @@ function PlazaPorDefecto(){
       PlazaModel.educacion = 'Ingenieria en Sistemas'
       PlazaModel.experecia = '2 años'
       PlazaModel.enlaceFormualario = 'https://forms.gle/kwy2Yp7ZrQ8QHCER6'
+      PlazaModel.imgPath = 
     
     
       PlazaModel.save((err,uneteGuardado)=>{
@@ -306,6 +307,21 @@ function obtenerFuncionesxid(req, res) {
     })
   }
 
+function ObtenerPlazaxId(req,res){
+  let id = req.params.id
+
+  Unete.findById(id,(err,uneteFinded)=>{
+    if(err){
+      return res.status(404).send({message:'error en la peticion'})
+    }else if (uneteFinded){
+      return res.status(200).send({plaza:uneteFinded})
+    }else{
+      return res.status(400).send({message:'error al obtener el usuario'})
+    }
+  })
+
+}
+
 module.exports = {
     CrearEmpleo,
     obtenerUnete,
@@ -318,5 +334,6 @@ module.exports = {
     obtenerPlazas,
     editatFuncionesV2,
     eliminarFuncionV2,
-    obtenerFuncionesxid
+    obtenerFuncionesxid,
+    ObtenerPlazaxId
 }

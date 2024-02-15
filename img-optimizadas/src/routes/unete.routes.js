@@ -17,5 +17,8 @@ api.put('/eliminarFuncion/:id/:position',UneteContoller.eliminarFuncionV2)
 api.get('/obtenerFuncionesxid/:id',UneteContoller.obtenerFuncionesxid)
 
 
+api.get('/obtenerPlazaId/:id',UneteContoller.ObtenerPlazaxId);
+
+
 module.exports = api;
 
