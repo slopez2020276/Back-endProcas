@@ -30,6 +30,7 @@ async function CrearProductos(req, res) {
 async function CrearListaEnProducto(req, res) {
 
     let idProducto = req.params.idProducto;	
+    let nuevaLista = req.body.tituloLista
     try {
         const { tituloLista, descripcionItems } = req.body;
 
@@ -41,13 +42,10 @@ async function CrearListaEnProducto(req, res) {
         }
 
         // Crear una nueva lista con los items proporcionados
-        const nuevaLista = new Listas({
-            tituloLista,
-            listaItems: descripcionItems.map(descripcion => ({ descripcion }))
-        });
+      
 
         // Agregar la nueva lista al producto
-        producto.Lista.push(nuevaLista);
+        producto.Lista.push({tituloLista:nuevaLista});
 
         // Guardar los cambios en el producto
         await producto.save();
