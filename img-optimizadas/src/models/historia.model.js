@@ -14,6 +14,7 @@ const historia = Schema({
   imgPathFondoMedion:String,
   imgPathPrincipalSmall:String,
   colorFondo: String,
+  backgroundTipo :  Boolean,
 });
 
 

@@ -3,6 +3,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const path = require('path')
 const app = express();
+const fileUpload = require('express-fileupload');
 
 // IMPORTACION RUTAS
 const usuarioRoutes = require("./src/routes/users.routes");
