@@ -3,7 +3,6 @@ const cors = require("cors");
 const morgan = require("morgan");
 const path = require('path')
 const app = express();
-const fileUpload = require('express-fileupload');
 
 // IMPORTACION RUTAS
 const usuarioRoutes = require("./src/routes/users.routes");
@@ -18,6 +17,7 @@ const subs = require('./src/routes/susbribe.routes')
 const ubicaciones = require('./src/routes/ubicaciones.routes')
 const producto = require('./src/routes/productos.routes')
 const unete = require('./src/routes/unete.routes')
+const cloud = require('./src/routes/cloudinary.routes')
 
 // MIDDLEWARES
 app.use(express.urlencoded({ extended: false }));
@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(cors());
 
 // CARGA DE RUTAS localhost:3000/api/productos
-app.use("/api", usuarioRoutes,imgsROutes,mainPage, unete,producto ,lineaTiempo,historia,mision,noticas,valores,subs,ubicaciones);
+app.use("/api", usuarioRoutes,imgsROutes,mainPage, unete,producto ,lineaTiempo,historia,mision,noticas,valores,subs,ubicaciones,cloud);
 
 app.use('/uploads',express.static(path.resolve('uploads')));
 app.use('/imgsDefult',express.static(path.resolve('imgsDefult')));

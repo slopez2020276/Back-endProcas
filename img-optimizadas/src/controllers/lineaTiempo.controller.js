@@ -290,6 +290,21 @@ async function agregarLineaTiempo(req, res) {
 
 
 
+
+function trakaaa(){
+  let yery  
+  switch(yery){
+    case  yery ="traka":{
+      for (let index = 0; index < array.length; index++) {
+        const element = array[index];
+        
+      }
+    }
+  }
+}
+
+
+
 module.exports = {
     crearEventosLineaDeTiempoDefult,
     obtenerTiempo,
