@@ -151,13 +151,116 @@ function EditarFondo(req,res){
 
                                 const urlImagen = 'jwvlqzz6johnmhndtwy7';
 
-// Utiliza el método destroy para eliminar la imagen en Cloudinary
+                                // Utiliza el método destroy para eliminar la imagen en Cloudinary
                                 cloudinary.uploader.destroy(historiaSinEditar.idPulicFondo, (error, result) => {
                                  if (error) {
                                 console.error('Error al eliminar la imagen en Cloudinary:', error);
                                 } else {
                                 console.log('Imagen eliminada correctamente en Cloudinary:', result)
                                 return res.status(200).send({lineaUpdated:historiaUpdated});
+                                }
+                                });
+                             }else{
+                                return res.status(200).send({message:'error al editar'})
+                    
+                            }
+                        })
+
+                    }
+                
+                  
+                  })
+
+                console.log('con imagen y la url de la imgen es NO ES LA DEFULT')
+              
+            }
+          }else{
+            console.log('sin imagen verficar si en caso de tener color')
+
+            if(req.body.colorFondo){
+
+
+                Historia.findByIdAndUpdate(idHistoria,{colorFondo: req.body.colorFondo, backgroundTipo: false},{new:true},(err,historiaUpdated)=>{
+                    if(err){
+                        return res.status(200).send({messege:'error en la petion'})
+                    }else if (historiaUpdated){
+                        
+                        return res.status(200).send({lineaUpdated:historiaUpdated})
+                    }else{
+                        return res.status(200).send({message:'error al editar'})
+                    }
+                })
+            }else{
+                return res.status(200).send({messege:'error No envio ningun parametro para editar el fondo de la historia'})
+            }
+          
+          }
+        }else{
+
+
+            return res.status(404).send({message:'la linea de timepo no se encuentra registrada'})
+        }
+    })
+
+}
+
+function EditarPortada(req,res){
+
+    let  idHistoria = req.params.idHistoria
+    let parametros = req.body
+
+    Historia.findById(idHistoria,(err,historiaSinEditar)=>{
+        if(err){
+            return res.status(404).send({message:'error en la peticion 1'})
+        }else if (historiaSinEditar){
+
+
+
+
+
+          if(req.file){
+            if(historiaSinEditar.imgPathFondo === 'imgsDefult/textura-defult.png'){
+                console.log('con image y la ulr SI ES LA DEFULT')
+                let {EncalceVideo,DescripcionHistoria, } = parametros
+                Historia.findByIdAndUpdate(idHistoria,{imgPathPrincipal:req.file.path },{new:true},(err,historiaUpdated)=>{
+                    if(err){
+                        return res.status(200).send({messege:'error en la petion 2'})
+                    }else if (historiaUpdated){
+                        return res.status(200).send({lineaUpdated:historiaUpdated})
+                    }else{
+                        return res.status(200).send({message:'error al editar'})
+                    }
+                })
+
+
+
+
+            }else{
+
+                cloudinary.uploader.upload(req.file.path, function (err, result){
+                    if(err) {
+                      console.log(err);
+                      return res.status(500).json({
+                        success: false,
+                        message: "Error"
+                      })
+                    }else{
+                        let idPublic = result.public_id
+                        let {EncalceVideo,DescripcionHistoria, } = parametros
+                        Historia.findByIdAndUpdate(idHistoria,{imgPathPrincipal:result.url ,idPulicPortada: idPublic,backgroundTipo:true },{new:true},(err,historiaUpdated)=>{
+                            if(err){
+                                return res.status(200).send({messege:'error en la petion 2'})
+                            }else if (historiaUpdated){
+
+                                const urlImagen = 'jwvlqzz6johnmhndtwy7';
+
+                                // Utiliza el método destroy para eliminar la imagen en Cloudinary
+                                cloudinary.uploader.destroy(historiaSinEditar.imgPathFondo, (error, result) => {
+                                 if (error) {
+                                console.error('Error al eliminar la imagen en Cloudinary:', error);
+                                } else {
+                                console.log('Imagen eliminada correctamente en Cloudinary:', result)
+                                return res.status(200).send({Portada:historiaUpdated});
                                 }
                                 });
                              }else{
@@ -234,4 +337,5 @@ module.exports ={
     editarhistoria,
     createHistoria,
     EditarFondo,
+    EditarPortada
 }
