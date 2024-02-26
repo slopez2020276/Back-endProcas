@@ -15,6 +15,8 @@ function crearHistoraDefult (){
             histriaModel.imgPathFondo = 'imgsDefult/textura-defult.png'
             histriaModel.colorFondo = '#000000'
             histriaModel.backgroundTipo = true
+            histriaModel.idPulicFondo = 'jwvlqzz6johnmhndtwy7'
+            histriaModel.idPulicPortada = 'jwvlqzz6johnmhndtwy7'
             histriaModel.save((err,noticia1Saved)=>{
             if(err){
                 return console.log('error en la peticon 2')
@@ -140,34 +142,30 @@ function EditarFondo(req,res){
                         message: "Error"
                       })
                     }else{
+                        let idPublic = result.public_id
                         let {EncalceVideo,DescripcionHistoria, } = parametros
-                        Historia.findByIdAndUpdate(idHistoria,{imgPathFondo:result.url ,backgroundTipo:true },{new:true},(err,historiaUpdated)=>{
+                        Historia.findByIdAndUpdate(idHistoria,{imgPathFondo:result.url ,idPulicFondo: idPublic,backgroundTipo:true },{new:true},(err,historiaUpdated)=>{
                             if(err){
                                 return res.status(200).send({messege:'error en la petion 2'})
                             }else if (historiaUpdated){
-                                return res.status(200).send({lineaUpdated:historiaUpdated})
-                            }else{
+
+                                const urlImagen = 'jwvlqzz6johnmhndtwy7';
+
+// Utiliza el método destroy para eliminar la imagen en Cloudinary
+                                cloudinary.uploader.destroy(historiaSinEditar.idPulicFondo, (error, result) => {
+                                 if (error) {
+                                console.error('Error al eliminar la imagen en Cloudinary:', error);
+                                } else {
+                                console.log('Imagen eliminada correctamente en Cloudinary:', result)
+                                return res.status(200).send({lineaUpdated:historiaUpdated});
+                                }
+                                });
+                             }else{
                                 return res.status(200).send({message:'error al editar'})
                     
                             }
                         })
 
-                        cloudinary.uploader.destroy(historiaSinEditar.imgPathFondo, function(error, result) {
-                            if(error){
-                                console.log(err);
-                                return res.status(500).json({
-                                  success: false,
-                                  message: "Error"
-                                })
-                            }else{
-                                console.log(result)
-                                return res.status(500).json({
-                                    success: true,
-                                    message: "Uploaded!",
-                                  })
-
-                            }
-                        })
                     }
                 
                   

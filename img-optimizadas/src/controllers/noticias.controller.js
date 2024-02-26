@@ -65,10 +65,6 @@ function agregarNoticias(req,res){
     noticiasmodel.tipo = parametros.tipo
     
 
-
-
-
-
     cloudinary.uploader.upload(req.file.path, function (err, result){
         if(err) {
           console.log(err);

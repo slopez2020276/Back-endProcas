@@ -15,6 +15,8 @@ const historia = Schema({
   imgPathPrincipalSmall:String,
   colorFondo: String,
   backgroundTipo :  Boolean,
+  idPulicFondo: String,
+  idPulicPortada: String,
 });
 
 
