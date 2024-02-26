@@ -62,6 +62,7 @@ function agregarNoticias(req,res){
     noticiasmodel.title = parametros.title
     noticiasmodel.imgPhat = imgPatha
     noticiasmodel.descripcion = parametros.descripcion
+    noticiasmodel.tipo = parametros.tipo
     
 
 
@@ -83,9 +84,6 @@ function agregarNoticias(req,res){
             if (err) {
                 return res.status(400).send({message:'error en la peticon'})
             } else if (noticia) {
-    
-    
-    
                 return res.status(200).send({noticia:noticia})
             }else{
                 return res.status(200).send({message:'error al crear la noticia'})
