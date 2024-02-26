@@ -1,6 +1,8 @@
 const Noticas = require("../models/noticias.model")
 const path = require('path')
 const fs = require('fs-extra')
+const cloudinary = require("../../libs/cloudinary");
+
 
 
 function crearNocitiasDefult (req,res){
@@ -60,17 +62,43 @@ function agregarNoticias(req,res){
     noticiasmodel.title = parametros.title
     noticiasmodel.imgPhat = imgPatha
     noticiasmodel.descripcion = parametros.descripcion
-    noticiasmodel.tipo = parametros.tipo
+    
 
-    noticiasmodel.save((err, noticia) => {
-        if (err) {
-            return res.status(400).send({message:'error en la peticon'})
-        } else if (noticia) {
-            return res.status(200).send({noticia:noticia})
-        }else{
-            return res.status(200).send({message:'error al crear la noticia'})
+
+
+
+
+    cloudinary.uploader.upload(req.file.path, function (err, result){
+        if(err) {
+          console.log(err);
+          return res.status(500).json({
+            success: false,
+            message: "Error"
+          })
         }
-    })
+        else{
+         
+        noticiasmodel.imgPhat = result.url
+        noticiasmodel.save((err, noticia) => {
+            if (err) {
+                return res.status(400).send({message:'error en la peticon'})
+            } else if (noticia) {
+    
+    
+    
+                return res.status(200).send({noticia:noticia})
+            }else{
+                return res.status(200).send({message:'error al crear la noticia'})
+            }
+        })
+        }
+      
+       
+      })
+      
+
+
+  
 }
 
 
