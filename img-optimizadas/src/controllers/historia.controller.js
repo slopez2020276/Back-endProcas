@@ -1,7 +1,7 @@
 const Historia = require('../models/historia.model')
 const path = require('path')
 const fs = require('fs-extra')
-
+const cloudinary = require("../../libs/cloudinary");
 
 function crearHistoraDefult (){
     Historia.find((err,HistoriaFiended)=>{
@@ -126,20 +126,55 @@ function EditarFondo(req,res){
                         return res.status(200).send({message:'error al editar'})
                     }
                 })
+
+
+
+
             }else{
-                console.log('con imagen y la url de la imgen es NO ES LA DEFULT')
-                fs.unlink(path.resolve (historiaSinEditar.imgPathFondo))
-                let {EncalceVideo,DescripcionHistoria, } = parametros
-                Historia.findByIdAndUpdate(idHistoria,{imgPathFondo:req.file.path ,backgroundTipo:true },{new:true},(err,historiaUpdated)=>{
-                    if(err){
-                        return res.status(200).send({messege:'error en la petion 2'})
-                    }else if (historiaUpdated){
-                        return res.status(200).send({lineaUpdated:historiaUpdated})
+
+                cloudinary.uploader.upload(req.file.path, function (err, result){
+                    if(err) {
+                      console.log(err);
+                      return res.status(500).json({
+                        success: false,
+                        message: "Error"
+                      })
                     }else{
-                        return res.status(200).send({message:'error al editar'})
-            
+                        let {EncalceVideo,DescripcionHistoria, } = parametros
+                        Historia.findByIdAndUpdate(idHistoria,{imgPathFondo:result.url ,backgroundTipo:true },{new:true},(err,historiaUpdated)=>{
+                            if(err){
+                                return res.status(200).send({messege:'error en la petion 2'})
+                            }else if (historiaUpdated){
+                                return res.status(200).send({lineaUpdated:historiaUpdated})
+                            }else{
+                                return res.status(200).send({message:'error al editar'})
+                    
+                            }
+                        })
+
+                        cloudinary.uploader.destroy(historiaSinEditar.imgPathFondo, function(error, result) {
+                            if(error){
+                                console.log(err);
+                                return res.status(500).json({
+                                  success: false,
+                                  message: "Error"
+                                })
+                            }else{
+                                console.log(result)
+                                return res.status(500).json({
+                                    success: true,
+                                    message: "Uploaded!",
+                                  })
+
+                            }
+                        })
                     }
-                })
+                
+                  
+                  })
+
+                console.log('con imagen y la url de la imgen es NO ES LA DEFULT')
+              
             }
           }else{
             console.log('sin imagen verficar si en caso de tener color')

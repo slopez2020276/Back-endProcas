@@ -90,13 +90,7 @@ function agregarNoticias(req,res){
             }
         })
         }
-      
-       
       })
-      
-
-
-  
 }
 
 
