@@ -1,6 +1,5 @@
 const Noticas = require("../models/noticias.model")
 const path = require('path')
-const fs = require('fs-extra')
 const cloudinary = require("../../libs/cloudinary");
 
 
@@ -76,6 +75,7 @@ function agregarNoticias(req,res){
         else{
          
         noticiasmodel.imgPhat = result.url
+        noticiasmodel.idPulic = result.public_id
         noticiasmodel.save((err, noticia) => {
             if (err) {
                 return res.status(400).send({message:'error en la peticon'})
@@ -212,19 +212,44 @@ function editarNoticias(req,res){
             }else{
                 console.log('con imagen y la url de la imgen es NO ES LA DEFULT')
                 
-                fs.unlink(path.resolve (NoticiaSinEditar.imgPhat))
-                let {title,descripcion } = parametros
-                Noticas.findByIdAndUpdate(idNoticia,{title,descripcion,imgPhat:req.file.path },{new:true},(err,NoticiaUpdated)=>{
-                    if(err){
-                        return res.status(200).send({messege:'error en la petion 2'})
-                    }else if (NoticiaUpdated){
-                        
-                        return res.status(200).send({lineaUpdated:NoticiaUpdated})
+
+                cloudinary.uploader.upload(req.file.path, function (err, result){
+                    if(err) {
+                      console.log(err);
+                      return res.status(500).json({
+                        success: false,
+                        message: "Error"
+                      })
                     }else{
-                        return res.status(200).send({message:'error al editar'})
-            
+                        let idPublic = result.public_id
+                        let {EncalceVideo,DescripcionHistoria, } = parametros
+                        Noticas.findByIdAndUpdate(idNoticia,{imgPhat:result.url ,idPulic: idPublic,
+                            tipo:req.body.tipo,title:req.body.title,
+                            descripcion:req.body.descripcion},{new:true},(err,historiaUpdated)=>{
+                            if(err){
+                                return res.status(200).send({messege:'error en la petion 2'})
+                            }else if (historiaUpdated){
+    
+                                const urlImagen = 'jwvlqzz6johnmhndtwy7';
+    
+                                // Utiliza el método destroy para eliminar la imagen en Cloudinary
+                                cloudinary.uploader.destroy(NoticiaSinEditar.idPulic, (error, result) => {
+                                 if (error) {
+                                console.error('Error al eliminar la imagen en Cloudinary:', error);
+                                } else {
+                                console.log('Imagen eliminada correctamente en Cloudinary:', result)
+                                return res.status(200).send({lineaUpdated:historiaUpdated});
+                                }
+                                });
+                             }else{
+                                return res.status(200).send({message:'error al editar'})
+                    
+                            }
+                        })
                     }
-                })
+                  })
+
+                
             }
           }else{
             console.log('sin imagen')
@@ -278,20 +303,34 @@ function eliminarNoticias(req,res){
                         if(err){
                             return res.status(200).send({message:'error en la peticion'})
                         }else if(NoticiasDeleted){
-                         return res.status(200).send({message:'se elimino correctamente'})            
-                        }else{
+
+                            cloudinary.uploader.destroy(noticiasFiend.idPulic, (error, result) => {
+                                if (error) {
+                               console.error('Error al eliminar la imagen en Cloudinary:', error);
+                               } else {
+                               console.log('Imagen eliminada correctamente en Cloudinary:', result)
+                               return res.status(200).send({lineaUpdated:historiaUpdated});
+                               }
+                               });                        }else{
                             console.log(idNoticia)
                             return res.status(200).send({message:'error al eliminar'})
                         }
                     })                
                     
                 }else{
-                    fs.unlink(path.resolve (noticiasFiend.imgPhat))
+                    
                     Noticas.findByIdAndDelete(idNoticia,(err,NoticiasDeleted)=>{
                         if(err){
                             return res.status(200).send({message:'error en la peticion'})
                         }else if(NoticiasDeleted){
-                            return res.status(200).send({message:'se elimino correctamente'})
+                            cloudinary.uploader.destroy(noticiasFiend.idPulic, (error, result) => {
+                                if (error) {
+                               console.error('Error al eliminar la imagen en Cloudinary:', error);
+                               } else {
+                               console.log('Imagen eliminada correctamente en Cloudinary:', result)
+                               return res.status(200).send({lineaUpdated:NoticiasDeleted});
+                               }
+                               });     
                         }else{
                             console.log(idNoticia)
                             return res.status(200).send({message:'error al eliminar'})

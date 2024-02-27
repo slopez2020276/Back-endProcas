@@ -10,7 +10,8 @@ const noticiaSchema = Schema({
   fecha: {
     type: Date,
     default: Date.now
-  }
+  },
+  idPulic:String
 });
 
 module.exports = mongoose.model("noticias", noticiaSchema);
