@@ -17,6 +17,7 @@ const categoriaSchema = new Schema({
 const productosSchema = new Schema({
   nombreProducto: String,
   imgPath: String,
+  idPublic: String,
   categorias: [categoriaSchema]
 });
 

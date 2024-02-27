@@ -16,6 +16,11 @@ api.post('/agregarItemsACategoria/:idProducto/:nombreCategoria',ProductosControl
 api.put('/editarItemsACategoria/:idProducto/:nombreCategoria/:nombreItemExistente',ProductosController.editarItemEnCategoria);
 api.put('/editarCategoria/:idProducto/:nombreCategoriaExistente',ProductosController.editarCategoria);
 api.get('/ObtenerProductos',ProductosController.ObtenerProductos);
+api.delete('/eliminarProducto/:idProducto',ProductosController.EliminarProductos);
+api.delete('/eliminarCategoria/:idProducto/:nombreCategoria',ProductosController.EliminarCategoriaEnProducto);
+api.delete('/eliminarProducto/:idProducto',ProductosController.EliminarProductos);
+api.delete('/eliminarItemCategoria/:idProducto/:idCategoria/:idItem',ProductosController.EliminarItemEnCategoria);
+api.put('/editarProducto/:idProducto',multer.single('imgPath'),ProductosController.editarProductos);
 module.exports = api;
 
 

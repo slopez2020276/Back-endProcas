@@ -1,6 +1,5 @@
 const Historia = require('../models/historia.model')
 const path = require('path')
-const fs = require('fs-extra')
 const cloudinary = require("../../libs/cloudinary");
 
 function crearHistoraDefult (){
