@@ -2,7 +2,6 @@ const express = require('express');
 const imgpruebaController = require('../controllers/imgs.controller');
 const multer = require('multer')
 const api = express.Router();
-const fs = require('node:fs')
 const upload = multer({dest: 'new/'})
 
 

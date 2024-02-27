@@ -11,6 +11,7 @@ const Ubicaciones = Schema({
   imgPath:String,
   enlaceMaps:String,
   enlaceWaze:String,
+  idPublic:String,
 });
 
 module.exports = mongoose.model("Ubicaciones", Ubicaciones);
