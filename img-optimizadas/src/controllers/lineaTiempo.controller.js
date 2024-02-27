@@ -3,9 +3,7 @@ const LineaTimepo = require('../models/lineaTiempo.model')
 const Historia = require('../models/historia.model')
 const { param } = require('../routes/img.routes')
 const path = require('path')
-const fs = require('fs-extra')
-const sharp = require('sharp')
-
+const cloudinary = require("../../libs/cloudinary");
 function crearEventosLineaDeTiempoDefult() {
 
 
@@ -22,7 +20,7 @@ function crearEventosLineaDeTiempoDefult() {
             lineaTiempo1.ImgPathLineaTiempo = 'imgsDefult/imgDefult.png'
             lineaTiempo1.descriptionLineaTiempo = 'descripcion evento 1'
             lineaTiempo1.mostrarPor = 'anio'
-
+          
 
             lineaTiempo2.titleLineaTiempo = 'Titulo evento 2'
             lineaTiempo2.ImgPathLineaTiempo = 'imgsDefult/imgDefult.png'
@@ -132,20 +130,42 @@ function editarLineaTiempo(req,res){
                     }
                 })
             }else{
-                console.log('con imagen y la url de la imgen es NO ES LA DEFULT')
-                fs.unlink(path.resolve (lineaSinEditar.ImgPathLineaTiempo))
-                let {titleLineaTiempo,descriptionLineaTiempo } = parametros
-                LineaTimepo.findByIdAndUpdate(idlinea,{titleLineaTiempo,descriptionLineaTiempo,ImgPathLineaTiempo:req.file.path },{new:true},(err,lienaUpdeted)=>{
-                    if(err){
-                        return res.status(200).send({messege:'error en la petion 2'})
-                    }else if (lienaUpdeted){
-                        
-                        return res.status(200).send({lineaUpdated:lienaUpdeted})
-                    }else{
-                        return res.status(200).send({message:'error al editar'})
-            
-                    }
-                })
+
+              cloudinary.uploader.upload(req.file.path, function (err, result){
+                if(err) {
+                  console.log(err);
+                  return res.status(500).json({
+                    success: false,
+                    message: "Error"
+                  })
+                }else{
+                    let idPublic = result.public_id
+                    let {EncalceVideo,DescripcionHistoria, } = parametros
+                    LineaTimepo.findByIdAndUpdate(idlinea,{ImgPathLineaTiempo:result.url ,idPublic: idPublic,
+                      descriptionLineaTiempo:req.body.descriptionLineaTiempo,mostrarPor:req.body.mostrarPor,
+                      titleLineaTiempo:req.body.titleLineaTiempo},{new:true},(err,historiaUpdated)=>{
+                        if(err){
+                            return res.status(200).send({messege:'error en la petion 2'})
+                        }else if (historiaUpdated){
+
+                            const urlImagen = 'jwvlqzz6johnmhndtwy7';
+
+                            // Utiliza el método destroy para eliminar la imagen en Cloudinary
+                            cloudinary.uploader.destroy(lineaSinEditar.idPublic, (error, result) => {
+                             if (error) {
+                            console.error('Error al eliminar la imagen en Cloudinary:', error);
+                            } else {
+                            console.log('Imagen eliminada correctamente en Cloudinary:', result)
+                            return res.status(200).send({lineaUpdated:historiaUpdated});
+                            }
+                            });
+                         }else{
+                            return res.status(200).send({message:'error al editar'})
+                
+                        }
+                    })
+                }
+              })
             }
           }else{
             console.log('sin imagen')
@@ -190,17 +210,26 @@ function eliminarLineaTiempo(req,res){
                 })
 
             }else{
-                LineaTimepo.findByIdAndDelete(idLinea,(err,eliminarLinea)=>{
-                    if(err){
-                        return res.status(200).send({message:'error en la peticion'})
-                    }else if(eliminarLinea){
-                        fs.unlink(path.resolve (lineaFiend.ImgPathLineaTiempo))
-                        return res.status(200).send({message:'se elimino correctamente'})
-                    }else{
-                        console.log(idLinea)
-                        return res.status(200).send({message:'error al eliminar'})
-                    }
-                })
+
+              cloudinary.uploader.destroy(lineaFiend.idPublic, (error, result) => {
+                if (error) {
+               console.error('Error al eliminar la imagen en Cloudinary:', error);
+               } else {
+               console.log('Imagen eliminada correctamente en Cloudinary:', result)
+               LineaTimepo.findByIdAndDelete(idLinea,(err,eliminarLinea)=>{
+                if(err){
+                    return res.status(200).send({message:'error en la peticion'})
+                }else if(eliminarLinea){
+                    return res.status(200).send({message:'se elimino correctamente'})
+                }else{
+                    console.log(idLinea)
+                    return res.status(200).send({message:'error al eliminar'})
+                }
+            })
+               }
+               });
+
+             
             }
 
            
@@ -242,46 +271,36 @@ async function agregarLineaTiempo(req, res) {
     let ImgPathLine = req.file.filename;
 
     lineaTiempo1.titleLineaTiempo = req.body.titleLineaTiempo;
-    lineaTiempo1.ImgPathLineaTiempo = `optimize\\medium-${ImgPathLine}`;
 
     lineaTiempo1.descriptionLineaTiempo = req.body.descriptionLineaTiempo;
     lineaTiempo1.fecha = req.body.fecha;
     lineaTiempo1.mostrarPor = req.body.mostrarPor;
-    console.log(req.body.fecha);
 
-    // Manipulación y redimensionamiento de la imagen antes de guardarla
-    const imagePath = req.file.path;
-    const targetWidth = 3000; // Puedes ajustar el tamaño deseado
-    const targetHeight = 3000; // Puedes ajustar el tamaño deseado
-
-    const metadata = await sharp(imagePath).metadata();
-    const currentWidth = metadata.width;
-    const currentHeight = metadata.height;
-
-    const leftPadding = Math.max(0, Math.floor((targetWidth - currentWidth) / 2));
-    const topPadding = Math.max(0, Math.floor((targetHeight - currentHeight) / 2));
-
-    const resizedImage = await sharp({
-      create: {
-        width: targetWidth,
-        height: targetHeight,
-        channels: 3,
-        background: { r: 255, g: 255, b: 255 } // Color de fondo
+  
+    cloudinary.uploader.upload(req.file.path, function (err, result){
+      if(err) {
+        console.log(err);
+        return res.status(500).json({
+          success: false,
+          message: "Error"
+        })
+      }
+      else{
+       
+      lineaTiempo1.ImgPathLineaTiempo = result.url
+      lineaTiempo1.idPublic = result.public_id
+      lineaTiempo1.save((err, noticia) => {
+          if (err) {
+              return res.status(400).send({message:'error en la peticon'})
+          } else if (noticia) {
+              return res.status(200).send({noticia:noticia})
+          }else{
+              return res.status(200).send({message:'error al crear la noticia'})
+          }
+      })
       }
     })
-    .composite([
-      {
-        input: imagePath,
-        top: topPadding,
-        left: leftPadding,
-      }
-    ])
-    .toFile(`optimize\\medium-${ImgPathLine}`);
 
-    await lineaTiempo1.save();
-
-    console.log(req.file);
-    return res.status(200).send({ noticia: lineaTiempo1 });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: 'Error al procesar la imagen o al crear la noticia' });
@@ -290,18 +309,6 @@ async function agregarLineaTiempo(req, res) {
 
 
 
-
-function trakaaa(){
-  let yery  
-  switch(yery){
-    case  yery ="traka":{
-      for (let index = 0; index < array.length; index++) {
-        const element = array[index];
-        
-      }
-    }
-  }
-}
 
 
 

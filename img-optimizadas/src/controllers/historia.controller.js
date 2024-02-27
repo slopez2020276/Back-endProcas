@@ -105,16 +105,10 @@ function EditarFondo(req,res){
 
     let  idHistoria = req.params.idHistoria
     let parametros = req.body
-
     Historia.findById(idHistoria,(err,historiaSinEditar)=>{
         if(err){
             return res.status(404).send({message:'error en la peticion 1'})
         }else if (historiaSinEditar){
-
-
-
-
-
           if(req.file){
             if(historiaSinEditar.imgPathFondo === 'imgsDefult/textura-defult.png'){
                 console.log('con image y la ulr SI ES LA DEFULT')
@@ -128,10 +122,6 @@ function EditarFondo(req,res){
                         return res.status(200).send({message:'error al editar'})
                     }
                 })
-
-
-
-
             }else{
 
                 cloudinary.uploader.upload(req.file.path, function (err, result){
@@ -165,21 +155,15 @@ function EditarFondo(req,res){
                     
                             }
                         })
-
                     }
-                
-                  
                   })
 
                 console.log('con imagen y la url de la imgen es NO ES LA DEFULT')
-              
             }
           }else{
             console.log('sin imagen verficar si en caso de tener color')
 
             if(req.body.colorFondo){
-
-
                 Historia.findByIdAndUpdate(idHistoria,{colorFondo: req.body.colorFondo, backgroundTipo: false},{new:true},(err,historiaUpdated)=>{
                     if(err){
                         return res.status(200).send({messege:'error en la petion'})
@@ -193,31 +177,20 @@ function EditarFondo(req,res){
             }else{
                 return res.status(200).send({messege:'error No envio ningun parametro para editar el fondo de la historia'})
             }
-          
           }
         }else{
-
-
             return res.status(404).send({message:'la linea de timepo no se encuentra registrada'})
         }
     })
-
 }
 
 function EditarPortada(req,res){
-
     let  idHistoria = req.params.idHistoria
     let parametros = req.body
-
     Historia.findById(idHistoria,(err,historiaSinEditar)=>{
         if(err){
             return res.status(404).send({message:'error en la peticion 1'})
         }else if (historiaSinEditar){
-
-
-
-
-
           if(req.file){
             if(historiaSinEditar.imgPathFondo === 'imgsDefult/textura-defult.png'){
                 console.log('con image y la ulr SI ES LA DEFULT')
@@ -231,10 +204,6 @@ function EditarPortada(req,res){
                         return res.status(200).send({message:'error al editar'})
                     }
                 })
-
-
-
-
             }else{
 
                 cloudinary.uploader.upload(req.file.path, function (err, result){

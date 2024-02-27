@@ -10,7 +10,8 @@ const lineaTiempo = Schema({
   fecha: {
     type: Date,
     default: Date.now
-  }
+  },
+  idPublic:String
 });
 
 module.exports = mongoose.model("lineaTiempo", lineaTiempo);
