@@ -1,6 +1,6 @@
 const Ubicaciones = require("../models/ubicaciaones.model")
-const fs = require('fs-extra')
 const path = require('path')
+const cloudinary = require("../../libs/cloudinary");
 
 
 function crearUbidefult (){
@@ -93,8 +93,7 @@ function editarUbicaciones(req,res){
                 Ubicaciones.findByIdAndUpdate(idUbicacion,{
                     
                     nombreTienda:req.body.nombreTienda,
-                    codenadasLng:req.body.codenadasLng,
-                    codenadaslat:req.body.codenadaslat,
+                  
                     tipoTienda:req.body.tipoTienda,
                     descripcion:req.body.descripcion,
                     imgPath:req.body.imgPath,
@@ -110,26 +109,48 @@ function editarUbicaciones(req,res){
             }else{
                 console.log('con imagen y la url de la imgen es NO ES LA DEFULT')
                 let {nombre } = parametros
-                fs.unlink(path.resolve (UbicacionSinEditar.imgPath))
-               
-                Ubicaciones.findByIdAndUpdate(idUbicacion,{
-                    nombreTienda:req.body.nombreTienda,
-                    codenadasLng:req.body.codenadasLng,
-                    codenadaslat:req.body.codenadaslat,
-                    tipoTienda:req.body.tipoTienda,
-                    descripcion:req.body.descripcion,
-                    imgPath:req.body.imgPath,
-                   },{new:true},(err,NoticiaUpdated)=>{
-                    if(err){
-                        return res.status(200).send({messege:'error en la petion 2'})
-                    }else if (NoticiaUpdated){
-                        
-                        return res.status(200).send({lineaUpdated:NoticiaUpdated})
+                cloudinary.uploader.upload(req.file.path, function (err, result){
+                    if(err) {
+                      console.log(err);
+                      return res.status(500).json({
+                        success: false,
+                        message: "Error"
+                      })
                     }else{
-                        return res.status(200).send({message:'error al editar'})
-            
+                        let idPublic = result.public_id
+                        let {EncalceVideo,DescripcionHistoria, } = parametros
+                        Ubicaciones.findByIdAndUpdate(idUbicacion,{imgPath:result.url ,idPublic: idPublic,
+                           direccion:req.body.direccion,
+                            telefono:req.body.telefono,
+                            enlaceMaps:req.body.enlaceMaps,
+                            enlaceWaze:req.body.enlaceWaze,
+                            horario:req.body.horario,
+                            nombreTienda:req.body.nombreTienda,
+                            tipoTienda:req.body.tipoTienda,
+                            descripcion:req.body.descripcion,
+                        },{new:true},(err,historiaUpdated)=>{
+                            if(err){
+                                return res.status(200).send({messege:'error en la petion 2'})
+                            }else if (historiaUpdated){
+    
+                                const urlImagen = 'jwvlqzz6johnmhndtwy7';
+    
+                                // Utiliza el método destroy para eliminar la imagen en Cloudinary
+                                cloudinary.uploader.destroy(UbicacionSinEditar.idPublic, (error, result) => {
+                                 if (error) {
+                                console.error('Error al eliminar la imagen en Cloudinary:', error);
+                                } else {
+                                console.log('Imagen eliminada correctamente en Cloudinary:', result)
+                                return res.status(200).send({Ubicacion:historiaUpdated});
+                                }
+                                });
+                             }else{
+                                return res.status(200).send({message:'error al editar'})
+                    
+                            }
+                        })
                     }
-                })
+                  })
             }
           }else{
             console.log('sin imagen')
@@ -154,6 +175,8 @@ function editarUbicaciones(req,res){
 function editarubi(req,res){
     let  idMision = req.params.idMision
     let parametros = req.body
+
+
     
     Ubicaciones.findByIdAndUpdate(idMision,parametros,{new:true},(err,MisionUpdated)=>{
         if(err){
@@ -186,7 +209,6 @@ function agregarUbicacion(req,res){
 
     let parametros = req.body
     let UbiModel = new Ubicaciones()
-    let imgPathRelative = req.file.path
 
     UbiModel.tipoTienda = parametros.tipoTienda
     UbiModel.direccion = parametros.direccion
@@ -196,14 +218,25 @@ function agregarUbicacion(req,res){
     UbiModel.enlaceMaps = parametros.enlaceMaps
     UbiModel.enlaceWaze = parametros.enlaceWaze
     UbiModel.horario = parametros.horario
-    UbiModel.imgPath = imgPathRelative
-    UbiModel.save((err, ubiSaved) => {
-        if (err) {
-            return res.status(400).send({message:'error en la peticon'})
-        } else if (ubiSaved) {
-            return res.status(200).send({Ubi:ubiSaved})
-        }else{
-            return res.status(200).send({message:'error al crear al crear la ubicacion'})
+
+    cloudinary.uploader.upload(req.file.path, function (err, result){
+        if(err) {
+          console.log(err);
+          return res.status(500).json({
+            success: false,
+            message: "Error"
+          })
+        }
+        else{
+          UbiModel.imgPath = result.url
+          UbiModel.idPublic = result.public_id
+          UbiModel.save((err,valorSaved)=>{
+            if(err){
+                return res.status(500).send({message:'error en la peticion 2'})
+            }else if (valorSaved){
+                return res.status(200).send({message:'se guardo correctamente',valorSaved})
+            }
+         })
         }
     })
 }
@@ -222,23 +255,45 @@ function ObtnerUbicacionxID(req, res){
         }
     })
 }
-function eliminarMision(req,res){
+function eliminarUbi(req,res){
     let idUbicacion = req.params.idUbicacion
     
-    Ubicaciones.findByIdAndDelete(idUbicacion,(err,noticiaDeleted)=>{
+    Ubicaciones.findById(idUbicacion,(err,ubicacionFinded)=>{
         if(err){
             return res.status(200).send({message:'error en la peticion'})
-        }else if(noticiaDeleted){
-            return res.status(200).send({message:'se elimino correctamente'})
+        }else if(ubicacionFinded){
+
+            cloudinary.uploader.destroy(ubicacionFinded.idPublic, (error, result) => {
+                if (error) {
+               console.error('Error al eliminar la imagen en Cloudinary:', error);
+               } else {
+               console.log('Imagen eliminada correctamente en Cloudinary:', result)
+               Ubicaciones.findByIdAndDelete(idUbicacion,(err,eliminarLinea)=>{
+                if(err){
+                    return res.status(200).send({message:'error en la peticion'})
+                }else if(eliminarLinea){
+                    return res.status(200).send({message:'se elimino correctamente'})
+                }else{
+                    console.log(idLinea)
+                    return res.status(200).send({message:'error al eliminar'})
+                }
+            })
+               }
+               });
+
+
+        }else{
+            return res.status(200).send({message:'error al obtener la ubcacion'})
         }
     })
+
 }
 
 module.exports = {
     crearUbidefult,
     editarubi,
     obtnerUbiAll,
-    eliminarMision,
+    eliminarUbi,
     obtenerMisionxID,
     agregarUbicacion,
     ObtnerMeatHose,
