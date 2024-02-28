@@ -230,11 +230,15 @@ function agregarUbicacion(req,res){
         else{
           UbiModel.imgPath = result.url
           UbiModel.idPublic = result.public_id
+
+          console.log(parametros)
           UbiModel.save((err,valorSaved)=>{
             if(err){
-                return res.status(500).send({message:'error en la peticion 2'})
+                return res.status(500).send({message:'error en la peticion 2 asdfas'})
             }else if (valorSaved){
                 return res.status(200).send({message:'se guardo correctamente',valorSaved})
+            }else {
+                return res.status(200).send({message:'error al guardar'})
             }
          })
         }
