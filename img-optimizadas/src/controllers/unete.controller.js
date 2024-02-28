@@ -1,5 +1,8 @@
+const { cloudinary_js_config } = require('../../libs/cloudinary');
 const uneteEqipoModel = require('../models/uneteEqipo.model');
 const Unete = require('../models/uneteEqipo.model');
+const cloudinary = require("../../libs/cloudinary");
+
 
 function PlazaPorDefecto(){
 
@@ -17,7 +20,8 @@ function PlazaPorDefecto(){
       PlazaModel.educacion = 'Ingenieria en Sistemas'
       PlazaModel.experecia = '2 años'
       PlazaModel.enlaceFormualario = 'https://forms.gle/kwy2Yp7ZrQ8QHCER6'
-      PlazaModel.imgPath = 
+      PlazaModel.imgPath = ''
+      PlazaModel.idPublic = 'publico'
     
     
       PlazaModel.save((err,uneteGuardado)=>{
@@ -40,26 +44,42 @@ function PlazaPorDefecto(){
 function CrearEmpleo (req,res){
 
 
-    UneteModel = new Unete()
-    let parametros = req.body
+     let uneteModel = new Unete()
 
-    UneteModel.titulo = req.body.titulo
-    UneteModel.ubicacion = req.body.ubicacion
-    UneteModel.departamento = req.body.departamento
-    UneteModel.empresa = req.body.empresa
-    UneteModel.funciones = req.body.funciones
-    UneteModel.educacion = req.body.educacion
-    UneteModel.experecia = req.body.experecia
-    UneteModel.enlaceFormualario = req.body.enlaceFormualario
+    uneteModel.titulo = req.body.titulo
+    uneteModel.ubicacion = req.body.ubicacion
+    uneteModel.departamento = req.body.departamento
+    uneteModel.empresa = req.body.empresa
+    uneteModel.funciones = req.body.funciones
+    uneteModel.educacion = req.body.educacion
+    uneteModel.experecia = req.body.experecia
+    uneteModel.enlaceFormualario = req.body.enlaceFormualario
 
-    UneteModel.save((err,uneteGuardado)=>{
-        if(err){
-            return res.status(400).send({message:'error en la peticion'})
-        }else if(uneteGuardado){
-            return res.status(200).send({unete:uneteGuardado})
-        }else{
-            return res.status(200).send({message:'error al guardar el unete'})
-        }
+    cloudinary.uploader.upload(req.file.path , function(error, result) {
+      if(error){
+        console.log(err);
+        return res.status(500).json({
+          success: false,
+          message: "Error"
+        })
+      }else{
+        uneteModel.imgPath = result.url
+        uneteModel.idPublic = result.public_id
+
+        uneteModel.save((err,uneteGuardado)=>{
+          if(err){
+              return res.status(400).send({message:'error en la peticion'})
+          }else if(uneteGuardado){
+              return res.status(200).send({unete:uneteGuardado})
+          }else{
+              return res.status(200).send({message:'error al guardar el unete'})
+          }
+
+
+        })
+      }
+
+
     })
 
 }
@@ -262,15 +282,36 @@ function obtenerFuncionesxid(req, res) {
     id = req.params.id
     parametros = req.body
 
-    Unete.findByIdAndUpdate(id,parametros,{new:true},(err,uneteUpdated)=>{
-      if(err){
-        return res.status(404).send({message:'error en la peticion'})
-      }else if (uneteUpdated){
-        return res.status(200).send({message:'plazo  actualizado con exito'})
-      }else{
-        return res.status(400).send({message:'error al actualizar el usuario'})
-      }
-    })
+   Unete.findById(id,(err,uneteFinded)=>{
+    if(err){
+      return res.status(404).send({message:'error en la peticion'})
+    }else if (uneteFinded){
+      cloudinary.uploader.upload(req.file.path , function(error, result) {
+        if(error){
+          console.log(err);
+          return res.status(500).json({
+            success: false,
+            message: "Error"
+          })
+        }else{
+          parametros.imgPath = result.url
+          parametros.idPublic = result.public_id
+
+          Unete.findByIdAndUpdate(id,parametros,{new:true},(err,uneteUpdated)=>{
+            if(err){
+              return res.status(404).send({message:'error en la peticion'})
+            }else if (uneteUpdated){
+              return res.status(200).send({message:'plazo  actualizado con exito',uneteUpdated})
+            }else{
+              return res.status(400).send({message:'error al actualizar el usuario'})
+            }
+          })
+        }
+      })
+    }else{
+      return res.status(400).send({message:'error al obtener el usuario'})
+    }
+   })
 
 
   }
@@ -280,15 +321,38 @@ function obtenerFuncionesxid(req, res) {
   function eiliminarPlaza(req,res){
     let id = req.params.id
 
-    Unete.findByIdAndDelete(id,(err,uneteDeleted)=>{
+    Unete.findById(id,(err,uneteFinded)=>{
       if(err){
         return res.status(404).send({message:'error en la peticion'})
-      }else if (uneteDeleted){
-        return res.status(200).send({message:'plazo  eliminado con exito'})
+      }else if (uneteFinded){
+        cloudinary.uploader.destroy(uneteFinded.idPublic, function(error, result) {
+          if(error){
+            console.log(err);
+            return res.status(500).json({
+              success: false,
+              message: "Error"
+            })
+          }else{
+            Unete.findByIdAndDelete(id,(err,uneteDeleted)=>{
+              if(err){
+                return res.status(404).send({message:'error en la peticion'})
+              }else if (uneteDeleted){
+                console.log(result)
+                return res.status(200).send({message:'plazo  eliminado con exito'})
+              }else{
+                return res.status(400).send({message:'error al eliminar el usuario'})
+              }
+            })
+          }
+        })
       }else{
-        return res.status(400).send({message:'error al eliminar el usuario'})
+        return res.status(400).send({message:'error al obtener el usuario'})
       }
+    
     })
+
+
+
 
 
   }

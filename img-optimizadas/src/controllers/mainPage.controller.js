@@ -25,7 +25,7 @@ function crearMainPageDefult (req,res){
             return console.log('error en la peticion al buscar')
         }else if(pageFinded.length == 0){
             let mainPageModel = new MainPage()
-            mainPageModel.mainImgPath = 'urlImg';
+            mainPageModel.mainImgPath = 'urlImg'; 
             mainPageModel.textHistoria = 'Modificar este texto, pertence a la historia';
             mainPageModel.textVision = 'Modificar este texto para la vision'
             mainPageModel.textMision = 'modificar este texto para la mision'

@@ -15,6 +15,7 @@ api.get('/obtenerPlazas',UneteContoller.obtenerPlazas);
 api.put('/editarPlazaV2/:id/:position', UneteContoller.editatFuncionesV2)
 api.put('/eliminarFuncion/:id/:position',UneteContoller.eliminarFuncionV2)
 api.get('/obtenerFuncionesxid/:id',UneteContoller.obtenerFuncionesxid)
+api.delete('/eliminarPlaza/:id',UneteContoller.eiliminarPlaza);
 
 
 api.get('/obtenerPlazaId/:id',UneteContoller.ObtenerPlazaxId);

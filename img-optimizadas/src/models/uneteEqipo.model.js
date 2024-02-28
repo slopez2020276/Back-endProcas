@@ -15,6 +15,8 @@ const unetes = Schema({
   experecia:String,
   enlaceFormualario :String,
   imgPath:String,
+  idPublic:String,
+  imgPath:String,
 
 
 });
