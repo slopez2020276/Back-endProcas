@@ -5,11 +5,11 @@ const api = express.Router();
 const multer = require('../../libs/multer');
 
 
-api.post('/crearEmpleo',multer.single('imagePath'),UneteContoller.CrearEmpleo);
+api.post('/crearEmpleo',multer.single('imgPath'),UneteContoller.CrearEmpleo);
 api.get('/obtenerEmpleo',UneteContoller.obtenerUnete);
 api.put('/editarFunciones/:id',UneteContoller.editarFunciones);	
 api.put('/agregarFuncionesAUnete/:id',UneteContoller.agregarFuncionesAUnete);
-api.put("/editarPlaza/:id",multer.single('imagePath'),UneteContoller.editarPlaza)
+api.put("/editarPlaza/:id",multer.single('imgPath'),UneteContoller.editarPlaza)
 api.delete('/eliminarPlaza/:id',UneteContoller.eiliminarPlaza);
 api.get('/obtenerPlazas',UneteContoller.obtenerPlazas);
 api.put('/editarPlazaV2/:id/:position', UneteContoller.editatFuncionesV2)

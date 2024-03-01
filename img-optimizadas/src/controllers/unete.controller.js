@@ -305,7 +305,18 @@ function obtenerFuncionesxid(req, res) {
             parametros.imgPath = result.url
             parametros.idPublic = result.public_id
   
-            Unete.findByIdAndUpdate(id,parametros,{new:true},(err,uneteUpdated)=>{
+            Unete.findByIdAndUpdate(id,{ 
+              titulo: parametros.titulo,
+              ubicacion: parametros.ubicacion,
+              departamento: parametros.departamento,
+              empresa: parametros.empresa,
+              educacion: parametros.educacion,
+              experecia: parametros.experecia,
+              enlaceFormualario: parametros.enlaceFormualario,
+              imgPath: parametros.imgPath,
+              idPublic: parametros.idPublic
+              
+             },{new:true},(err,uneteUpdated)=>{
               if(err){
                 return res.status(404).send({message:'error en la peticion'})
               }else if (uneteUpdated){
