@@ -282,32 +282,59 @@ function obtenerFuncionesxid(req, res) {
     id = req.params.id
     parametros = req.body
 
+
+
+
    Unete.findById(id,(err,uneteFinded)=>{
     if(err){
       return res.status(404).send({message:'error en la peticion'})
     }else if (uneteFinded){
-      cloudinary.uploader.upload(req.file.path , function(error, result) {
-        if(error){
-          console.log(err);
-          return res.status(500).json({
-            success: false,
-            message: "Error"
-          })
-        }else{
-          parametros.imgPath = result.url
-          parametros.idPublic = result.public_id
 
-          Unete.findByIdAndUpdate(id,parametros,{new:true},(err,uneteUpdated)=>{
-            if(err){
-              return res.status(404).send({message:'error en la peticion'})
-            }else if (uneteUpdated){
-              return res.status(200).send({message:'plazo  actualizado con exito',uneteUpdated})
-            }else{
-              return res.status(400).send({message:'error al actualizar el usuario'})
-            }
-          })
+
+      if(req.file){
+
+        console.log('con imagen')
+        cloudinary.uploader.upload(req.file.path , function(error, result) {
+          if(error){
+            console.log(err);
+            return res.status(500).json({
+              success: false,
+              message: "Error"
+            })
+          }else{
+            parametros.imgPath = result.url
+            parametros.idPublic = result.public_id
+  
+            Unete.findByIdAndUpdate(id,parametros,{new:true},(err,uneteUpdated)=>{
+              if(err){
+                return res.status(404).send({message:'error en la peticion'})
+              }else if (uneteUpdated){
+                return res.status(200).send({message:'plazo  actualizado con exito',uneteUpdated})
+              }else{
+                return res.status(400).send({message:'error al actualizar el usuario'})
+              }
+            })
+          }
+        })
+      }else{
+        console.log('sin imgagen')
+        Unete.findByIdAndUpdate (id,parametros,{new:true},(err,uneteUpdated)=>{
+          if(err){
+            return res.status(404).send({message:'error en la peticion'})
+          }else if (uneteUpdated){
+            return res.status(200).send({message:'plazo  actualizado con exito',uneteUpdated})
+          }else{
+            return res.status(400).send({message:'error al actualizar el usuario'})
+          }
         }
-      })
+
+       )}
+
+
+
+
+
+    
     }else{
       return res.status(400).send({message:'error al obtener el usuario'})
     }
