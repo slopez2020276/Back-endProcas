@@ -404,6 +404,8 @@ async function editarCategoria(req,res) {
       }else if(productoFinded){
 
 
+
+
         if(productoFinded.imgPath === 'imgsDefult/imgDefult.png'){
           console.log('con image y la ulr SI ES LA DEFULT')
           let {title,descripcion } = parametros
@@ -417,46 +419,65 @@ async function editarCategoria(req,res) {
               }
           })
       }else{
+
+       
+        if(req.file ){
           console.log('con imagen y la url de la imgen es NO ES LA DEFULT')
+          cloudinary.uploader.upload(req.file.path, function (err, result){
+            if(err) {
+              console.log(err);
+              return res.status(500).json({
+                success: false,
+                message: "Error"
+              })
+            }else{
+                let idPublic = result.public_id
+                let {EncalceVideo,DescripcionHistoria, } = parametros
+                Productos.findByIdAndUpdate(idProducto,{
+                  imgPath:result.url ,
+                  idPublic: idPublic,
+                  nombreProducto:req.body.nombreProducto 
+                },{new:true},(err,historiaUpdated)=>{
+                    if(err){
+                        return res.status(200).send({messege:'error en la petion 2'})
+                    }else if (historiaUpdated){
+  
+                        const urlImagen = 'jwvlqzz6johnmhndtwy7';
+  
+                        // Utiliza el método destroy para eliminar la imagen en Cloudinary
+                        cloudinary.uploader.destroy(productoFinded.idPublic, (error, result) => {
+                         if (error) {
+                        console.error('Error al eliminar la imagen en Cloudinary:', error);
+                        } else {
+                        console.log('Imagen eliminada correctamente en Cloudinary:', result)
+                        return res.status(200).send({lineaUpdated:historiaUpdated});
+                        }
+                        });
+                     }else{
+                        return res.status(200).send({message:'error al editar'})
+            
+                    }
+                })
+            }
+          })
+  
+
+        }else{
+          console.log('sin imagen')
+          Productos.findByIdAndUpdate(idProducto,{nombreProducto:req.body.nombreProducto },{new:true},(err,productoUpdated)=>{
+            if(err){
+              return res.status(200).send({messege:'error en la petion 2'})
+            }else if(productoUpdated){
+              return res.status(200).send({lineaUpdated:productoUpdated})
+            }else{
+              return res.status(200).send({message:'error al editar'})
+            }
+          })
+
+        }
           
 
-          cloudinary.uploader.upload(req.file.path, function (err, result){
-              if(err) {
-                console.log(err);
-                return res.status(500).json({
-                  success: false,
-                  message: "Error"
-                })
-              }else{
-                  let idPublic = result.public_id
-                  let {EncalceVideo,DescripcionHistoria, } = parametros
-                  Productos.findByIdAndUpdate(idProducto,{
-                    imgPath:result.url ,
-                    idPublic: idPublic,
-                    nombreProducto:req.body.nombreProducto 
-                  },{new:true},(err,historiaUpdated)=>{
-                      if(err){
-                          return res.status(200).send({messege:'error en la petion 2'})
-                      }else if (historiaUpdated){
-
-                          const urlImagen = 'jwvlqzz6johnmhndtwy7';
-
-                          // Utiliza el método destroy para eliminar la imagen en Cloudinary
-                          cloudinary.uploader.destroy(productoFinded.idPublic, (error, result) => {
-                           if (error) {
-                          console.error('Error al eliminar la imagen en Cloudinary:', error);
-                          } else {
-                          console.log('Imagen eliminada correctamente en Cloudinary:', result)
-                          return res.status(200).send({lineaUpdated:historiaUpdated});
-                          }
-                          });
-                       }else{
-                          return res.status(200).send({message:'error al editar'})
-              
-                      }
-                  })
-              }
-            })
+         
 
           
       }
@@ -465,6 +486,21 @@ async function editarCategoria(req,res) {
         return res.status(404).send({message:'error al encontrar el producto'})
       }
     })
+  }
+
+  function ObtenerProductosxId (req,res){
+    idProducto = req.params.idProducto;
+
+    Productos.findById(idProducto,(err,productoFinded)=>{
+      if(err){
+        return res.status(500).send({message:'error en la peticion'})
+      }else if(productoFinded){
+        return res.status(200).send({productoFinded})
+      }else{
+        return res.status(404).send({message:'error al encontrar el producto'})
+      }
+    })
+
   }
 
 module.exports = {
@@ -476,6 +512,7 @@ module.exports = {
     editarItemEnCategoria,
     editarCategoria,
     ObtenerProductos,
+    ObtenerProductosxId,
     EliminarProductos,
     EliminarCategoriaEnProducto,
     EliminarItemEnCategoria,
