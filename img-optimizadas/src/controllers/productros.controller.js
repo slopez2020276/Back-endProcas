@@ -503,6 +503,41 @@ async function editarCategoria(req,res) {
 
   }
 
+  function ObtenerCategoriasxID(req,res){
+    idProducto = req.params.idProducto;
+    Productos.findById(idProducto,(err,productoFinded)=>{
+      if(err){
+        return res.status(500).send({message:'error en la peticion'})
+      }else if(productoFinded){
+        return res.status(200).send({categorias:productoFinded.categorias})
+      }else{
+        return res.status(404).send({message:'error al encontrar el producto'})
+      }
+    })
+  }
+  function ObtenerItemsxCategoria(req, res) {
+    const idProducto = req.params.idProducto;
+    const idCategoria = req.params.idCategoria; // Cambié 'nombreCategoria' por 'idCategoria'
+  
+    Productos.findById(idProducto, (err, productoFinded) => {
+      if (err) {
+        return res.status(500).send({ message: 'Error en la petición' });
+      } else if (productoFinded) {
+        // Utilizo el método 'id' de mongoose para comparar IDs
+        let categoria = productoFinded.categorias.find(categoria => categoria._id.equals(idCategoria));
+  
+        if (categoria) {
+          return res.status(200).send({ items: categoria.items });
+        } else {
+          return res.status(404).send({ message: 'Error al encontrar la categoría' });
+        }
+      } else {
+        return res.status(404).send({ message: 'Error al encontrar el producto' });
+      }
+    });
+  }
+  
+
 module.exports = {
     CrearProductos,
     CrearListaEnProducto,
@@ -516,6 +551,8 @@ module.exports = {
     EliminarProductos,
     EliminarCategoriaEnProducto,
     EliminarItemEnCategoria,
-    editarProductos
+    editarProductos,
+    ObtenerCategoriasxID,
+    ObtenerItemsxCategoria
     
 };

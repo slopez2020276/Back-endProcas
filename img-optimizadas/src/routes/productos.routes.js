@@ -22,6 +22,8 @@ api.delete('/eliminarProducto/:idProducto',ProductosController.EliminarProductos
 api.delete('/eliminarItemCategoria/:idProducto/:idCategoria/:idItem',ProductosController.EliminarItemEnCategoria);
 api.put('/editarProducto/:idProducto',multer.single('imgPath'),ProductosController.editarProductos);
 api.get('/obtenerProducto/:idProducto',ProductosController.ObtenerProductosxId);
+api.get('/obtenerCategoriasxProducto/:idProducto',ProductosController.ObtenerCategoriasxID);
+api.get('/obtenerItemsxCategoria/:idProducto/:idCategoria',ProductosController.ObtenerItemsxCategoria);
 module.exports = api;
 
 
