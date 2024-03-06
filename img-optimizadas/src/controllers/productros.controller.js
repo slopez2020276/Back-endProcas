@@ -195,47 +195,39 @@ async function CrearProductosv2 (req,res){
     })
 
   }
-async function agregarItemsACategoria(req,res) {
-
-    let productoId = req.params.idProducto;
-    
-     let nuevosItems = req.body.items;
-    let nombreCategoria = req.params.nombreCategoria;
+  async function agregarItemsACategoria(req, res) {
+    const productoId = req.params.idProducto;
+    const nuevosItems = req.body.items;
+    const categoriaId = req.params.categoriaId; // Cambié 'nombreCategoria' por 'categoriaId'
+  
     try {
       const producto = await Productos.findById(productoId);
   
       if (!producto) {
-        console.error('Producto no encontrado');
-        return;
+        return res.status(404).send({ message: 'Producto no encontrado' });
       }
   
       // Encontrar la categoría específica dentro del array de categorías
-      const categoriaEncontrada = producto.categorias.find(categoria => categoria.Nombre === nombreCategoria);
+      const categoriaEncontrada = producto.categorias.find(categoria => categoria._id.equals(categoriaId));
   
       if (!categoriaEncontrada) {
-        console.error('Categoría no encontrada');
-        return;
+        return res.status(404).send({ message: 'Categoría no encontrada' });
       }
   
       // Agregar los nuevos ítems a la propiedad "items" de la categoría
       categoriaEncontrada.items = categoriaEncontrada.items.concat(nuevosItems);
   
       // Guardar el producto actualizado en la base de datos
-      await producto.save((err,productoGuardado)=>{
-        if(err){
-            return res.status(500).send({message:'error en la peticion'})
-        }else if (productoGuardado){
-            return res.status(200).send({productoGuardado})
-        }else{
-            return res.status(404).send({message:'error al guardar el producto'})
-        }
-      });
+      const productoGuardado = await producto.save();
   
-      console.log('Ítems agregados a la categoría con éxito');
+      return res.status(200).send({ productoGuardado });
     } catch (error) {
       console.error('Error al agregar ítems a la categoría:', error);
+      return res.status(500).send({ message: 'Error en la petición' });
     }
   }
+  
+  
 
 
 
@@ -283,33 +275,30 @@ async function agregarItemsACategoria(req,res) {
 
 // Función para editar un ítem en una categoría
 async function editarItemEnCategoria(req, res) {
+  const productoId = req.params.idProducto;
+  const categoriaId = req.params.categoriaId; // Cambié 'nombreCategoria' por 'categoriaId'
+  const nombreItemExistente = req.params.nombreItemExistente;
+  const nuevoNombreItem = req.body.nuevoNombreItem;
 
-    let productoId = req.params.idProducto;
-    let nombreCategoria = req.params.nombreCategoria;
-    let nombreItemExistente = req.params.nombreItemExistente;
-    let nuevoNombreItem = req.body.nuevoNombreItem;
-    try {
+  try {
     const producto = await Productos.findById(productoId);
 
     if (!producto) {
-      console.error('Producto no encontrado');
-      return;
+      return res.status(404).send({ message: 'Producto no encontrado' });
     }
 
     // Encontrar la categoría específica dentro del array de categorías
-    const categoriaEncontrada = producto.categorias.find(categoria => categoria.Nombre === nombreCategoria);
+    const categoriaEncontrada = producto.categorias.find(categoria => categoria._id.equals(categoriaId));
 
     if (!categoriaEncontrada) {
-      console.error('Categoría no encontrada');
-      return;
+      return res.status(404).send({ message: 'Categoría no encontrada' });
     }
 
     // Encontrar el ítem específico dentro de la categoría
     const itemEncontradoIndex = categoriaEncontrada.items.findIndex(item => item === nombreItemExistente);
 
     if (itemEncontradoIndex === -1) {
-      console.error('Ítem no encontrado en la categoría');
-      return;
+      return res.status(404).send({ message: 'Ítem no encontrado en la categoría' });
     }
 
     // Actualizar el nombre del ítem y otras propiedades según sea necesario
@@ -319,43 +308,33 @@ async function editarItemEnCategoria(req, res) {
     // Ejemplo: categoríaEncontrada.items[itemEncontradoIndex].otraPropiedad = nuevasPropiedades.otraPropiedad;
 
     // Guardar el producto actualizado en la base de datos
-    await producto.save((err,productoGuardado)=>{
-        if(err){
-            return res.status(500).send({message:'error en la peticion'})
-        }else if(productoGuardado){
-            return res.status(200).send({productoGuardado})
-        }else{
-            return res.status(404).send({message:'error al guardar el producto'})
-        }
-    
-    });
+    const productoGuardado = await producto.save();
 
-    console.log('Ítem editado en la categoría con éxito');
+    return res.status(200).send({ productoGuardado });
   } catch (error) {
     console.error('Error al editar ítem en la categoría:', error);
+    return res.status(500).send({ message: 'Error en la petición' });
   }
-  }
-async function editarCategoria(req,res) {
-    
-    let productoId = req.params.idProducto;
-    let nombreCategoriaExistente = req.params.nombreCategoriaExistente;
-    let nuevoNombreCategoria = req.body.nuevoNombreCategoria;
-    let nuevasPropiedades = req.body.nuevasPropiedades;
-    
+}
+
+  async function editarCategoria(req, res) {
+    const productoId = req.params.idProducto;
+    const categoriaId = req.params.categoriaId; // Cambié 'nombreCategoriaExistente' por 'categoriaId'
+    const nuevoNombreCategoria = req.body.nuevoNombreCategoria;
+    const nuevasPropiedades = req.body.nuevasPropiedades;
+  
     try {
       const producto = await Productos.findById(productoId);
   
       if (!producto) {
-        console.error('Producto no encontrado');
-        return;
+        return res.status(404).send({ message: 'Producto no encontrado' });
       }
   
       // Encontrar la categoría específica dentro del array de categorías
-      const categoriaEncontrada = producto.categorias.find(categoria => categoria.Nombre === nombreCategoriaExistente);
+      const categoriaEncontrada = producto.categorias.find(categoria => categoria._id.equals(categoriaId));
   
       if (!categoriaEncontrada) {
-        console.error('Categoría no encontrada');
-        return;
+        return res.status(404).send({ message: 'Categoría no encontrada' });
       }
   
       // Actualizar el nombre de la categoría y otras propiedades según sea necesario
@@ -365,21 +344,15 @@ async function editarCategoria(req,res) {
       // Ejemplo: categoriaEncontrada.otraPropiedad = nuevasPropiedades.otraPropiedad;
   
       // Guardar el producto actualizado en la base de datos
-      await producto.save((err,productoGuardado)=>{
-        if(err){
-            return res.status(500).send({message:'error en la peticion'})
-        }else if(productoGuardado){
-            return res.status(200).send({productoGuardado})
-        }else{
-            return res.status(404).send({message:'error al guardar el producto'})
-        }
-      });
+      const productoGuardado = await producto.save();
   
-      console.log('Categoría editada con éxito');
+      return res.status(200).send({ productoGuardado });
     } catch (error) {
       console.error('Error al editar categoría:', error);
+      return res.status(500).send({ message: 'Error en la petición' });
     }
   }
+  
   async function ObtenerProductos(req,res){
     Productos.find({},(err,productosEncontrados)=>{
         if(err){
@@ -553,6 +526,7 @@ module.exports = {
     EliminarItemEnCategoria,
     editarProductos,
     ObtenerCategoriasxID,
-    ObtenerItemsxCategoria
+    ObtenerItemsxCategoria,
+
     
 };
