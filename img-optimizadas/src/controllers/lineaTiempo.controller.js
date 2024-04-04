@@ -4,54 +4,111 @@ const Historia = require('../models/historia.model')
 const { param } = require('../routes/img.routes')
 const path = require('path')
 const cloudinary = require("../../libs/cloudinary");
+
+
 function crearEventosLineaDeTiempoDefult() {
+    // Definir los eventos predeterminados
+    LineaTimepo.find({}, (err, lineFiended) => {
+      if(err){
 
+      }else if (lineFiended.length > 0){
 
-    LineaTimepo.find((err, eventosLineaTiempoFiend) => {
-        if (err) {
-            return res.status(500).send({ "message": "error en la petion1" })
+        return console.log("ya se encuentran registrados ")
+      }else{
 
-        } else if (eventosLineaTiempoFiend.length == 0) {
-            let lineaTiempo1 = new LineaTimepo()
-            let lineaTiempo2 = new LineaTimepo()
-            let lineaTiempo3 = new LineaTimepo()
+        const eventosPredeterminados = [
+          {
+              anio: 2021,
+              eventos: [{
+                  ImgPathLineaTiempo: 'imgsDefult/imgDefult.png',
+                  titleLineaTiempo: 'Título del evento 1',
+                  subTitleLineaTiempo: 'Subtítulo del evento 1',
+                  descriptionLineaTiempo: 'Descripción del evento 1',
+                  mostrarPor: 'anio',
+                  idPublic: 'idDelEvento1'
+              }]
+          },
+          {
+              anio: 2022,
+              eventos: [{
+                  ImgPathLineaTiempo: 'imgsDefult/imgDefult2.png',
+                  titleLineaTiempo: 'Título del evento 2',
+                  subTitleLineaTiempo: 'Subtítulo del evento 2',
+                  descriptionLineaTiempo: 'Descripción del evento 2',
+                  mostrarPor: 'anio',
+                  idPublic: 'idDelEvento2'
+              }]
+          },
+          // Puedes agregar más eventos aquí si es necesario
+      ];
+  
+      // Insertar los eventos predeterminados en la base de datos
+      LineaTimepo.insertMany(eventosPredeterminados, (err, eventosInsertados) => {
+          if (err) {
+              console.error('Error al insertar eventos predeterminados:', err);
+          } else {
+              console.log('Eventos predeterminados insertados correctamente:', eventosInsertados);
+          }
+      });
 
-            lineaTiempo1.titleLineaTiempo = 'Titulo evento 1'
-            lineaTiempo1.ImgPathLineaTiempo = 'imgsDefult/imgDefult.png'
-            lineaTiempo1.descriptionLineaTiempo = 'descripcion evento 1'
-            lineaTiempo1.mostrarPor = 'anio'
-          
+      }
 
-            lineaTiempo2.titleLineaTiempo = 'Titulo evento 2'
-            lineaTiempo2.ImgPathLineaTiempo = 'imgsDefult/imgDefult.png'
-            lineaTiempo2.descriptionLineaTiempo = 'descripcion evento 2'
-            lineaTiempo2.mostrarPor = 'anioyMes'
-
-
-            lineaTiempo3.titleLineaTiempo = 'Titulo evento 3'
-            lineaTiempo3.ImgPathLineaTiempo = 'imgsDefult/imgDefult.png'
-            lineaTiempo3.descriptionLineaTiempo = 'descripcion evento 3'
-            lineaTiempo3.mostrarPor = 'anioMesDia'
-
-            lineaTiempo1.save((err, noticia) => {
-                if (err) {
-                    return console.log('error en la peticon')
-                } else if (noticia) {
-                    lineaTiempo2.save()
-                    lineaTiempo3.save()
-                    return console.log('se crearon los eventos de predetermindos porfavor de la orden de editarlos')
-                }
-            })
-
-
-
-        } else {
-            return console.log("se encontraron registros sobre eventos en la linea de tiempo")
-        }
     })
 
-
+    
 }
+
+
+
+
+async function agregarEventoAlAnioPorId(req, res) {
+  try {
+      const anioId  = req.params.idLinea; // ID del año
+      const nuevoEvento = req.body; // Nuevo evento a agregar
+
+      // Buscar el año por su ID
+      const anioEncontrado = await LineaTimepo.findById(anioId);
+
+      if (!anioEncontrado) {
+          return res.status(404).json({ success: false, message: 'El año especificado no fue encontrado.' });
+      }
+
+      // Agregar el nuevo evento al año encontrado
+      
+      cloudinary.uploader.upload(req.file.path, async function (err, result){
+        if(err) {
+          console.log(err);
+          return res.status(500).json({
+            success: false,
+            message: "Error"
+          })
+        }
+        else{
+         
+        nuevoEvento.ImgPathLineaTiempo = result.url
+        nuevoEvento.idPublic = result.public_id
+
+        console.log(nuevoEvento)
+        anioEncontrado.eventos.push(nuevoEvento);
+        const anioActualizado = await anioEncontrado.save();
+        res.status(200).json({ success: true, message: 'Evento agregado correctamente al año.', anioActualizado });
+
+        
+        }
+      })
+
+      // Guardar los cambios en la base de datos
+      
+
+  } catch (error) {
+      console.error('Error al agregar evento al año:', error);
+      res.status(500).json({ success: false, message: 'Error al agregar evento al año.' });
+  }
+}
+
+
+
+
 function obtenerFechaFormateada(lineaTiempo) {
     const fecha = lineaTiempo.fecha;
     const mostrarPor = lineaTiempo.mostrarPor;
@@ -72,39 +129,22 @@ function obtenerFechaFormateada(lineaTiempo) {
     }
   }
   
-  function obtenerTiempo(req, res) {
-    LineaTimepo.find({}, (err, lineFiended) => {
-      if (err) {
-        return res.status(200).send({ message: 'error en la peticion' });
-      } else if (lineFiended) {
-        Historia.find((err, historifiend) => {
-          if (err) {
-            return res.status(404).send({ message: 'error en la peticion' });
-          } else if (historifiend) {
-            // Formatear fechas para cada objeto de línea de tiempo
-            const lineasFormateadas = lineFiended.map(linea => {
-              return {
-                ...linea.toObject(),
-                fechaFormateada: obtenerFechaFormateada(linea)
-              };
-            });
-  
-            // Ordenar eventos desde la más antigua hasta la más reciente
-            lineasFormateadas.sort((a, b) => new Date(a.fecha) - new Date(  ));
-  
-            return res.status(200).send([{ historia: historifiend }, { lineas: lineasFormateadas }]);
-          } else {
-            return res.status(404).send({ message: 'error en la peticion' });
-          }
-        });
-      } else {
-        return res.status(200).send({ message: 'error al mostrar la línea de tiempo' });
-      }
-    });
-  }
-  
-  
+  async function obtenerTiempo(req, res) {
+    try {
+        // Obtener todos los registros de la línea de tiempo y ordenarlos de menor a mayor
+        const registrosOrdenados = await LineaTimepo.find().sort({ anio: 1 });
 
+        return res.status(200).json({ registros: registrosOrdenados });
+    } catch (error) {
+        console.error('Error al obtener los registros ordenados:', error);
+        return res.status(500).json({ message: 'Error al obtener los registros ordenados' });
+    }
+}
+
+
+  
+  
+/* 
 function editarLineaTiempo(req,res){
 
     
@@ -184,7 +224,11 @@ function editarLineaTiempo(req,res){
             return res.status(404).send({message:'la linea de timepo no se encuentra registrada'})
         }
     })
-}
+} */
+
+
+
+
 
 function eliminarLineaTiempo(req,res){
 
@@ -307,6 +351,108 @@ async function agregarLineaTiempo(req, res) {
   }
 }
 
+async function CrearAnio(req, res) {
+  try {
+      const { anio } = req.body; // Año a crear
+
+      // Verificar si el año ya existe
+      const anioExistente = await LineaTimepo.findOne({ anio });
+
+      if (anioExistente) {
+          return res.status(400).json({ success: false, message: 'El año ya existe en la línea de tiempo.' });
+      }
+
+      // Crear un nuevo objeto de año
+      const nuevoAnio = new LineaTimepo({ anio });
+
+      // Guardar el nuevo año en la base de datos
+      await nuevoAnio.save();
+
+      return res.status(200).json({ success: true, message: 'Año creado exitosamente.', anio: nuevoAnio });
+  } catch (error) {
+      console.error('Error al crear el año:', error);
+      return res.status(500).json({ success: false, message: 'Error al crear el año.' });
+  }
+}
+
+async function editarEvento(req, res) {
+  const eventoId = req.params.eventoId;
+  const lineaId = req.params.idLinea;
+  const parametrosEvento = req.body;
+
+  try {
+      // Buscar la línea de tiempo por su ID
+      const lineaTiempo = await LineaTimepo.findById(lineaId);
+      if (!lineaTiempo) {
+          return res.status(404).send({ message: 'La línea de tiempo no se encuentra registrada' });
+      }
+
+      // Buscar el evento dentro de la línea de tiempo por su ID
+      const eventoExistente = lineaTiempo.eventos.find(evento => evento._id.toString() === eventoId);
+      if (!eventoExistente) {
+          return res.status(404).send({ message: 'El evento no se encuentra registrado en esta línea de tiempo' });
+      }
+
+      // Si se envía una nueva imagen, eliminar la anterior de Cloudinary
+      if (req.file) {
+          // Eliminar la imagen anterior de Cloudinary
+          await cloudinary.uploader.destroy(eventoExistente.idPublic);
+
+          // Subir la nueva imagen a Cloudinary
+          const result = await cloudinary.uploader.upload(req.file.path);
+          parametrosEvento.ImgPathLineaTiempo = result.url;
+          parametrosEvento.idPublic = result.public_id;
+      }
+
+      // Actualizar las propiedades del evento
+      Object.assign(eventoExistente, parametrosEvento);
+
+      // Guardar los cambios en la línea de tiempo
+      const lineaActualizada = await lineaTiempo.save();
+
+      return res.status(200).send({ message: 'Evento actualizado exitosamente', lineaActualizada });
+  } catch (error) {
+      console.error('Error al editar el evento:', error);
+      return res.status(500).send({ message: 'Error al editar el evento' });
+  }
+}
+
+async function eliminarEvento(req, res) {
+  const eventoId = req.params.eventoId;
+  const lineaId = req.params.idLinea;
+
+  try {
+      // Buscar la línea de tiempo por su ID
+      const lineaTiempo = await LineaTimepo.findById(lineaId);
+      if (!lineaTiempo) {
+          return res.status(404).send({ message: 'La línea de tiempo no se encuentra registrada' });
+      }
+
+      // Buscar el índice del evento dentro de la línea de tiempo por su ID
+      const indiceEvento = lineaTiempo.eventos.findIndex(evento => evento._id.toString() === eventoId);
+      if (indiceEvento === -1) {
+          return res.status(404).send({ message: 'El evento no se encuentra registrado en esta línea de tiempo' });
+      }
+
+      // Obtener el evento a eliminar
+      const eventoAEliminar = lineaTiempo.eventos[indiceEvento];
+
+      // Eliminar la imagen del evento de Cloudinary
+      await cloudinary.uploader.destroy(eventoAEliminar.idPublic);
+
+      // Eliminar el evento del array de eventos en la línea de tiempo
+      lineaTiempo.eventos.splice(indiceEvento, 1);
+
+      // Guardar los cambios en la línea de tiempo
+      const lineaActualizada = await lineaTiempo.save();
+
+      return res.status(200).send({ message: 'Evento eliminado exitosamente', lineaActualizada });
+  } catch (error) {
+      console.error('Error al eliminar el evento:', error);
+      return res.status(500).send({ message: 'Error al eliminar el evento' });
+  }
+}
+
 
 
 
@@ -315,9 +461,12 @@ async function agregarLineaTiempo(req, res) {
 module.exports = {
     crearEventosLineaDeTiempoDefult,
     obtenerTiempo,
-    editarLineaTiempo,
+  
     eliminarLineaTiempo,
     obtenerLineaTiempoxId,
-    agregarLineaTiempo
+    agregarLineaTiempo,
+    agregarEventoAlAnioPorId,
+    CrearAnio,
+    editarEvento,eliminarEvento
 }
 
