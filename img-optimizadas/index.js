@@ -10,7 +10,7 @@ mongoose.Promise = global.Promise;
 mongoose.set('strictQuery', false);  // Añade esta línea para evitar la advertencia
 
 mongoose
-  .connect('mongodb://localhost/procasa', {
+  .connect('mongodb+srv://desjr:desjr@cluster0.qmiwvug.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

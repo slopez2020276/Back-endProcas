@@ -128,10 +128,9 @@ function obtenerFechaFormateada(lineaTiempo) {
       return fecha.toISOString();
     }
   }
-  
   async function obtenerTiempo(req, res) {
     try {
-        // Obtener todos los registros de la línea de tiempo y ordenarlos de menor a mayor
+        // Obtener todos los registros de la línea de tiempo y ordenarlos por año de menor a mayor
         const registrosOrdenados = await LineaTimepo.find().sort({ anio: 1 });
 
         return res.status(200).json({ registros: registrosOrdenados });
@@ -140,6 +139,7 @@ function obtenerFechaFormateada(lineaTiempo) {
         return res.status(500).json({ message: 'Error al obtener los registros ordenados' });
     }
 }
+
 
 
   
