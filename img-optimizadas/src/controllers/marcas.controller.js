@@ -11,16 +11,33 @@ async function crearMarca(req, res) {
         const  textMarca  = req.body.textMarca;
 
         console.log(req.file.path)
-        // Subir la imagen a Cloudinary
 
+        cloudinary.uploader.upload(req.file.path, async function (err, result){
+            if(err) {
+              console.log(err);
+              return res.status(500).json({
+                success: false,
+                message: "Error"
+              })
+            }
+            else{
+             
+                
         const nuevaMarca = new Marcas({ 
             imgPath: result.url, 
             idPublic: result.public_id, 
             textMarca 
         });
 
-        const marcaGuardada = await nuevaMarca.save();
-        res.status(201).json(marcaGuardada);
+    
+            console.log(nuevaMarca)
+            const MarcaUpdated = await nuevaMarca.save();
+            res.status(200).json({ success: true, message: 'nueva marca creada', MarcaUpdated });
+    
+            
+            }
+          })
+    
     } catch (error) {
         console.error('Error al crear la marca:', error);
         res.status(500).json({ message: 'Error al crear la marca' });
@@ -90,14 +107,14 @@ function actualizarMarca(req, res) {
                 // Subir la nueva imagen a Cloudinary
                 const result = await cloudinary.uploader.upload(req.file.path);
                 imgPublicId = result.public_id;
-
+                imgPath = result.url;
                 // Eliminar la imagen anterior de Cloudinary
                 await cloudinary.uploader.destroy(marcaSinEditar.idPublic);
             }
 
             // Actualizar la marca en la base de datos
             const marcaActualizada = await Marcas.findByIdAndUpdate(idMarca, {
-                imgPath: req.file ? result.url : marcaSinEditar.imgPath,
+                imgPath:  imgPath ,
                 idPublic: imgPublicId,
                 textMarca: req.body.textMarca
             }, { new: true });

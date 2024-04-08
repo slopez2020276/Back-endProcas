@@ -18,6 +18,7 @@ function crearUbidefult (){
          UbiModel.imgPath = 'imgpath'
          UbiModel.enlaceMaps = '#'
          UbiModel.enlaceWaze = '#'
+         UbiModel.whatsapp = '12345678'
 
          UbiModel.save((err,valorSaved)=>{
             if(err){
@@ -54,7 +55,7 @@ function obtenerUbicacionProcas(req,res){
         if(err){
             return res.status(400).send({message:'error en la peticion'})
         }else if(ubicaciaonesFiend){
-            return res.status(200).send({ubi:ubicaciaonesFiend})
+            return res.status(200).send({ubicaciones:ubicaciaonesFiend})
 
         }else{
             return res.status(400).send({message:'No se encontraron Ubicaciones en Procasa'})
@@ -97,6 +98,7 @@ function editarUbicaciones(req,res){
                     tipoTienda:req.body.tipoTienda,
                     descripcion:req.body.descripcion,
                     imgPath:req.body.imgPath,
+                    whatsapp:req.body.whatsapp,
                 },{new:true},(err,NoticiaUpdated)=>{
                     if(err){
                         return res.status(200).send({messege:'error en la petion 2'})
@@ -128,6 +130,7 @@ function editarUbicaciones(req,res){
                             nombreTienda:req.body.nombreTienda,
                             tipoTienda:req.body.tipoTienda,
                             descripcion:req.body.descripcion,
+                            whatsapp:req.body.whatsapp,
                         },{new:true},(err,historiaUpdated)=>{
                             if(err){
                                 return res.status(200).send({messege:'error en la petion 2'})
@@ -218,6 +221,7 @@ function agregarUbicacion(req,res){
     UbiModel.enlaceMaps = parametros.enlaceMaps
     UbiModel.enlaceWaze = parametros.enlaceWaze
     UbiModel.horario = parametros.horario
+    UbiModel.whatsapp = parametros.whatsapp
 
     cloudinary.uploader.upload(req.file.path, function (err, result){
         if(err) {
@@ -293,6 +297,57 @@ function eliminarUbi(req,res){
 
 }
 
+
+async function obtenerUbicacionesProcasa(req, res) {
+    try {
+        const ubicacionesProcasa = await Ubicaciones.find({ tipoTienda: "procasa" });
+        res.status(200).send({ ubicaciones: ubicacionesProcasa });
+    } catch (error) {
+        console.error('Error en la petición:', error);
+        res.status(500).send({ message: 'Error en la petición' });
+    }
+}
+
+async function obtenerUbicacionesProcasacdd(req, res) {
+    try {
+        const ubicacionesProcasa = await Ubicaciones.find({ tipoTienda: "procasacdd" });
+        res.status(200).send({ ubicaciones: ubicacionesProcasa });
+    } catch (error) {
+        console.error('Error en la petición:', error);
+        res.status(500).send({ message: 'Error en la petición' });
+    }
+}
+
+
+async function obtenerUbicacionesmtgr(req, res) {
+    try {
+        const ubicacionesProcasa = await Ubicaciones.find({ tipoTienda: "mtgr" });
+        res.status(200).send({ ubicaciones: ubicacionesProcasa });
+    } catch (error) {
+        console.error('Error en la petición:', error);
+        res.status(500).send({ message: 'Error en la petición' });
+    }
+}
+async function obtenerUbicacionesmtCarniceria(req, res) {
+    try {
+        const ubicacionesProcasa = await Ubicaciones.find({ tipoTienda: "mtCarniceria" });
+        res.status(200).send({ ubicaciones: ubicacionesProcasa });
+    } catch (error) {
+        console.error('Error en la petición:', error);
+        res.status(500).send({ message: 'Error en la petición' });
+    }
+}
+async function obtenerUbicacionesecono(req, res) {
+    try {
+        const ubicacionesProcasa = await Ubicaciones.find({ tipoTienda: "econo" });
+        res.status(200).send({ ubicaciones: ubicacionesProcasa });
+    } catch (error) {
+        console.error('Error en la petición:', error);
+        res.status(500).send({ message: 'Error en la petición' });
+    }
+}
+
+
 module.exports = {
     crearUbidefult,
     editarubi,
@@ -303,5 +358,12 @@ module.exports = {
     ObtnerMeatHose,
     obtenerUbicacionProcas,
     ObtnerUbicacionxID,
-    editarUbicaciones
+    editarUbicaciones,
+
+
+    obtenerUbicacionesProcasa,
+    obtenerUbicacionesProcasacdd,
+    obtenerUbicacionesmtgr,
+    obtenerUbicacionesmtCarniceria,
+    obtenerUbicacionesecono
 }

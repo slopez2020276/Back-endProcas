@@ -12,9 +12,7 @@ const Ubicaciones = Schema({
   enlaceMaps:String,
   enlaceWaze:String,
   idPublic:String,
-
-
-  
+  whatsapp:String,
 });
 
 module.exports = mongoose.model("Ubicaciones", Ubicaciones);

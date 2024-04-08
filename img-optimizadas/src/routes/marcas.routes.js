@@ -9,7 +9,7 @@ api.get('/mostrarMarcas',marcaController.obtenerMarcas);
 api.delete('/eliminarMarca/:id',marcaController.eliminarMarca)
 api.get('/obtenerMarcaXid/:id', marcaController.obtenerMarcaPorId)
 api.post('/agregarMarca',multer.single('imgPath'),marcaController.crearMarca)
-api.put('/editarMarca/:id',multer.single('imgPath'),marcaController.actualizarMarca)
+api.put('/editarMarca/:idMarca',multer.single('imgPath'),marcaController.actualizarMarca)
 
 
 

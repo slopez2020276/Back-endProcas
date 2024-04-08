@@ -12,5 +12,10 @@ api.post("/crearUbicacion",multer.single('imgPath'),ControllerUbicaion.agregarUb
 api.delete("/eliminarUbicacion/:idUbicacion",ControllerUbicaion.eliminarUbi);
 api.put("/editarUbicacion/:idUbicacion",multer.single('imgPath'),ControllerUbicaion.editarUbicaciones);
 
+api.get('/obtenerUbicacionesProcasa',ControllerUbicaion.obtenerUbicacionesProcasa);
+api.get('/obtenerProcasacdd',ControllerUbicaion.obtenerUbicacionesProcasacdd);
+api.get('/obtnerMeathouseGrabandgo',ControllerUbicaion.obtenerUbicacionesmtgr);
+api.get('/obtenerMeathouseCarniceria',ControllerUbicaion.obtenerUbicacionesmtCarniceria);
+api.get('/obtenerEconocarnes',ControllerUbicaion.obtenerUbicacionesecono);
 
 module.exports = api;

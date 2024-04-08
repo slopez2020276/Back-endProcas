@@ -138,7 +138,6 @@ function EditarFondo(req,res){
                                 return res.status(200).send({messege:'error en la petion 2'})
                             }else if (historiaUpdated){
 
-                                const urlImagen = 'jwvlqzz6johnmhndtwy7';
 
                                 // Utiliza el método destroy para eliminar la imagen en Cloudinary
                                 cloudinary.uploader.destroy(historiaSinEditar.idPulicFondo, (error, result) => {
