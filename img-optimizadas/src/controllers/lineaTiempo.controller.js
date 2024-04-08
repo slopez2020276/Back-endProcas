@@ -1,4 +1,4 @@
-const e = require('express')
+const express = require('express')
 const LineaTimepo = require('../models/lineaTiempo.model')
 const Historia = require('../models/historia.model')
 const { param } = require('../routes/img.routes')
@@ -286,21 +286,28 @@ function eliminarLineaTiempo(req,res){
     })
   
 }
+function obtenerLineaTiempoxId(req, res) {
+    const idLinea = req.params.idLinea;
+    const comunetoId = req.params.idAnio;
 
-function obtenerLineaTiempoxId(req,res){
-
-    let idLinea = req.params.idLinea
-
-    LineaTimepo.findById(idLinea,(err,lineaFiend)=>{
-        if(err){return res.status(400).send({mesagge:'error en la peticion'})
-        }else if(lineaFiend){
-            return res.status(200).send({lineaFiend:lineaFiend})
-        }else{
-            return res.status(400).send({messaga:'error al obtener la linea de tiempo'})
+    // Buscar el documento principal por su ID
+    LineaTimepo.findById(comunetoId, (err, comunetoEncontrado) => {
+        if (err) {
+            return res.status(400).send({ message: 'Error en la petición' });
+        } else if (comunetoEncontrado) {
+            // Buscar la línea de tiempo dentro del documento principal por su ID
+            const lineaEncontrada = comunetoEncontrado.eventos.find(linea => linea._id.toString() == idLinea);
+            if (lineaEncontrada) {
+                return res.status(200).send({ linea: lineaEncontrada });
+            } else {
+                return res.status(404).send({ message: 'No se encontró la línea de tiempo' });
+            }
+        } else {
+            return res.status(404).send({ message: 'No se encontró el documento principal' });
         }
-    })
-
+    });
 }
+
  
 function helperImg(filepath,filename,sizel = 300,sizeW){
     return sharp(filepath).resize(sizel,sizeW)

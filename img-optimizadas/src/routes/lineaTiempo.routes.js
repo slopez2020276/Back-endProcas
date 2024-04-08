@@ -6,7 +6,7 @@ const multer = require('../../libs/multer');
 
 api.get('/mostrarLineaTiempo',LineaTiempoController.obtenerTiempo);
 api.delete('/eliminarLineaTiempo/:idLinea',LineaTiempoController.eliminarLineaTiempo)
-api.get('/obtenerLineaXid/:idLinea',md_auteticacion.Auth, LineaTiempoController.obtenerLineaTiempoxId)
+api.get('/obtenerLineaXid/:idAnio/:idLinea', LineaTiempoController.obtenerLineaTiempoxId)
 api.post('/agregarEventoLineadeTiempo',multer.single('ImgPathLineaTiempo'),LineaTiempoController.agregarLineaTiempo)
 
 

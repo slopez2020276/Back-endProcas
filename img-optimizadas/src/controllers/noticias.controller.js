@@ -92,47 +92,37 @@ function agregarNoticias(req,res){
 
 
 async function obtenerNoticias(req, res) {
-    const tipoPrincipal = 'principal';
-
     try {
-        // Consulta para obtener las noticias principales
-        const noticiasPrincipales = await Noticas.find({ tipo: tipoPrincipal })
-            .sort({ fecha: -1 })  // Ordenar por fecha de forma descendente
-            .limit(6);  // Limitar el número de resultados a 6
+        // Obtener todos los registros de la línea de tiempo y ordenarlos por fecha de manera ascendente
+        const registrosOrdenados = await Noticas.find().sort({ fecha: 1 });
 
-        // Obtener la fecha actual
-        const fechaActual = new Date();
-
-        // Calcular la diferencia en tiempo para cada noticia principal
-        const noticiasPrincipalesConDiferencia = noticiasPrincipales.map((noticia) => {
-            const diferenciaEnMilisegundos = fechaActual - noticia.fecha;
-            let diferenciaTexto;
-
-            if (diferenciaEnMilisegundos >= 24 * 60 * 60 * 1000) {
-                const diferenciaEnDias = Math.floor(diferenciaEnMilisegundos / (24 * 60 * 60 * 1000));
-                diferenciaTexto = `${diferenciaEnDias} día${diferenciaEnDias !== 1 ? 's' : ''}`;
-            } else if (diferenciaEnMilisegundos >= 60 * 60 * 1000) {
-                const diferenciaEnHoras = Math.floor(diferenciaEnMilisegundos / (60 * 60 * 1000));
-                diferenciaTexto = `${diferenciaEnHoras} hora${diferenciaEnHoras !== 1 ? 's' : ''}`;
-            } else if (diferenciaEnMilisegundos >= 60 * 1000) {
-                const diferenciaEnMinutos = Math.floor(diferenciaEnMilisegundos / (60 * 1000));
-                diferenciaTexto = `${diferenciaEnMinutos} minuto${diferenciaEnMinutos !== 1 ? 's' : ''}`;
-            } else {
-                const diferenciaEnSegundos = Math.floor(diferenciaEnMilisegundos / 1000);
-                diferenciaTexto = `${diferenciaEnSegundos} segundo${diferenciaEnSegundos !== 1 ? 's' : ''}`;
-            }
-
+        // Mapear los registros para formatear la fecha en el formato deseado
+        const registrosFormateados = registrosOrdenados.map(registro => {
+            const fecha = new Date(registro.fecha);
+            const dia = fecha.getDate();
+            const mes = obtenerNombreMes(fecha.getMonth() + 1);
+            const anio = fecha.getFullYear();
             return {
-                ...noticia._doc,  // Copiar propiedades existentes
-                diferenciaEnTexto: diferenciaTexto,
+                ...registro.toObject(),
+                fechaFormateada: `${dia} ${mes} ${anio}`
             };
         });
 
-        res.status(200).send({ noticias: noticiasPrincipalesConDiferencia });
+        // Devolver los registros ordenados con la fecha formateada
+        res.status(200).send({ noticias: registrosFormateados });
     } catch (error) {
         console.error('Error en la petición:', error);
         res.status(500).send({ message: 'Error en la petición' });
     }
+}
+
+// Función auxiliar para obtener el nombre del mes a partir de su número
+function obtenerNombreMes(numeroMes) {
+    const nombresMeses = [
+        'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+        'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+    ];
+    return nombresMeses[numeroMes - 1];
 }
 
 
