@@ -286,21 +286,22 @@ function eliminarLineaTiempo(req,res){
     })
   
 }
-
+/*
 function obtenerLineaTiempoxId(req,res){
-
+    
     let idLinea = req.params.idLinea
-
+    
     LineaTimepo.findById(idLinea,(err,lineaFiend)=>{
         if(err){return res.status(400).send({mesagge:'error en la peticion'})
-        }else if(lineaFiend){
-            return res.status(200).send({lineaFiend:lineaFiend})
-        }else{
-            return res.status(400).send({messaga:'error al obtener la linea de tiempo'})
-        }
-    })
+    }else if(lineaFiend){
+return res.status(200).send({lineaFiend:lineaFiend})
+}else{
+    return res.status(400).send({messaga:'error al obtener la linea de tiempo'})
+}
+})
 
 }
+*/
  
 function helperImg(filepath,filename,sizel = 300,sizeW){
     return sharp(filepath).resize(sizel,sizeW)
@@ -451,6 +452,29 @@ async function eliminarEvento(req, res) {
       console.error('Error al eliminar el evento:', error);
       return res.status(500).send({ message: 'Error al eliminar el evento' });
   }
+}
+
+
+function obtenerLineaTiempoxId(req, res) {
+    const idLinea = req.params.eventoId;
+    const comunetoId = req.params.idLinea;
+
+    // Buscar el documento principal por su ID
+    LineaTimepo.findById(comunetoId, (err, comunetoEncontrado) => {
+        if (err) {
+            return res.status(400).send({ message: 'Error en la petición' });
+        } else if (comunetoEncontrado) {
+            // Buscar la línea de tiempo dentro del documento principal por su ID
+            const lineaEncontrada = comunetoEncontrado.eventos.find(evento => evento._id.toString() === idLinea);
+            if (lineaEncontrada) {
+                return res.status(200).send({ linea: lineaEncontrada });
+            } else {
+                return res.status(404).send({ message: 'No se encontró la línea de tiempo' });
+            }
+        } else {
+            return res.status(404).send({ message: 'No se encontró el documento principal' });
+        }
+    });
 }
 
 

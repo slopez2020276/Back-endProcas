@@ -90,24 +90,25 @@ function agregarNoticias(req,res){
 }
 
 
+/*
 
 async function obtenerNoticias(req, res) {
     const tipoPrincipal = 'principal';
-
+    
     try {
         // Consulta para obtener las noticias principales
         const noticiasPrincipales = await Noticas.find({ tipo: tipoPrincipal })
-            .sort({ fecha: -1 })  // Ordenar por fecha de forma descendente
-            .limit(6);  // Limitar el número de resultados a 6
-
+        .sort({ fecha: -1 })  // Ordenar por fecha de forma descendente
+        .limit(6);  // Limitar el número de resultados a 6
+        
         // Obtener la fecha actual
         const fechaActual = new Date();
-
+        
         // Calcular la diferencia en tiempo para cada noticia principal
         const noticiasPrincipalesConDiferencia = noticiasPrincipales.map((noticia) => {
             const diferenciaEnMilisegundos = fechaActual - noticia.fecha;
             let diferenciaTexto;
-
+            
             if (diferenciaEnMilisegundos >= 24 * 60 * 60 * 1000) {
                 const diferenciaEnDias = Math.floor(diferenciaEnMilisegundos / (24 * 60 * 60 * 1000));
                 diferenciaTexto = `${diferenciaEnDias} día${diferenciaEnDias !== 1 ? 's' : ''}`;
@@ -121,7 +122,7 @@ async function obtenerNoticias(req, res) {
                 const diferenciaEnSegundos = Math.floor(diferenciaEnMilisegundos / 1000);
                 diferenciaTexto = `${diferenciaEnSegundos} segundo${diferenciaEnSegundos !== 1 ? 's' : ''}`;
             }
-
+            
             return {
                 ...noticia._doc,  // Copiar propiedades existentes
                 diferenciaEnTexto: diferenciaTexto,
@@ -135,6 +136,7 @@ async function obtenerNoticias(req, res) {
     }
 }
 
+*/
 
 async function obtenerNoticiasPrincipalesYRestantes(req, res) {
     const tipoPrincipal = 'principal';
@@ -142,9 +144,9 @@ async function obtenerNoticiasPrincipalesYRestantes(req, res) {
     try {
         // Consulta para obtener las 6 noticias principales
         const noticiasPrincipales = await Noticas.find({ tipo: tipoPrincipal })
-            .sort({ fecha: -1 })  // Ordenar por fecha de forma descendente
-            .limit(6);  // Limitar el número de resultados a 6
-
+        .sort({ fecha: -1 })  // Ordenar por fecha de forma descendente
+        .limit(6);  // Limitar el número de resultados a 6
+        
         // Consulta para obtener las demás noticias (que no son principales)
         const noticiasRestantes = await Noticas.find({ tipo: { $ne: tipoPrincipal } })
             .sort({ fecha: -1 });  // Ordenar por fecha de forma descendente
@@ -346,7 +348,42 @@ function eliminarNoticias(req,res){
 
     })
 
+
     
+    
+}
+
+
+
+async function obtenerNoticias(req, res) {
+    try {
+        const noticias = await Noticas.find()
+            .sort({ fecha: 1 })  // Ordenar por fecha de forma ascendente (menor a mayor)
+            .exec();
+
+        const noticiasFormateadas = noticias.map(noticia => {
+            // Formatear la fecha en el formato "dia mes año"
+            const fechaFormateada = noticia.fecha.getDate() + ' ' + obtenerNombreMes(noticia.fecha.getMonth()) + ' ' + noticia.fecha.getFullYear();
+            return {
+                ...noticia._doc,  // Copiar propiedades existentes
+                fecha: fechaFormateada,
+            };
+        });
+
+        res.status(200).json({ noticias: noticiasFormateadas });
+    } catch (error) {
+        console.error('Error en la petición:', error);
+        res.status(500).json({ message: 'Error en la petición' });
+    }
+}
+
+// Función auxiliar para obtener el nombre del mes a partir de su número
+function obtenerNombreMes(numeroMes) {
+    const nombresMeses = [
+        'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+        'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+    ];
+    return nombresMeses[numeroMes];
 }
 
 module.exports = {
@@ -356,5 +393,5 @@ module.exports = {
     eliminarNoticias,
     buscarNoticasxId,
     agregarNoticias,
-    obtenerNoticiasPrincipalesYRestantes
+    obtenerNoticiasPrincipalesYRestantes,
 }
