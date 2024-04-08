@@ -90,6 +90,7 @@ function agregarNoticias(req,res){
 }
 
 
+/*
 
 async function obtenerNoticias(req, res) {
     try {
@@ -125,6 +126,7 @@ function obtenerNombreMes(numeroMes) {
     return nombresMeses[numeroMes - 1];
 }
 
+*/
 
 async function obtenerNoticiasPrincipalesYRestantes(req, res) {
     const tipoPrincipal = 'principal';
@@ -132,9 +134,9 @@ async function obtenerNoticiasPrincipalesYRestantes(req, res) {
     try {
         // Consulta para obtener las 6 noticias principales
         const noticiasPrincipales = await Noticas.find({ tipo: tipoPrincipal })
-            .sort({ fecha: -1 })  // Ordenar por fecha de forma descendente
-            .limit(6);  // Limitar el número de resultados a 6
-
+        .sort({ fecha: -1 })  // Ordenar por fecha de forma descendente
+        .limit(6);  // Limitar el número de resultados a 6
+        
         // Consulta para obtener las demás noticias (que no son principales)
         const noticiasRestantes = await Noticas.find({ tipo: { $ne: tipoPrincipal } })
             .sort({ fecha: -1 });  // Ordenar por fecha de forma descendente
@@ -336,7 +338,42 @@ function eliminarNoticias(req,res){
 
     })
 
+
     
+    
+}
+
+
+
+async function obtenerNoticias(req, res) {
+    try {
+        const noticias = await Noticas.find()
+            .sort({ fecha: 1 })  // Ordenar por fecha de forma ascendente (menor a mayor)
+            .exec();
+
+        const noticiasFormateadas = noticias.map(noticia => {
+            // Formatear la fecha en el formato "dia mes año"
+            const fechaFormateada = noticia.fecha.getDate() + ' ' + obtenerNombreMes(noticia.fecha.getMonth()) + ' ' + noticia.fecha.getFullYear();
+            return {
+                ...noticia._doc,  // Copiar propiedades existentes
+                fecha: fechaFormateada,
+            };
+        });
+
+        res.status(200).json({ noticias: noticiasFormateadas });
+    } catch (error) {
+        console.error('Error en la petición:', error);
+        res.status(500).json({ message: 'Error en la petición' });
+    }
+}
+
+// Función auxiliar para obtener el nombre del mes a partir de su número
+function obtenerNombreMes(numeroMes) {
+    const nombresMeses = [
+        'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+        'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+    ];
+    return nombresMeses[numeroMes];
 }
 
 module.exports = {
@@ -346,5 +383,5 @@ module.exports = {
     eliminarNoticias,
     buscarNoticasxId,
     agregarNoticias,
-    obtenerNoticiasPrincipalesYRestantes
+    obtenerNoticiasPrincipalesYRestantes,
 }

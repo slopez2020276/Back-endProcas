@@ -19,5 +19,6 @@ api.post('/CrearAnio',LineaTiempoController.CrearAnio)
 api.put('/agregarEventoLineaTiempo/:idLinea',multer.single('ImgPathLineaTiempo'),LineaTiempoController.agregarEventoAlAnioPorId)
 api.put('/editarEventoLineaTiempo/:idLinea/:eventoId',multer.single('ImgPathLineaTiempo'),LineaTiempoController.editarEvento)
 api.delete('/eliminarEventoLineaTiempo/:idLinea/:eventoId',LineaTiempoController.eliminarEvento)
+api.get('/obtenerEventoXid/:idLinea/:eventoId',LineaTiempoController.obtenerLineaTiempoxId)
 
 module.exports = api;
