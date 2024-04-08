@@ -47,7 +47,7 @@ async function crearMarca(req, res) {
 async function obtenerMarcas(req, res) {
     try {
         const marcas = await Marcas.find();
-        res.status(200).json(marcas);
+        res.status(200).json({marcas:marcas});
     } catch (error) {
         console.error('Error al obtener las marcas:', error);
         res.status(500).json({ message: 'Error al obtener las marcas' });
