@@ -10,8 +10,9 @@ mongoose.Promise = global.Promise;
 mongoose.set('strictQuery', false);  // Añade esta línea para evitar la advertencia
 
 mongoose
-  .connect('mongodb://localhost/procasa', {
+  .connect('mongodb+srv://desjr:desjr@cluster0.qmiwvug.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
     //'mongodb://localhost/procasa'
+    //mongodb+srv://desjr:desjr@cluster0.qmiwvug.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -19,8 +20,6 @@ mongoose
     console.log("Se ha conectado correctamente a la base de datos.");
     const PORT = process.env.PORT || 3002;
     app.listen(PORT, function () {
-      lineaController.crearEventosLineaDeTiempoDefult();
-      mainPage.DefultFINAL()
       console.log(
         'El servidor está levantado en el puerto ' + PORT
       );
