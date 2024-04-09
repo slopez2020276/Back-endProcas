@@ -400,6 +400,53 @@ async function CrearAnio(req, res) {
   }
 }
 
+async function EliminarAnio(req,res){
+    const anioId = req.params.idAnio;
+    const lineaTiempo = await LineaTimepo.findById(anioId);
+
+    if(lineaTiempo){
+        LineaTimepo.findByIdAndDelete(anioId,(err,eliminarAnio)=>{
+            if(err){
+                return res.status(404).send({message:'error en la peticion'})
+            }else if(eliminarAnio){
+                return res.status(200).send({message:'se elimino correctamente'})
+            }else{
+                return res.status(404).send({message:'error al eliminar'})
+            }
+        })
+    }else{
+        return res.status(404).send({message:'no se encontro el anio'})
+    
+    }
+
+}
+
+
+async function ediatarAnio(req,res){
+    const anioId = req.params.idAnio;
+    const parametros = req.body;
+    let anios = parametros.anio
+
+    LineaTimepo.findById(anioId,(err,anioSinEditar)=>{
+        if(err){
+            return res.status(404).send({message:'error en la peticion'})
+        }else if(anioSinEditar){
+            LineaTimepo.findByIdAndUpdate(anioId,{anio:anios},{new:true},(err,anioUpdeted)=>{
+                if(err){
+                    return res.status(404).send({message:'error en la peticion'})
+                }else if(anioUpdeted){
+                    return res.status(200).send({anioUpdeted})
+                }else{
+                    return res.status(404).send({message:'error al editar'})
+                }
+            })
+        }else{
+            return res.status(404).send({message:'no se encontro el anio'})
+        }
+    })
+
+}
+
 async function editarEvento(req, res) {
   const eventoId = req.params.eventoId;
   const lineaId = req.params.idLinea;
@@ -526,6 +573,6 @@ module.exports = {
     agregarLineaTiempo,
     agregarEventoAlAnioPorId,
     CrearAnio,
-    editarEvento,eliminarEvento
+    editarEvento,eliminarEvento,EliminarAnio,ediatarAnio
 }
 

@@ -16,6 +16,8 @@ api.post('/agregarEventoLineadeTiempo',multer.single('ImgPathLineaTiempo'),Linea
 
 
 api.post('/CrearAnio',LineaTiempoController.CrearAnio)
+api.delete('/EliminarAnio/:idAnio',LineaTiempoController.EliminarAnio)
+api.put('/ediatarAnio/:idAnio',LineaTiempoController.ediatarAnio)
 api.put('/agregarEventoLineaTiempo/:idLinea',multer.single('ImgPathLineaTiempo'),LineaTiempoController.agregarEventoAlAnioPorId)
 api.put('/editarEventoLineaTiempo/:idLinea/:eventoId',multer.single('ImgPathLineaTiempo'),LineaTiempoController.editarEvento)
 api.delete('/eliminarEventoLineaTiempo/:idLinea/:eventoId',LineaTiempoController.eliminarEvento)
