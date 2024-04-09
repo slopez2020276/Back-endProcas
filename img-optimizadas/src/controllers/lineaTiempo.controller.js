@@ -74,28 +74,46 @@ async function agregarEventoAlAnioPorId(req, res) {
       }
 
       // Agregar el nuevo evento al año encontrado
-      
-      cloudinary.uploader.upload(req.file.path, async function (err, result){
-        if(err) {
-          console.log(err);
-          return res.status(500).json({
-            success: false,
-            message: "Error"
-          })
-        }
-        else{
-         
-        nuevoEvento.ImgPathLineaTiempo = result.url
-        nuevoEvento.idPublic = result.public_id
 
+
+
+      if(req.file){
+        cloudinary.uploader.upload(req.file.path, async function (err, result){
+            if(err) {
+              console.log(err);
+              return res.status(500).json({
+                success: false,
+                message: "Error"
+              })
+            }
+            else{
+             
+            nuevoEvento.ImgPathLineaTiempo = result.url
+            nuevoEvento.idPublic = result.public_id
+    
+            console.log(nuevoEvento)
+            anioEncontrado.eventos.push(nuevoEvento);
+            const anioActualizado = await anioEncontrado.save();
+            res.status(200).json({ success: true, message: 'Evento agregado correctamente al año.', anioActualizado });
+    
+            
+            }
+          })
+      }else{
+
+
+        nuevoEvento.ImgPathLineaTiempo = 'NULL'
+         nuevoEvento.idPublic = 'NULL'
+    
         console.log(nuevoEvento)
         anioEncontrado.eventos.push(nuevoEvento);
         const anioActualizado = await anioEncontrado.save();
         res.status(200).json({ success: true, message: 'Evento agregado correctamente al año.', anioActualizado });
 
-        
-        }
-      })
+
+      }
+      
+   
 
       // Guardar los cambios en la base de datos
       
@@ -400,16 +418,27 @@ async function editarEvento(req, res) {
           return res.status(404).send({ message: 'El evento no se encuentra registrado en esta línea de tiempo' });
       }
 
-      // Si se envía una nueva imagen, eliminar la anterior de Cloudinary
-      if (req.file) {
-          // Eliminar la imagen anterior de Cloudinary
-          await cloudinary.uploader.destroy(eventoExistente.idPublic);
+      if(eventoExistente.idPublic === 'NULL'){
 
-          // Subir la nueva imagen a Cloudinary
-          const result = await cloudinary.uploader.upload(req.file.path);
-          parametrosEvento.ImgPathLineaTiempo = result.url;
-          parametrosEvento.idPublic = result.public_id;
+        const result = await cloudinary.uploader.upload(req.file.path);
+        parametrosEvento.ImgPathLineaTiempo = result.url;
+        parametrosEvento.idPublic = result.public_id;
+      }else{
+
+        // Si se envía una nueva imagen, eliminar la anterior de Cloudinary
+         if (req.file) {
+         // Eliminar la imagen anterior de Cloudinary
+         await cloudinary.uploader.destroy(eventoExistente.idPublic);
+         // Subir la nueva imagen a Cloudinary
+         const result = await cloudinary.uploader.upload(req.file.path);
+              parametrosEvento.ImgPathLineaTiempo = result.url;
+             parametrosEvento.idPublic = result.public_id;
+}
+
       }
+
+
+     
 
       // Actualizar las propiedades del evento
       Object.assign(eventoExistente, parametrosEvento);
