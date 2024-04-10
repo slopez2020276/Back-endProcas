@@ -2,6 +2,7 @@ const { cloudinary_js_config } = require('../../libs/cloudinary');
 const uneteEqipoModel = require('../models/uneteEqipo.model');
 const Unete = require('../models/uneteEqipo.model');
 const cloudinary = require("../../libs/cloudinary");
+const { param } = require('../routes/ubicaciones.routes');
 
 
 function PlazaPorDefecto(){
@@ -52,7 +53,7 @@ function CrearEmpleo (req,res){
     uneteModel.empresa = req.body.empresa
     uneteModel.funciones = req.body.funciones
     uneteModel.educacion = req.body.educacion
-    uneteModel.experecia = req.body.experecia
+    uneteModel.experiencia = req.body.experiencia
     uneteModel.enlaceFormualario = req.body.enlaceFormualario
     uneteModel.estado = 'activo'
 
@@ -108,6 +109,8 @@ function editarFunciones(req, res) {
       { $set: { funciones: nuevasFunciones } },
       { new: true },
       (err, uneteActualizado) => {
+
+
         if (err) {
           return res.status(400).send({ message: 'Error en la petición' });
         } else if (uneteActualizado) {
@@ -305,32 +308,75 @@ function obtenerFuncionesxid(req, res) {
           }else{
             parametros.imgPath = result.url
             parametros.idPublic = result.public_id
-  
-            Unete.findByIdAndUpdate(id,{ 
-              titulo: parametros.titulo,
-              ubicacion: parametros.ubicacion,
-              departamento: parametros.departamento,
-              empresa: parametros.empresa,
-              educacion: parametros.educacion,
-              experecia: parametros.experecia,
-              enlaceFormualario: parametros.enlaceFormualario,
-              imgPath: parametros.imgPath,
-              idPublic: parametros.idPublic
-              
-             },{new:true},(err,uneteUpdated)=>{
-              if(err){
-                return res.status(404).send({message:'error en la peticion'})
-              }else if (uneteUpdated){
-                return res.status(200).send({message:'plazo  actualizado con exito',uneteUpdated})
-              }else{
-                return res.status(400).send({message:'error al actualizar el usuario'})
-              }
-            })
+
+            if(parametros.estado === 'inactivo'){
+
+
+              console.log('inactivo'	)
+              Unete.findByIdAndUpdate(id,{ 
+                titulo: parametros.titulo,
+                ubicacion: parametros.ubicacion,
+                departamento: parametros.departamento,
+                empresa: parametros.empresa,
+                educacion: parametros.educacion,
+                experecia: parametros.experecia,
+                enlaceFormualario: parametros.enlaceFormualario,
+                imgPath: parametros.imgPath,
+                idPublic: parametros.idPublic,
+                fechaModificacion: Date.now()
+               },{new:true},(err,uneteUpdated)=>{
+                if(err){
+                  return res.status(404).send({message:'error en la peticion'})
+                }else if (uneteUpdated){
+                  return res.status(200).send({message:'plazo  actualizado con exito',uneteUpdated})
+                }else{
+                  return res.status(400).send({message:'error al actualizar el usuario'})
+                }
+              })
+
+            }else{
+
+              console.log('activo')
+              Unete.findByIdAndUpdate(id,{ 
+                titulo: parametros.titulo,
+                ubicacion: parametros.ubicacion,
+                departamento: parametros.departamento,
+                empresa: parametros.empresa,
+                educacion: parametros.educacion,
+                experecia: parametros.experecia,
+                enlaceFormualario: parametros.enlaceFormualario,
+                imgPath: parametros.imgPath,
+                idPublic: parametros.idPublic,
+               },{new:true},(err,uneteUpdated)=>{
+                if(err){
+                  return res.status(404).send({message:'error en la peticion'})
+                }else if (uneteUpdated){
+                  return res.status(200).send({message:'plazo  actualizado con exito',uneteUpdated})
+                }else{
+                  return res.status(400).send({message:'error al actualizar el usuario'})
+                }
+              })
+            }
+
+           
           }
         })
       }else{
+
+        if(req.body.estado == 'inactivo'){
+          parametros.estado = 'inactivo'
+          parametros.fechaModificacion = Date.now()
+          console.log('inactivo'	)
+        }else{
+          parametros.estado = 'activo'
+          console.log('activo')
+        }
         console.log('sin imgagen')
         Unete.findByIdAndUpdate (id,parametros,{new:true},(err,uneteUpdated)=>{
+
+       
+
+
           if(err){
             return res.status(404).send({message:'error en la peticion'})
           }else if (uneteUpdated){
@@ -427,7 +473,8 @@ function ObtenerPlazaxId(req,res){
 
 function editarEstado (){
   let id = req.params.id
-
+  let parametros = req.body
+  let estado = parametros.estado
 
   Unete.findById(id,(err,uneteFinded)=>{
     if(err){
@@ -436,7 +483,7 @@ function editarEstado (){
       let estado = uneteFinded.estado
 
       if(estado == 'activo'){
-        Unete.findByIdAndUpdate(id,{estado:'inactivo'},{new:true},(err,uneteUpdated)=>{
+        Unete.findByIdAndUpdate(id,{estado:estado,  fechaModificacion: Date.now() },{new:true},(err,uneteUpdated)=>{
           if(err){
             return res.status(404).send({message:'error en la peticion'})
           }else if (uneteUpdated){
@@ -446,7 +493,7 @@ function editarEstado (){
           }
         })
       }else{
-        Unete.findByIdAndUpdate(id,{estado:'activo'},{new:true},(err,uneteUpdated)=>{
+        Unete.findByIdAndUpdate(id,{estado:estado, fechaModificacion: Date.now()},{new:true},(err,uneteUpdated)=>{
           if(err){
             return res.status(404).send({message:'error en la peticion'})
           }else if (uneteUpdated){
@@ -463,6 +510,33 @@ function editarEstado (){
   })
 }
 
+
+
+async function eliminarRegistrosInactivos() {
+  const fechaLimite = new Date();
+  fechaLimite.setDate(fechaLimite.getDate() - 14); // Resta 14 días a la fecha actual
+
+  try {
+    const registrosInactivos = await Unete.find({
+      estado: 'inactivo',
+      fechaModificacion: { $lt: fechaLimite } // Fecha de modificación menor que la fecha límite
+    });
+
+    if (registrosInactivos.length > 0) {
+      // Eliminar los registros inactivos
+      const eliminados = await Unete.deleteMany({
+        estado: 'inactivo',
+        fechaModificacion: { $lt: fechaLimite }
+      });
+
+      console.log(`Se eliminaron ${eliminados.deletedCount} registros inactivos.`);
+    } else {
+      console.log('No hay registros inactivos que eliminar.');
+    }
+  } catch (error) {
+    console.error('Error al eliminar registros inactivos:', error);
+  }
+}
 module.exports = {
     CrearEmpleo,
     obtenerUnete,
@@ -476,5 +550,6 @@ module.exports = {
     editatFuncionesV2,
     eliminarFuncionV2,
     obtenerFuncionesxid,
-    ObtenerPlazaxId,
+    ObtenerPlazaxId,editarEstado,
+    eliminarRegistrosInactivos,
 }
