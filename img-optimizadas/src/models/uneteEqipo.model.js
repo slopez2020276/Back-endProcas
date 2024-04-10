@@ -23,4 +23,4 @@ const unetesSchema = Schema({
   estado: String,
 });
 
-const Unete = mongoose.model("unetes", unetesSchema);
+module.exports = mongoose.model("unetesSchema", unetesSchema);
