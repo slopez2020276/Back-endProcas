@@ -99,31 +99,51 @@ function actualizarMarca(req, res) {
             return res.status(404).send({ message: 'La marca no se encuentra registrada' });
         }
 
-        try {
-            let imgPublicId = marcaSinEditar.idPublic;
+        if(req.file){
 
-            // Si se proporciona una nueva imagen, subirla a Cloudinary y eliminar la imagen anterior
-            if (req.file) {
-                // Subir la nueva imagen a Cloudinary
-                const result = await cloudinary.uploader.upload(req.file.path);
-                imgPublicId = result.public_id;
-                imgPath = result.url;
-                // Eliminar la imagen anterior de Cloudinary
-                await cloudinary.uploader.destroy(marcaSinEditar.idPublic);
+            try {
+                let imgPublicId = marcaSinEditar.idPublic;
+    
+                // Si se proporciona una nueva imagen, subirla a Cloudinary y eliminar la imagen anterior
+                if (req.file) {
+                    // Subir la nueva imagen a Cloudinary
+                    const result = await cloudinary.uploader.upload(req.file.path);
+                    imgPublicId = result.public_id;
+                    imgPath = result.url;
+                    // Eliminar la imagen anterior de Cloudinary
+                    await cloudinary.uploader.destroy(marcaSinEditar.idPublic);
+                }
+    
+                // Actualizar la marca en la base de datos
+                const marcaActualizada = await Marcas.findByIdAndUpdate(idMarca, {
+                    imgPath:  imgPath ,
+                    idPublic: imgPublicId,
+                    textMarca: req.body.textMarca
+                }, { new: true });
+    
+                res.status(200).json({ marcaUpdated: marcaActualizada });
+            } catch (error) {
+                console.error('Error al actualizar la marca:', error);
+                res.status(500).json({ message: 'Error al actualizar la marca' });
             }
 
-            // Actualizar la marca en la base de datos
-            const marcaActualizada = await Marcas.findByIdAndUpdate(idMarca, {
-                imgPath:  imgPath ,
-                idPublic: imgPublicId,
-                textMarca: req.body.textMarca
-            }, { new: true });
-
-            res.status(200).json({ marcaUpdated: marcaActualizada });
-        } catch (error) {
-            console.error('Error al actualizar la marca:', error);
-            res.status(500).json({ message: 'Error al actualizar la marca' });
+        }else{
+            try {
+    
+             
+                // Actualizar la marca en la base de datos
+                const marcaActualizada = await Marcas.findByIdAndUpdate(idMarca, {
+                    textMarca: req.body.textMarca
+                }, { new: true });
+    
+                res.status(200).json({ marcaUpdated: marcaActualizada });
+            } catch (error) {
+                console.error('Error al actualizar la marca:', error);
+                res.status(500).json({ message: 'Error al actualizar la marca' });
+            }
         }
+
+      
     });
 }
 
