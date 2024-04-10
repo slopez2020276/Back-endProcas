@@ -54,6 +54,7 @@ function CrearEmpleo (req,res){
     uneteModel.educacion = req.body.educacion
     uneteModel.experecia = req.body.experecia
     uneteModel.enlaceFormualario = req.body.enlaceFormualario
+    uneteModel.estado = 'activo'
 
     cloudinary.uploader.upload(req.file.path , function(error, result) {
       if(error){
@@ -424,6 +425,44 @@ function ObtenerPlazaxId(req,res){
 
 }
 
+function editarEstado (){
+  let id = req.params.id
+
+
+  Unete.findById(id,(err,uneteFinded)=>{
+    if(err){
+      return res.status(404).send({message:'error en la peticion'})
+    }else if(uneteFinded){
+      let estado = uneteFinded.estado
+
+      if(estado == 'activo'){
+        Unete.findByIdAndUpdate(id,{estado:'inactivo'},{new:true},(err,uneteUpdated)=>{
+          if(err){
+            return res.status(404).send({message:'error en la peticion'})
+          }else if (uneteUpdated){
+            return res.status(200).send({message:'plazo  actualizado con exito',uneteUpdated})
+          }else{
+            return res.status(400).send({message:'error al actualizar el usuario'})
+          }
+        })
+      }else{
+        Unete.findByIdAndUpdate(id,{estado:'activo'},{new:true},(err,uneteUpdated)=>{
+          if(err){
+            return res.status(404).send({message:'error en la peticion'})
+          }else if (uneteUpdated){
+            return res.status(200).send({message:'plazo  actualizado con exito',uneteUpdated})
+          }else{
+            return res.status(400).send({message:'error al actualizar el usuario'})
+          }
+        })
+      }
+    }else{
+      return res.status(400).send({message:'error al obtener el usuario'})
+
+    }
+  })
+}
+
 module.exports = {
     CrearEmpleo,
     obtenerUnete,
@@ -437,5 +476,5 @@ module.exports = {
     editatFuncionesV2,
     eliminarFuncionV2,
     obtenerFuncionesxid,
-    ObtenerPlazaxId
+    ObtenerPlazaxId,
 }
