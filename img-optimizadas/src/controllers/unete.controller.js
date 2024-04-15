@@ -3,6 +3,7 @@ const uneteEqipoModel = require('../models/uneteEqipo.model');
 const Unete = require('../models/uneteEqipo.model');
 const cloudinary = require("../../libs/cloudinary");
 const { param } = require('../routes/ubicaciones.routes');
+const { format } = require('date-fns');
 
 
 function PlazaPorDefecto(){
@@ -86,19 +87,25 @@ function CrearEmpleo (req,res){
 
 }
 
-function obtenerUnete(req,res){
-    Unete.find({},(err,uneteFinded)=>{
-        if(err){
-            return res.status(200).send({message:'error en la peticion'})
-        }else if(uneteFinded){
-            return res.status(200).send({unete:uneteFinded})
-        }else{
-            return res.status(200).send({message:'error al obtener el unete'})
-        }
+function obtenerUnete(req, res) {
+  Unete.find({}, (err, uneteFinded) => {
+      if (err) {
+          return res.status(500).send({ message: 'Error en la petición' });
+      }
+      if (!uneteFinded || uneteFinded.length === 0) {
+          return res.status(404).send({ message: 'No se encontraron registros' });
+      }
 
-    })
+      // Formatear las fechas en el formato deseado
+      const unetesFormateados = uneteFinded.map(unete => ({
+          ...unete._doc,
+          fechaCreacion: format(new Date(unete.fechaCreacion), 'dd MMMM yyyy'),
+          fechaModificacion: format(new Date(unete.fechaModificacion), 'dd MMMM yyyy'),
+      }));
+
+      return res.status(200).send({ unete: unetesFormateados });
+  });
 }
-
 
 function editarFunciones(req, res) {
     let id = req.params.id;
