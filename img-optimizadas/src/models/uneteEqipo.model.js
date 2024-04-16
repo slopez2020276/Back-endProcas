@@ -21,6 +21,7 @@ const unetesSchema = Schema({
   imgPath: String,
   idPublic: String,
   estado: String,
+  descripcion: String,
 });
 
 module.exports = mongoose.model("unetesSchema", unetesSchema);

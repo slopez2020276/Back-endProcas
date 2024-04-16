@@ -57,6 +57,7 @@ function CrearEmpleo (req,res){
     uneteModel.experiencia = req.body.experiencia
     uneteModel.enlaceFormualario = req.body.enlaceFormualario
     uneteModel.estado = 'activo'
+    uneteModel.descripcion = req.body.descripcion
 
     cloudinary.uploader.upload(req.file.path , function(error, result) {
       if(error){
