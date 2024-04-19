@@ -48,6 +48,29 @@ function obtnerUbiAll(req,res){
     })
 }
 
+async function obtnerUbiAllForUnete(req, res) {
+    try {
+        const ubicacionesFiend = await Ubicaciones.find({});
+        if (!ubicacionesFiend) {
+            return res.status(404).send({ message: 'No se encontraron ubicaciones' });
+        }
+
+        // Obtener solo los nombres de las ubicaciones
+        const nombresUbicaciones = ubicacionesFiend.map((ubicacion) => ubicacion.nombreTienda);
+
+        // Agregar el nombre "Sígnala" al final de la lista de nombres
+        nombresUbicaciones.push('Sígnala');
+
+        return res.status(200).send({ nombres: nombresUbicaciones });
+    } catch (error) {
+        console.error('Error en la petición:', error);
+        return res.status(500).send({ message: 'Error en la petición' });
+    }
+}
+
+
+
+
 function obtenerUbicacionProcas(req,res){
 
     Ubicaciones.find({tipoTienda:'procasa'},(err,ubicaciaonesFiend)=>{
@@ -360,7 +383,7 @@ module.exports = {
     ObtnerUbicacionxID,
     editarUbicaciones,
 
-
+    obtnerUbiAllForUnete,
     obtenerUbicacionesProcasa,
     obtenerUbicacionesProcasacdd,
     obtenerUbicacionesmtgr,

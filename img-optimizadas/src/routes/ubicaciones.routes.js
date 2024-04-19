@@ -11,7 +11,7 @@ api.get("/obtenerUbiccacionxID/:idUbicacion",ControllerUbicaion.ObtnerUbicacionx
 api.post("/crearUbicacion",multer.single('imgPath'),ControllerUbicaion.agregarUbicacion);
 api.delete("/eliminarUbicacion/:idUbicacion",ControllerUbicaion.eliminarUbi);
 api.put("/editarUbicacion/:idUbicacion",multer.single('imgPath'),ControllerUbicaion.editarUbicaciones);
-
+api.get('/obtnerUbiAllForUnete',ControllerUbicaion.obtnerUbiAllForUnete);
 api.get('/obtenerUbicacionesProcasa',ControllerUbicaion.obtenerUbicacionesProcasa);
 api.get('/obtenerProcasacdd',ControllerUbicaion.obtenerUbicacionesProcasacdd);
 api.get('/obtnerMeathouseGrabandgo',ControllerUbicaion.obtenerUbicacionesmtgr);

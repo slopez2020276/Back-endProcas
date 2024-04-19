@@ -22,6 +22,7 @@ const unetesSchema = Schema({
   idPublic: String,
   estado: String,
   descripcion: String,
+  NumeroPlazas: Number,
 });
 
 module.exports = mongoose.model("unetesSchema", unetesSchema);
