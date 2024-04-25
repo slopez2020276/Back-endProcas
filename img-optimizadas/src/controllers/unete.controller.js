@@ -94,7 +94,7 @@ function obtenerUnete(req, res) {
           return res.status(500).send({ message: 'Error en la petición' });
       }
       if (!uneteFinded || uneteFinded.length === 0) {
-          return res.status(404).send({ message: 'No se encontraron registros' });
+          return res.status(200).send({ message: 'No se encontraron registros', unete: []});
       }
 
       // Formatear las fechas en el formato deseado
