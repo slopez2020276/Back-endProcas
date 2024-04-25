@@ -1,6 +1,7 @@
 const Usuario = require("../models/users.model");
 const bcrypt = require("bcrypt-nodejs");
 const jwt = require("../services/jwt");
+const { el } = require("date-fns/locale");
 
 function RegistrarAd(req, res) {
   let usuarioModelo = new Usuario();
@@ -272,6 +273,29 @@ function ObterneruserLog(req,res){
 }
 
 
+
+
+function CrearAgenteMarketing(req,res) {
+  let usuarioModelo = new Usuario();
+  usuarioModelo.email = req.body.email;
+  usuarioModelo.rol = "AgenteMarketing";
+  usuarioModelo.password = req.body.password;
+
+ usuarioModelo.save((err, usuarioGuardado) => {
+
+
+    if(err){
+      return res.status(500).send({mensaje:'error en la peticion'})
+    }else if ( usuarioGuardado){
+      return res.status(200).send({mensaje:'Agente de Marketing creado'})
+    }else{
+      return res.status(500).send({mensaje:'error al crear el agente de marketing'})
+
+    }
+ })
+};
+
+
 module.exports = {
   RegistrarAd,
   Login,
@@ -283,5 +307,6 @@ module.exports = {
   crearGerente,
   ObtenerUsuarios,
   ObterneruserLog,
-  editUser
+  editUser,
+  CrearAgenteMarketing
 };

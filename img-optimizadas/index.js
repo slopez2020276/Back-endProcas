@@ -7,6 +7,9 @@ const mainPage = require("./src/controllers/mainPage.controller");
 const historiaController = require('./src/controllers/historia.controller');
 const equipoCOntroller = require('./src/controllers/unete.controller');
 
+
+
+
 mongoose.Promise = global.Promise;
 mongoose.set('strictQuery', false);  // Añade esta línea para evitar la advertencia
 

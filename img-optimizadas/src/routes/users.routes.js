@@ -9,7 +9,7 @@ api.get("/obtenerUsuarios",controladorUsuario.ObtenerUsuarios);
 api.get("/obtenerUsuarioId/:idUsuario",controladorUsuario.ObtenerUsuarioId);
 api.post('/registrarUsuario/',controladorUsuario.RegistrarUsuario)
 api.put('/editarUsuario/:idUsers' ,controladorUsuario.editUser);
-
+api.post('/CrearAgenteMarketing',controladorUsuario.CrearAgenteMarketing);
 
 
 api.post('/login', controladorUsuario.Login);
