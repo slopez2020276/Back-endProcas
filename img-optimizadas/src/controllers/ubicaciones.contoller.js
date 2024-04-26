@@ -60,10 +60,12 @@ async function obtnerUbiAllForUnete(req, res) {
 
         // Agregar el nombre "Sígnala" al final de la lista de nombres
         nombresUbicaciones.push('Siquinala');
-        nombresUbicaciones.push('Zona 16 Pulte');
-        nombresUbicaciones.push('Zona 16 Asunción');
+
+        nombresUbicaciones.push('Zona 5 Plaza Asunción');
         nombresUbicaciones.push('Zona 15 Vista Hermosa');
-        nombresUbicaciones.push('Siquinala');
+        nombresUbicaciones.push('Zona 16 Pulte');
+        nombresUbicaciones.push('Zona 16 Santa Amelia');
+
         return res.status(200).send({ nombres: nombresUbicaciones });
     } catch (error) {
         console.error('Error en la petición:', error);
