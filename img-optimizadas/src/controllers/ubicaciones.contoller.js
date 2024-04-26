@@ -59,8 +59,11 @@ async function obtnerUbiAllForUnete(req, res) {
         const nombresUbicaciones = ubicacionesFiend.map((ubicacion) => ubicacion.nombreTienda);
 
         // Agregar el nombre "Sígnala" al final de la lista de nombres
-        nombresUbicaciones.push('Sígnala');
-
+        nombresUbicaciones.push('Siquinala');
+        nombresUbicaciones.push('Zona 16 Pulte');
+        nombresUbicaciones.push('Zona 16 Asunción');
+        nombresUbicaciones.push('Zona 15 Vista Hermosa');
+        nombresUbicaciones.push('Siquinala');
         return res.status(200).send({ nombres: nombresUbicaciones });
     } catch (error) {
         console.error('Error en la petición:', error);
