@@ -60,7 +60,6 @@ async function obtnerUbiAllForUnete(req, res) {
 
         // Agregar el nombre "Sígnala" al final de la lista de nombres
         nombresUbicaciones.push('Siquinala');
-
         nombresUbicaciones.push('Zona 5 Plaza Asunción');
         nombresUbicaciones.push('Zona 15 Vista Hermosa');
         nombresUbicaciones.push('Zona 16 Pulte');
@@ -127,7 +126,7 @@ function editarUbicaciones(req,res){
                     descripcion:req.body.descripcion,
                     imgPath:req.body.imgPath,
                     whatsapp:req.body.whatsapp,
-                },{new:true},(err,NoticiaUpdated)=>{
+                 },{new:true},(err,NoticiaUpdated)=>{
                     if(err){
                         return res.status(200).send({messege:'error en la petion 2'})
                     }else if (NoticiaUpdated){

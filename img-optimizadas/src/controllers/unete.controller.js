@@ -545,6 +545,32 @@ async function eliminarRegistrosInactivos() {
     console.error('Error al eliminar registros inactivos:', error);
   }
 }
+
+function obtenerPlazasActivas(req, res) {
+  const quinceDiasAtras = subDays(new Date(), 15); // Fecha de hace 15 días
+  const quinceDiasAtrasISO = quinceDiasAtras.toISOString();
+
+  Unetes.find({ estado: 'activo' }, (err, plazasActivas) => {
+      if (err) {
+          return res.status(500).send({ message: 'Error en la petición' });
+      }
+
+      if (!plazasActivas || plazasActivas.length === 0) {
+          return res.status(200).send({ message: 'No se encontraron plazas activas', plazas: [] });
+      }
+
+      const plazasFiltradas = plazasActivas.filter(plaza => {
+          // Si la plaza está marcada como visible y su fecha de modificación es posterior a quince días atrás, se incluye
+          if (plaza.visibilidad && plaza.fechaModificacion > quinceDiasAtrasISO) {
+              return true;
+          }
+          // Si la plaza no está marcada como visible o su fecha de modificación es anterior a quince días atrás, se excluye
+          return false;
+      });
+
+      return res.status(200).send({ plazas: plazasFiltradas });
+  });
+}
 module.exports = {
     CrearEmpleo,
     obtenerUnete,
@@ -560,4 +586,5 @@ module.exports = {
     obtenerFuncionesxid,
     ObtenerPlazaxId,editarEstado,
     eliminarRegistrosInactivos,
+    obtenerPlazasActivas,
 }
