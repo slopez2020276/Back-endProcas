@@ -20,9 +20,12 @@ mongoose.set('strictQuery', false);  // Añade esta línea para evitar la advert
 
 
 mongoose
-  .connect('mongodb+srv://desjr:desjr@interno.g3fzrlc.mongodb.net/?retryWrites=true&w=majority&appName=Interno', {
+  .connect('mongodb+srv://desjr:desjr@cluster0.qmiwvug.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
     //'mongodb://localhost/procasa'
     //mongodb+srv://desjr:desjr@cluster0.qmiwvug.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+        //mongodb+srv://desjr:desjr@interno.g3fzrlc.mongodb.net/?retryWrites=true&w=majority&appName=Interno
+
+
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
