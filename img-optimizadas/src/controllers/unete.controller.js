@@ -475,7 +475,11 @@ function obtenerFuncionesxid(req, res) {
                 return false;
             }
             return true;
-        });
+        }).map(plaza => ({
+            ...plaza._doc,
+            fechaCreacion: format(new Date(plaza.fechaCreacion), 'dd MMMM yyyy'),
+            fechaModificacion: format(new Date(plaza.fechaModificacion), 'dd MMMM yyyy'),
+        }));
 
         return res.status(200).send({ plazas: plazasFiltradas });
     });
