@@ -4,6 +4,8 @@ const Unete = require('../models/uneteEqipo.model');
 const cloudinary = require("../../libs/cloudinary");
 const { param } = require('../routes/ubicaciones.routes');
 const { format } = require('date-fns');
+const { subDays } = require('date-fns');
+
 
 
 function PlazaPorDefecto(){
@@ -24,6 +26,7 @@ function PlazaPorDefecto(){
       PlazaModel.enlaceFormualario = 'https://forms.gle/kwy2Yp7ZrQ8QHCER6'
       PlazaModel.imgPath = ''
       PlazaModel.idPublic = 'publico'
+
     
     
       PlazaModel.save((err,uneteGuardado)=>{
@@ -58,6 +61,7 @@ function CrearEmpleo (req,res){
     uneteModel.enlaceFormualario = req.body.enlaceFormualario
     uneteModel.estado = 'activo'
     uneteModel.descripcion = req.body.descripcion
+    uneteModel.visibilidad = req.body.visibilidad
 
     cloudinary.uploader.upload(req.file.path , function(error, result) {
       if(error){
@@ -452,6 +456,32 @@ function obtenerFuncionesxid(req, res) {
 
 
 
+  function obtenerPlazasFiltradas(req, res) {
+    const quinceDiasAtras = subDays(new Date(), 15); // Fecha de hace 15 días
+    const quinceDiasAtrasISO = quinceDiasAtras.toISOString();
+
+    Unete.find({ visibilidad: 'visible' }, (err, todasLasPlazas) => {
+        if (err) {
+            return res.status(500).send({ message: 'Error en la petición' });
+        }
+
+        if (!todasLasPlazas || todasLasPlazas.length === 0) {
+            return res.status(200).send({ message: 'No se encontraron plazas visibles', plazas: [] });
+        }
+
+        const plazasFiltradas = todasLasPlazas.filter(plaza => {
+            // Si la plaza está inactiva y la fecha de modificación es posterior a quince días atrás, no se incluye
+            if (plaza.estado === 'inactivo' && plaza.fechaModificacion <= quinceDiasAtrasISO) {
+                return false;
+            }
+            return true;
+        });
+
+        return res.status(200).send({ plazas: plazasFiltradas });
+    });
+}
+
+
   function obtenerPlazas(req,res){
     Unete.find({},(err,uneteFinded)=>{
       if(err){
@@ -518,6 +548,44 @@ function editarEstado (){
   })
 }
 
+function editarVisibilidad (req,res){
+  let id = req.params.id
+  let parametros = req.body
+
+  Unete.findById(id,(err,uneteFinded)=>{
+    if(err){
+      return res.status(404).send({message:'error en la peticion'})
+    }else if(uneteFinded){
+      let estado = uneteFinded.visibilidad
+
+      if(estado == 'novisible'){
+        Unete.findByIdAndUpdate(id,{visibilidad:'visible',  fechaModificacion: Date.now() },{new:true},(err,uneteUpdated)=>{
+          if(err){
+            return res.status(404).send({message:'error en la peticion'})
+          }else if (uneteUpdated){
+            return res.status(200).send({message:'plazo  actualizado con exito',uneteUpdated})
+          }else{
+            return res.status(400).send({message:'error al actualizar el usuario'})
+          }
+        })
+      }else{
+        Unete.findByIdAndUpdate(id,{visibilidad:'novisible', fechaModificacion: Date.now()},{new:true},(err,uneteUpdated)=>{
+          if(err){
+            return res.status(404).send({message:'error en la peticion'})
+          }else if (uneteUpdated){
+            return res.status(200).send({message:'plazo  actualizado con exito',uneteUpdated})
+          }else{
+            return res.status(400).send({message:'error al actualizar el usuario'})
+          }
+        })
+      }
+    }else{
+      return res.status(400).send({message:'error al obtener el usuario'})
+
+    }
+  })
+}
+
 
 
 async function eliminarRegistrosInactivos() {
@@ -550,7 +618,7 @@ function obtenerPlazasActivas(req, res) {
   const quinceDiasAtras = subDays(new Date(), 15); // Fecha de hace 15 días
   const quinceDiasAtrasISO = quinceDiasAtras.toISOString();
 
-  Unetes.find({ estado: 'activo' }, (err, plazasActivas) => {
+  Unete.find({ estado: 'activo' }, (err, plazasActivas) => {
       if (err) {
           return res.status(500).send({ message: 'Error en la petición' });
       }
@@ -587,4 +655,6 @@ module.exports = {
     ObtenerPlazaxId,editarEstado,
     eliminarRegistrosInactivos,
     obtenerPlazasActivas,
+    editarVisibilidad,
+    obtenerPlazasFiltradas
 }
