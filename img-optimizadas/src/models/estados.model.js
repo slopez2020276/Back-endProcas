@@ -2,11 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const estado = Schema({
-  Esadoto: String,
-  
+const estados = new Schema({
+  estado: String,
 });
-
-
-
-module.exports = mongoose.model("estado", estado);
+module.exports = mongoose.model("estados", estados);

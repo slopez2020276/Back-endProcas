@@ -3,6 +3,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const path = require('path')
 const app = express();
+const VerPeticion = require('./src/middlewares/estado-middlewares')
 
 // IMPORTACION RUTAS
 const usuarioRoutes = require("./src/routes/users.routes");
@@ -20,7 +21,12 @@ const unete = require('./src/routes/unete.routes')
 const cloud = require('./src/routes/cloudinary.routes')
 const Marcas = require('./src/routes/marcas.routes')
 const estados = require('./src/routes/estados.routes');
+const cola = require('./src/routes/cola.routes')
+
 // MIDDLEWARES
+
+
+app.use(VerPeticion.VerPeticion)
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
 app.use(express.json());
@@ -29,7 +35,7 @@ app.use(express.json());
 app.use(cors());
 
 // CARGA DE RUTAS localhost:3000/api/productos
-app.use("/api", usuarioRoutes,imgsROutes,mainPage, unete,producto ,lineaTiempo,historia,mision,noticas,valores,subs,ubicaciones,cloud,Marcas,estados);
+app.use("/api", usuarioRoutes,imgsROutes,mainPage,cola, unete,producto ,lineaTiempo,historia,mision,noticas,valores,subs,ubicaciones,cloud,Marcas,estados);
 
 app.use('/uploads',express.static(path.resolve('uploads')));
 app.use('/imgsDefult',express.static(path.resolve('imgsDefult')));

@@ -34,6 +34,7 @@ function crearHistoraDefult (){
 
 
 
+
 async function obtenerHistoria(req,res){
     Historia.find({},(err,historiaFiend)=>{
         if(err){
