@@ -173,7 +173,8 @@ async function verificarDisponibilidad() {
                 }
 
                 // Enviar los datos al servidor 2 para que los guarde
-                const respuesta = await axios[metodoHTTP]('http://servidor2:puerto/api/guardar-accion', accion);
+                console.log(`http://servidor2:puerto${accion.ruta}`)
+                const respuesta = await axios[metodoHTTP](`http://servidor2:puerto/${accion.ruta}`, accion);
                 console.log('Respuesta del servidor 2:', respuesta.data);
                 
                 // Aquí puedes eliminar la acción de la cola si se ejecutó con éxito
