@@ -13,6 +13,21 @@ async function CrearProductos(req, res) {
 
      
 
+        productosmodel.nombreProducto = req.body.nombreProducto
+          productosmodel.imgPath = 'https://meathouse-assets-prod.s3.amazonaws.com/media/cache/sylius_shop_product_original/43/5f/d2b88e7162b6f4f1c38b380c2a98.png'
+          productosmodel.idPublic = 'asdf'
+          productosmodel.save((err, noticia) => {
+              if (err) {
+                  return res.status(400).send({message:'error en la peticon'})
+              } else if (noticia) {
+                  return res.status(200).send({data:noticia})
+              }else{
+                  return res.status(200).send({message:'error al crear la noticia'})
+              }
+          })
+
+
+ /*    
         cloudinary.uploader.upload(req.file.path, function (err, result){
           if(err) {
             console.log(err);
@@ -29,13 +44,14 @@ async function CrearProductos(req, res) {
               if (err) {
                   return res.status(400).send({message:'error en la peticon'})
               } else if (noticia) {
-                  return res.status(200).send({noticia:noticia})
+                  return res.status(200).send({data:noticia})
               }else{
                   return res.status(200).send({message:'error al crear la noticia'})
               }
           })
           }
         })
+        */
 
     } catch (error) {
         console.error('Error al crear el producto:', error);
@@ -63,7 +79,7 @@ Productos.findById(idProducto,(err,productoFinded)=>{
       if(err){
         return res.status(500).send({message:'error en la peticion'})
       }else if(productoDeleted){
-        return res.status(200).send({productoDeleted})
+        return res.status(200).send({data: productoDeleted})
       }else{
         return res.status(404).send({message:'error al eliminar el producto'})
       }
@@ -102,7 +118,7 @@ async function CrearListaEnProducto(req, res) {
         await producto.save();
 
         // Devolver el producto actualizado como respuesta
-        return res.status(200).send({ producto: producto });
+        return res.status(200).send({ data: producto });
     } catch (error) {
         console.error('Error al crear la lista en el producto:', error);
         return res.status(500).send({ message: 'Error interno del servidor' });
@@ -162,13 +178,14 @@ async function agregarCategoria(req,res) {
   
       // Agregar la nueva categoría al array de categorías
       producto.categorias.push(nuevaCategoria);
-  
       // Guardar el producto actualizado en la base de datos
       await producto.save((err,productoGuardado)=>{
+        let data  =  productoGuardado.categorias.length -1
+
         if(err){
             return res.status(500).send({message:'error en la peticion'})
         }else if(nuevaCategoria){
-            return res.status(200).send({productoGuardado})
+            return res.status(200).send({data : productoGuardado.categorias[data]})
         }else{
             return res.status(404).send({message:'error al guardar el producto'})
         }
@@ -220,7 +237,7 @@ async function CrearProductosv2 (req,res){
       // Guardar el producto actualizado en la base de datos
       const productoGuardado = await producto.save();
   
-      return res.status(200).send({ productoGuardado });
+      return res.status(200).send({ data : req.body });
     } catch (error) {
       console.error('Error al agregar ítems a la categoría:', error);
       return res.status(500).send({ message: 'Error en la petición' });
@@ -310,7 +327,7 @@ async function editarItemEnCategoria(req, res) {
     // Guardar el producto actualizado en la base de datos
     const productoGuardado = await producto.save();
 
-    return res.status(200).send({ productoGuardado });
+    return res.status(200).send({data:  req.body });
   } catch (error) {
     console.error('Error al editar ítem en la categoría:', error);
     return res.status(500).send({ message: 'Error en la petición' });
@@ -346,7 +363,7 @@ async function editarItemEnCategoria(req, res) {
       // Guardar el producto actualizado en la base de datos
       const productoGuardado = await producto.save();
   
-      return res.status(200).send({ productoGuardado });
+      return res.status(200).send({data : req.body  });
     } catch (error) {
       console.error('Error al editar categoría:', error);
       return res.status(500).send({ message: 'Error en la petición' });
@@ -386,7 +403,7 @@ async function editarItemEnCategoria(req, res) {
               if(err){
                   return res.status(200).send({messege:'error en la petion 2'})
               }else if (NoticiaUpdated){
-                  return res.status(200).send({lineaUpdated:NoticiaUpdated})
+                  return res.status(200).send({data:NoticiaUpdated})
               }else{
                   return res.status(200).send({message:'error al editar'})
               }
@@ -423,7 +440,7 @@ async function editarItemEnCategoria(req, res) {
                         console.error('Error al eliminar la imagen en Cloudinary:', error);
                         } else {
                         console.log('Imagen eliminada correctamente en Cloudinary:', result)
-                        return res.status(200).send({lineaUpdated:historiaUpdated});
+                        return res.status(200).send({data:historiaUpdated});
                         }
                         });
                      }else{
@@ -441,7 +458,7 @@ async function editarItemEnCategoria(req, res) {
             if(err){
               return res.status(200).send({messege:'error en la petion 2'})
             }else if(productoUpdated){
-              return res.status(200).send({lineaUpdated:productoUpdated})
+              return res.status(200).send({data:productoUpdated})
             }else{
               return res.status(200).send({message:'error al editar'})
             }

@@ -10,7 +10,6 @@ async function crearMarca(req, res) {
     try {
         const  textMarca  = req.body.textMarca;
 
-        console.log(req.file.path)
 
         cloudinary.uploader.upload(req.file.path, async function (err, result){
             if(err) {
@@ -26,17 +25,18 @@ async function crearMarca(req, res) {
         const nuevaMarca = new Marcas({ 
             imgPath: result.url, 
             idPublic: result.public_id, 
-            textMarca 
+            textMarca: req.body.textMarca
         });
 
     
             console.log(nuevaMarca)
             const MarcaUpdated = await nuevaMarca.save();
-            res.status(200).json({ success: true, message: 'nueva marca creada', MarcaUpdated });
+            res.status(200).json({ success: true, message: 'nueva marca creada', data: MarcaUpdated  });
     
             
             }
           })
+
     
     } catch (error) {
         console.error('Error al crear la marca:', error);
@@ -79,7 +79,7 @@ async function eliminarMarca(req, res) {
         await cloudinary.uploader.destroy(marca.idPublic);
 
         await Marcas.findByIdAndDelete(req.params.id);
-        res.status(200).json({ message: 'Marca eliminada correctamente' });
+        res.status(200).json({ data: req.bpdy });
     } catch (error) {
         console.error('Error al eliminar la marca:', error);
         res.status(500).json({ message: 'Error al eliminar la marca' });
@@ -121,7 +121,7 @@ function actualizarMarca(req, res) {
                     textMarca: req.body.textMarca
                 }, { new: true });
     
-                res.status(200).json({ marcaUpdated: marcaActualizada });
+                res.status(200).json({ data: marcaActualizada });
             } catch (error) {
                 console.error('Error al actualizar la marca:', error);
                 res.status(500).json({ message: 'Error al actualizar la marca' });
@@ -136,7 +136,7 @@ function actualizarMarca(req, res) {
                     textMarca: req.body.textMarca
                 }, { new: true });
     
-                res.status(200).json({ marcaUpdated: marcaActualizada });
+                res.status(200).json({ data: marcaActualizada });
             } catch (error) {
                 console.error('Error al actualizar la marca:', error);
                 res.status(500).json({ message: 'Error al actualizar la marca' });

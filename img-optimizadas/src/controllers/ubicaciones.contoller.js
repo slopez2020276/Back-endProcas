@@ -114,6 +114,11 @@ function editarUbicaciones(req,res){
         if(err){
             return res.status(404).send({message:'error en la peticion 1'})
         }else if (UbicacionSinEditar){
+
+
+
+
+
           if(req.file){
             if(UbicacionSinEditar.imgPath === 'imgsDefult/imgDefult.png'){
                 console.log('con image y la ulr SI ES LA DEFULT')
@@ -130,7 +135,7 @@ function editarUbicaciones(req,res){
                     if(err){
                         return res.status(200).send({messege:'error en la petion 2'})
                     }else if (NoticiaUpdated){
-                        return res.status(200).send({lineaUpdated:NoticiaUpdated})
+                        return res.status(200).send({data:NoticiaUpdated})
                     }else{
                         return res.status(200).send({message:'error al editar'})
                     }
@@ -171,7 +176,7 @@ function editarUbicaciones(req,res){
                                 console.error('Error al eliminar la imagen en Cloudinary:', error);
                                 } else {
                                 console.log('Imagen eliminada correctamente en Cloudinary:', result)
-                                return res.status(200).send({Ubicacion:historiaUpdated});
+                                return res.status(200).send({data:historiaUpdated});
                                 }
                                 });
                              }else{
@@ -189,7 +194,7 @@ function editarUbicaciones(req,res){
                     return res.status(200).send({messege:'error en la petion'})
                 }else if (NoticiaUpdated){
                     
-                    return res.status(200).send({lineaUpdated:NoticiaUpdated})
+                    return res.status(200).send({data:NoticiaUpdated})
                 }else{
                     return res.status(200).send({message:'error al editar'})
                 }
@@ -212,7 +217,7 @@ function editarubi(req,res){
         if(err){
             return res.status(200).send({messege:'error en la petion'})
         }else if (MisionUpdated){
-            return res.status(200).send({lineaUpdated:MisionUpdated})
+            return res.status(200).send({data:MisionUpdated})
         }else{
             return res.status(200).send({message:'error al editar'})
 
@@ -249,6 +254,7 @@ function agregarUbicacion(req,res){
     UbiModel.enlaceWaze = parametros.enlaceWaze
     UbiModel.horario = parametros.horario
     UbiModel.whatsapp = parametros.whatsapp
+ 
 
     cloudinary.uploader.upload(req.file.path, function (err, result){
         if(err) {
@@ -267,7 +273,7 @@ function agregarUbicacion(req,res){
             if(err){
                 return res.status(500).send({message:'error en la peticion 2 asdfas'})
             }else if (valorSaved){
-                return res.status(200).send({message:'se guardo correctamente',valorSaved})
+                return res.status(200).send({message:'se guardo correctamente',data : valorSaved})
             }else {
                 return res.status(200).send({message:'error al guardar'})
             }

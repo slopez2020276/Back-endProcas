@@ -167,19 +167,21 @@ async function verificarDisponibilidad() {
                     metodoHTTP = 'put';
                 } else if (accion.metodo === 'POST') {
                     metodoHTTP = 'post';
-                } else {
+                } else if (accion.metodo === 'DELETE'){
+                    metodoHTTP = 'delete';
+                }else {
                     console.error('Método de solicitud no soportado:', accion.metodo);
                     continue; // Pasar a la siguiente acción si el método no es PUT o POST
                 }
 
                 // Enviar los datos al servidor 2 para que los guarde
-                console.log(`http://192.168.23.86:3009${accion.ruta}`)
-                const respuesta = await axios[metodoHTTP](`http://192.168.23.86:3009${accion.ruta}`, accion);
-                console.log('Respuesta del servidor 2:', respuesta.data);
+                const respuesta = await axios[metodoHTTP](`http://192.168.23.86:3009${accion.ruta}`, accion.respuesta.data);
+                console.log('ESTA ES LA ACCION _________',accion.respuesta.data)
+                console.log('Respuesta del servidor 2:', respuesta);
                 
                 // Aquí puedes eliminar la acción de la cola si se ejecutó con éxito
             } catch (error) {
-                console.error('Error al enviar la acción al servidor 2:', error);
+                console.error('Error al enviar la acción al servidor 2:');
             }
         }
 
@@ -189,7 +191,7 @@ async function verificarDisponibilidad() {
 
         console.log('Todas las acciones en la cola han sido ejecutadas y la cola ha sido vaciada.');
     } catch (error) {
-        console.error('Error al verificar disponibilidad y ejecutar acciones en la cola:', error);
+        console.error('Error al verificar disponibilidad y ejecutar acciones en la cola:');
     }
 }
 

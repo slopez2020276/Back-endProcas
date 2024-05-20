@@ -50,7 +50,7 @@ function editarMision(req,res){
         if(err){
             return res.status(200).send({messege:'error en la petion'})
         }else if (MisionUpdated){
-            return res.status(200).send({lineaUpdated:MisionUpdated})
+            return res.status(200).send({data:MisionUpdated})
         }else{
             return res.status(200).send({message:'error al editar'})
 

@@ -62,7 +62,7 @@ function editarhistoria(req,res){
                     if(err){
                         return res.status(200).send({messege:'error en la petion 2'})
                     }else if (historiaUpdated){
-                        return res.status(200).send({lineaUpdated:historiaUpdated})
+                        return res.status(200).send({data:historiaUpdated})
                     }else{
                         return res.status(200).send({message:'error al editar'})
                     }
@@ -75,7 +75,7 @@ function editarhistoria(req,res){
                     if(err){
                         return res.status(200).send({messege:'error en la petion 2'})
                     }else if (historiaUpdated){
-                        return res.status(200).send({lineaUpdated:historiaUpdated})
+                        return res.status(200).send({data:historiaUpdated})
                     }else{
                         return res.status(200).send({message:'error al editar'})
             
@@ -89,7 +89,7 @@ function editarhistoria(req,res){
                     return res.status(200).send({messege:'error en la petion'})
                 }else if (historiaUpdated){
                     
-                    return res.status(200).send({lineaUpdated:historiaUpdated})
+                    return res.status(200).send({data:historiaUpdated})
                 }else{
                     return res.status(200).send({message:'error al editar'})
                 }
@@ -117,7 +117,7 @@ function EditarFondo(req,res){
                     if(err){
                         return res.status(200).send({messege:'error en la petion 2'})
                     }else if (historiaUpdated){
-                        return res.status(200).send({lineaUpdated:historiaUpdated})
+                        return res.status(200).send({data:historiaUpdated})
                     }else{
                         return res.status(200).send({message:'error al editar'})
                     }
@@ -146,7 +146,7 @@ function EditarFondo(req,res){
                                 console.error('Error al eliminar la imagen en Cloudinary:', error);
                                 } else {
                                 console.log('Imagen eliminada correctamente en Cloudinary:', result)
-                                return res.status(200).send({lineaUpdated:historiaUpdated});
+                                return res.status(200).send({data:historiaUpdated});
                                 }
                                 });
                              }else{
@@ -168,7 +168,7 @@ function EditarFondo(req,res){
                         return res.status(200).send({messege:'error en la petion'})
                     }else if (historiaUpdated){
                         
-                        return res.status(200).send({lineaUpdated:historiaUpdated})
+                        return res.status(200).send({data:historiaUpdated})
                     }else{
                         return res.status(200).send({message:'error al editar'})
                     }
@@ -198,7 +198,7 @@ function editarFondoMovile(req,res){
                     if(err){
                         return res.status(200).send({messege:'error en la petion 2'})
                     }else if (historiaUpdated){
-                        return res.status(200).send({lineaUpdated:historiaUpdated})
+                        return res.status(200).send({data:historiaUpdated})
                     }else{
                         return res.status(200).send({message:'error al editar'})
                     }
@@ -227,7 +227,7 @@ function editarFondoMovile(req,res){
                                 console.error('Error al eliminar la imagen en Cloudinary:', error);
                                 } else {
                                 console.log('Imagen eliminada correctamente en Cloudinary:', result)
-                                return res.status(200).send({lineaUpdated:historiaUpdated});
+                                return res.status(200).send({data:historiaUpdated});
                                 }
                                 });
                              }else{
@@ -249,7 +249,7 @@ function editarFondoMovile(req,res){
                         return res.status(200).send({messege:'error en la petion'})
                     }else if (historiaUpdated){
                         
-                        return res.status(200).send({lineaUpdated:historiaUpdated})
+                        return res.status(200).send({data:historiaUpdated})
                     }else{
                         return res.status(200).send({message:'error al editar'})
                     }
@@ -279,7 +279,7 @@ function EditarPortadamovle(req,res){
                     if(err){
                         return res.status(200).send({messege:'error en la petion 2'})
                     }else if (historiaUpdated){
-                        return res.status(200).send({lineaUpdated:historiaUpdated})
+                        return res.status(200).send({data:historiaUpdated})
                     }else{
                         return res.status(200).send({message:'error al editar'})
                     }
@@ -309,7 +309,7 @@ function EditarPortadamovle(req,res){
                                 console.error('Error al eliminar la imagen en Cloudinary:', error);
                                 } else {
                                 console.log('Imagen eliminada correctamente en Cloudinary:', result)
-                                return res.status(200).send({Portada:historiaUpdated});
+                                return res.status(200).send({data:historiaUpdated});
                                 }
                                 });
                              }else{
@@ -337,7 +337,7 @@ function EditarPortadamovle(req,res){
                         return res.status(200).send({messege:'error en la petion'})
                     }else if (historiaUpdated){
                         
-                        return res.status(200).send({lineaUpdated:historiaUpdated})
+                        return res.status(200).send({data:historiaUpdated})
                     }else{
                         return res.status(200).send({message:'error al editar'})
                     }
@@ -371,7 +371,7 @@ function EditarPortada(req,res){
                     if(err){
                         return res.status(200).send({messege:'error en la petion 2'})
                     }else if (historiaUpdated){
-                        return res.status(200).send({lineaUpdated:historiaUpdated})
+                        return res.status(200).send({data:historiaUpdated})
                     }else{
                         return res.status(200).send({message:'error al editar'})
                     }
@@ -401,7 +401,7 @@ function EditarPortada(req,res){
                                 console.error('Error al eliminar la imagen en Cloudinary:', error);
                                 } else {
                                 console.log('Imagen eliminada correctamente en Cloudinary:', result)
-                                return res.status(200).send({Portada:historiaUpdated});
+                                return res.status(200).send({data:historiaUpdated});
                                 }
                                 });
                              }else{
@@ -429,7 +429,7 @@ function EditarPortada(req,res){
                         return res.status(200).send({messege:'error en la petion'})
                     }else if (historiaUpdated){
                         
-                        return res.status(200).send({lineaUpdated:historiaUpdated})
+                        return res.status(200).send({data:historiaUpdated})
                     }else{
                         return res.status(200).send({message:'error al editar'})
                     }

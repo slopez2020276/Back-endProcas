@@ -6,13 +6,23 @@ const mongoose2 = require('mongoose');
 
 
 exports.VerPeticion = function (req, res, next) {
-    if (req.method === 'PUT' || req.method === 'POST') {
+
+  if(req.originalUrl === '/api/login'){
+
+
+  }else{
+
+
+
+    if (req.method === 'PUT' || req.method === 'POST' || req.method === 'DELETE') {
+
+
       // Actualizar la disponibilidad
       Estados.updateOne({},{estado:'disponible'},{new:true, upsert:true},(err,estadoUpdates)=>{
         if(err){
           console.log('error al actializar',err);
         }else if(estadoUpdates){
-         console.log( 'se actualizo correctamente', estadoUpdates);
+         console.log( 'se actualizo correctamente');
         }else{
           console.log('No se encontro el estado');
         }
@@ -48,14 +58,14 @@ exports.VerPeticion = function (req, res, next) {
         Cola.findOneAndUpdate({}, {$push: { cola: nuevaPeticion } }, { upsert: true })
           .then(() => {
             console.log('Peticion guardada en la cola');
-            console.log(nuevaPeticion);
           })
           .catch(error => {
             console.error('Error al guardar la petición en la cola:', error);
           });
       });
     }
-    next();
+  }
+   next();
 };
 
 const Estado2 = require('../models/estados.model');
@@ -80,6 +90,7 @@ exports.EjecutarCola = function () {
         // Iterar sobre cada elemento de la cola
         estado.cola.forEach(peticion => {
             // Aquí ejecutas la función correspondiente según el contenido de la peticion
+            
             // Por ejemplo, si peticion.metodo es 'POST', ejecutar la función correspondiente al método POST
             console.log('Ejecutando función de la cola en la segunda base de datos:', peticion);
         });

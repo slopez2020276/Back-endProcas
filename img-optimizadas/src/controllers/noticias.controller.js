@@ -64,6 +64,7 @@ function agregarNoticias(req,res){
     noticiasmodel.tipo = parametros.tipo
     
 
+
     cloudinary.uploader.upload(req.file.path, function (err, result){
         if(err) {
           console.log(err);
@@ -72,7 +73,6 @@ function agregarNoticias(req,res){
             message: "Error"
           })
         }
-        else{
          
         noticiasmodel.imgPhat = result.url
         noticiasmodel.idPulic = result.public_id
@@ -80,12 +80,12 @@ function agregarNoticias(req,res){
             if (err) {
                 return res.status(400).send({message:'error en la peticon'})
             } else if (noticia) {
-                return res.status(200).send({noticia:noticia})
+                return res.status(200).send({data:noticia})
             }else{
                 return res.status(200).send({message:'error al crear la noticia'})
             }
         })
-        }
+        
       })
 }
 
