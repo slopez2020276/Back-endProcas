@@ -51,22 +51,24 @@ function CrearEmpleo (req,res){
 
      let uneteModel = new Unete()
 
-    uneteModel.titulo = req.body.titulo
-    uneteModel.ubicacion = req.body.ubicacion
-    uneteModel.departamento = req.body.departamento
-    uneteModel.empresa = req.body.empresa
-    uneteModel.funciones = req.body.funciones
-    uneteModel.educacion = req.body.educacion
-    uneteModel.experiencia = req.body.experiencia
-    uneteModel.enlaceFormualario = req.body.enlaceFormualario
-    uneteModel.estado = 'activo'
-    uneteModel.descripcion = req.body.descripcion
-    uneteModel.visibilidad = req.body.visibilidad
 
-    console.log(req.body.ruta)
+
 
 
     if(req.file){
+
+      uneteModel.titulo = req.body.titulo
+      uneteModel.ubicacion = req.body.ubicacion
+      uneteModel.departamento = req.body.departamento
+      uneteModel.empresa = req.body.empresa
+      uneteModel.funciones = req.body.funciones
+      uneteModel.educacion = req.body.educacion
+      uneteModel.experiencia = req.body.experiencia
+      uneteModel.enlaceFormualario = req.body.enlaceFormualario
+      uneteModel.estado = 'activo'
+      uneteModel.descripcion = req.body.descripcion
+      uneteModel.visibilidad = req.body.visibilidad
+
       cloudinary.uploader.upload(req.file.path , function(error, result) {
         if(error){
           console.log(err);
@@ -87,15 +89,43 @@ function CrearEmpleo (req,res){
                 return res.status(200).send({message:'error al guardar el unete'})
             }
   
-  
+   
           })
         }
   
   
       })
     }else {
-      return res.status(200).send({message:'nice'})
-  
+
+      console.log( 'Body: ',req.body)
+      uneteModel.titulo = req.body.respuesta
+      uneteModel.ubicacion = req.body.ubicacion
+      uneteModel.departamento = req.body.departamento
+      uneteModel.empresa = req.body.empresa
+      uneteModel.funciones = req.body.funciones
+      uneteModel.educacion = req.body.educacion
+      uneteModel.experiencia = req.body.experiencia
+      uneteModel.enlaceFormualario = req.body.enlaceFormualario
+      uneteModel.estado = 'activo'
+      uneteModel.descripcion = req.body.descripcion
+      uneteModel.visibilidad = req.body.visibilidad
+      uneteModel._id = req.body._id
+
+
+      uneteModel.save((err,uneteGuardado)=>{
+        if(err){
+            return res.status(400).send({message:'error en la peticion'})
+        }else if(uneteGuardado){
+            return res.status(200).send({data:uneteGuardado})
+        }else{
+            return res.status(200).send({message:'error al guardar el unete'})
+        }
+
+
+      })
+
+      return res.status(200).send({message:'guardado en el servidor 2'})
+      
     }
 }
 

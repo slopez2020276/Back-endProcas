@@ -57,12 +57,15 @@ function agregarNoticias(req,res){
 
     let parametros = req.body
     let noticiasmodel = new Noticas()
-    let imgPatha = req.file.path
-    noticiasmodel.title = parametros.title
-    noticiasmodel.imgPhat = imgPatha
     noticiasmodel.descripcion = parametros.descripcion
+    
+   
+    noticiasmodel.title = parametros.title
     noticiasmodel.tipo = parametros.tipo
     
+   if (req.file){
+    let imgPatha = req.file.path
+    noticiasmodel.imgPhat = imgPatha
 
     cloudinary.uploader.upload(req.file.path, function (err, result){
         if(err) {
@@ -80,13 +83,29 @@ function agregarNoticias(req,res){
             if (err) {
                 return res.status(400).send({message:'error en la peticon'})
             } else if (noticia) {
-                return res.status(200).send({noticia:noticia})
+                return res.status(200).send({data:noticia})
             }else{
                 return res.status(200).send({message:'error al crear la noticia'})
             }
         })
         }
       })
+      
+   }else{
+
+    noticiasmodel.imgPhat =  req.body.imgPhat
+    noticiasmodel.idPulic = req.body.idPulic
+    noticiasmodel._id = req.body._id
+    noticiasmodel.save((err, noticia) => {
+        if (err) {
+            return res.status(400).send({message:'error en la peticon'})
+        } else if (noticia) {
+            return res.status(200).send({data:noticia})
+        }else{
+            return res.status(200).send({message:'error al crear la noticia'})
+        }
+    })
+   }   
 }
 
 

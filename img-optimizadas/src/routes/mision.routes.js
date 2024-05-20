@@ -4,7 +4,7 @@ const md_auteticacion = require('../middlewares/autenticacion')
 const api = express.Router();
 
 api.get('/mostrarMision', misioncontoller.obtenerMision);
-api.put('/editarMision/:idMision',md_auteticacion.Auth,misioncontoller.editarMision)
+api.put('/editarMision/:idMision',misioncontoller.editarMision)
 
 
 
