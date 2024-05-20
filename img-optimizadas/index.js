@@ -9,7 +9,12 @@ const PORT = process.env.PORT || 3009;
 const IP = '0.0.0.0'; // Escucha en todas las interfaces de red
 
 mongoose
-  .connect('mongodb://localhost/test', {
+  .connect('mongodb://localhost/test', {  
+    //'mongodb://localhost/procasa'
+    //mongodb+srv://desjr:desjr@cluster0.qmiwvug.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+        //mongodb+srv://desjr:desjr@interno.g3fzrlc.mongodb.net/?retryWrites=true&w=majority&appName=Interno
+
+
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

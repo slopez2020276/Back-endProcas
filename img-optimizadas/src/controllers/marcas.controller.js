@@ -10,33 +10,53 @@ async function crearMarca(req, res) {
     try {
         const  textMarca  = req.body.textMarca;
 
-
-        cloudinary.uploader.upload(req.file.path, async function (err, result){
-            if(err) {
-              console.log(err);
-              return res.status(500).json({
-                success: false,
-                message: "Error"
-              })
-            }
-            else{
-             
+        if(req.file){
+            cloudinary.uploader.upload(req.file.path, async function (err, result){
+                if(err) {
+                  console.log(err);
+                  return res.status(500).json({
+                    success: false,
+                    message: "Error"
+                  })
+                }
+                else{
+                 
+                    
+            const nuevaMarca = new Marcas({ 
+                imgPath: result.url, 
+                idPublic: result.public_id, 
+                textMarca 
+            });
+    
+        
+                console.log(nuevaMarca)
+                const MarcaUpdated = await nuevaMarca.save();
+                res.status(200).json({ success: true, message: 'nueva marca creada', MarcaUpdated });
+        
                 
-        const nuevaMarca = new Marcas({ 
-            imgPath: result.url, 
-            idPublic: result.public_id, 
-            textMarca: req.body.textMarca
-        });
+                }
+              })
+        }else{
 
+            const nuevaMarca = new Marcas({ 
+                imgPath: req.body.imgPath, 
+                idPublic: req.body.idPublic, 
+                textMarca: req.body.textMarca,
+                _id: req.body._id
+            });
     
-            console.log(nuevaMarca)
-            const MarcaUpdated = await nuevaMarca.save();
-            res.status(200).json({ success: true, message: 'nueva marca creada', data: MarcaUpdated  });
-    
+        
+                console.log(nuevaMarca)
+                const MarcaUpdated = await nuevaMarca.save();
+                res.status(200).json({ success: true, message: 'nueva marca creada', MarcaUpdated });
+        
+
             
-            }
-          })
+        }
 
+    
+
+       
     
     } catch (error) {
         console.error('Error al crear la marca:', error);
@@ -57,7 +77,7 @@ async function obtenerMarcas(req, res) {
 // Obtener una marca por su ID
 async function obtenerMarcaPorId(req, res) {
     try {
-        const marca = await Marcas.findById(req.params.id);
+        const marca = await Marcas.findById(req.params.id); 
         if (!marca) {
             return res.status(404).json({ message: 'Marca no encontrada' });
         }
@@ -133,7 +153,7 @@ function actualizarMarca(req, res) {
              
                 // Actualizar la marca en la base de datos
                 const marcaActualizada = await Marcas.findByIdAndUpdate(idMarca, {
-                    textMarca: req.body.textMarca
+                    textMarca: req.body.textMarca,
                 }, { new: true });
     
                 res.status(200).json({ data: marcaActualizada });

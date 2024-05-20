@@ -109,9 +109,10 @@ async function agregarEventoAlAnioPorId(req, res) {
       }else{
 
 
-        nuevoEvento.ImgPathLineaTiempo = 'NULL'
-         nuevoEvento.idPublic = 'NULL'
-        
+        nuevoEvento.ImgPathLineaTiempo = req.body.ImgPathLineaTiempo
+         nuevoEvento.idPublic = req.body.idPublic
+        nuevoEvento._id = req.body._id
+
         console.log(nuevoEvento)
         anioEncontrado.eventos.push(nuevoEvento);
         const anioActualizado = await anioEncontrado.save();
@@ -132,8 +133,6 @@ async function agregarEventoAlAnioPorId(req, res) {
       res.status(500).json({ success: false, message: 'Error al agregar evento al año.' });
   }
 }
-
-
 
 
 function obtenerFechaFormateada(lineaTiempo) {
@@ -399,6 +398,7 @@ async function CrearAnio(req, res) {
       // Crear un nuevo objeto de año
       const nuevoAnio = new LineaTimepo();
       nuevoAnio.anio = req.body.anio;
+      nuevoAnio._id = req.body._id;
       // Guardar el nuevo año en la base de datos
       await nuevoAnio.save();
 
@@ -465,13 +465,15 @@ async function editarEvento(req, res) {
       // Buscar la línea de tiempo por su ID
       const lineaTiempo = await LineaTimepo.findById(lineaId);
       if (!lineaTiempo) {
-          return res.status(404).send({ message: 'La línea de tiempo no se encuentra registrada' });
+          return res.status(404).send({ message: 'La línea de tiempo no se encuentra registrada jkhkjhkhhy' });
       }
+
+      console.log(eventoId  )
 
       // Buscar el evento dentro de la línea de tiempo por su ID
       const eventoExistente = lineaTiempo.eventos.find(evento => evento._id.toString() === eventoId);
       if (!eventoExistente) {
-          return res.status(404).send({ message: 'El evento no se nomas no' });
+          return res.status(404).send({ message: 'El evento no se encuentra registrado en esta línea de tiempo' });
       }
 
       if(eventoExistente.idPublic === 'NULL'){
@@ -483,7 +485,7 @@ async function editarEvento(req, res) {
 
         // Si se envía una nueva imagen, eliminar la anterior de Cloudinary
          if (req.file) {
-         // Eliminar la imagen anterior de Cloudinary
+         // Eliminar la imagen   anterior de Cloudinary
          await cloudinary.uploader.destroy(eventoExistente.idPublic);
          // Subir la nueva imagen a Cloudinary
          const result = await cloudinary.uploader.upload(req.file.path);

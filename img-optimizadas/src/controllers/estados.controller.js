@@ -122,7 +122,7 @@ async function copiarBaseDatosJson(req, res) {
 
         return res.status(200).send({ message: 'Base de datos copiada exitosamente.' });
     } catch (error) {
-        console.error("Error al copiar la base de datos:", error);
+        console.error("Error al copiar la base de datos:");
         return res.status(500).send({ message: 'Error al copiar la base de datos.' });
     } finally {
         await origenClient.close();
@@ -175,9 +175,9 @@ async function verificarDisponibilidad() {
                 }
 
                 // Enviar los datos al servidor 2 para que los guarde
-                const respuesta = await axios[metodoHTTP](`http://192.168.23.86:3009${accion.ruta}`, accion.respuesta.data);
-                console.log('ESTA ES LA ACCION _________',accion.respuesta.data)
-                console.log('Respuesta del servidor 2:', respuesta);
+                console.log(`http://192.168.23.45:3009${accion.ruta}`)
+                const respuesta = await axios[metodoHTTP](`http://192.168.23.45:3009${accion.ruta}`, accion);
+                console.log('Respuesta del servidor 2:', respuesta.data);
                 
                 // Aquí puedes eliminar la acción de la cola si se ejecutó con éxito
             } catch (error) {
@@ -195,9 +195,8 @@ async function verificarDisponibilidad() {
     }
 }
 
-setInterval(verificarDisponibilidad, 10 * 1000); // Intervalo de 10 segundos (en milisegundos)
 
-
+setInterval(verificarDisponibilidad, 50 * 1000); 
 
 
 module.exports = {

@@ -2,6 +2,7 @@ const Productos = require('../models/productos.model');
 const Listas = require('../models/listasProductos.model');
 const path = require('path');
 const cloudinary = require("../../libs/cloudinary");
+const productosModel = require('../models/productos.model');
 
 
 // Función para crear un producto
@@ -43,7 +44,7 @@ async function CrearProductos(req, res) {
           productosmodel.save((err, noticia) => {
               if (err) {
                   return res.status(400).send({message:'error en la peticon'})
-              } else if (noticia) {
+                     } else if (noticia) {
                   return res.status(200).send({data:noticia})
               }else{
                   return res.status(200).send({message:'error al crear la noticia'})
@@ -52,6 +53,28 @@ async function CrearProductos(req, res) {
           }
         })
         */
+
+      }else{
+
+
+        productosmodel.nombreProducto = req.body.nombreProducto
+        productosmodel.imgPath = req.body.imgPath
+        productosmodel.idPublic = req.body.idPublic
+        productosmodel._id = req.body._id
+
+        productosmodel.save((err, noticia) => {
+            if (err) {
+                return res.status(400).send({message:'error en la peticon'})
+                   } else if (noticia) {
+                return res.status(200).send({noticia:noticia})
+            }else{
+                return res.status(200).send({message:'error al crear la noticia'})
+            }
+        })
+      }
+     
+
+       
 
     } catch (error) {
         console.error('Error al crear el producto:', error);
@@ -171,14 +194,25 @@ async function agregarCategoria(req,res) {
         return;
       }
   
-      // Crear un nuevo objeto de categoría con el nombre y los items proporcionados
-      const nuevaCategoria = {
-        Nombre: req.body.nombreCategoria,
-      };
+      let  nuevaCategoria
+
+            // Crear un nuevo objeto de categoría con el nombre y los items proporcionados
+
+      if(req.body._id){
+        nuevaCategoria = {
+          _id:req.body._id,
+          Nombre: req.body.Nombre,
+        };
+      }else{
+         nuevaCategoria = {
+          Nombre: req.body.nombreCategoria,
+        };
+      }
+   
   
       // Agregar la nueva categoría al array de categorías
       producto.categorias.push(nuevaCategoria);
-      // Guardar el producto actualizado en la base de datos
+      // Guardar el producto actualizado en la base de datosd
       await producto.save((err,productoGuardado)=>{
         let data  =  productoGuardado.categorias.length -1
 

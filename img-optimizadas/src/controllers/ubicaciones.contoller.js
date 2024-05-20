@@ -245,41 +245,77 @@ function agregarUbicacion(req,res){
     let parametros = req.body
     let UbiModel = new Ubicaciones()
 
-    UbiModel.tipoTienda = parametros.tipoTienda
-    UbiModel.direccion = parametros.direccion
-    UbiModel.telefono = parametros.telefono
-    UbiModel.nombreTienda = parametros.nombreTienda
-    UbiModel.descripcion = parametros.descripcion
-    UbiModel.enlaceMaps = parametros.enlaceMaps
-    UbiModel.enlaceWaze = parametros.enlaceWaze
-    UbiModel.horario = parametros.horario
-    UbiModel.whatsapp = parametros.whatsapp
+    if(req.file){
+
+        UbiModel.tipoTienda = parametros.tipoTienda
+        UbiModel.direccion = parametros.direccion
+        UbiModel.telefono = parametros.telefono
+        UbiModel.nombreTienda = parametros.nombreTienda
+        UbiModel.descripcion = parametros.descripcion
+        UbiModel.enlaceMaps = parametros.enlaceMaps
+        UbiModel.enlaceWaze = parametros.enlaceWaze
+        UbiModel.horario = parametros.horario
+        UbiModel.whatsapp = parametros.whatsapp
+    
+        cloudinary.uploader.upload(req.file.path, function (err, result){
+            if(err) {
+              console.log(err);
+              return res.status(500).json({
+                success: false,
+                message: "Error"
+              })
+            }
+            else{
+              UbiModel.imgPath = result.url
+              UbiModel.idPublic = result.public_id
+    
+              console.log(parametros)
+              UbiModel.save((err,valorSaved)=>{
+                if(err){
+                    return res.status(500).send({message:'error en la peticion 2 asdfas'})
+                }else if (valorSaved){
+                    return res.status(200).send({message:'se guardo correctamente',valorSaved})
+                }else {
+                    return res.status(200).send({message:'error al guardar'})
+                }
+             })
+            }
+        })
+    }else{
+        
+        UbiModel.tipoTienda = parametros.tipoTienda
+        UbiModel.direccion = parametros.direccion
+        UbiModel.telefono = parametros.telefono
+        UbiModel.nombreTienda = parametros.nombreTienda
+        UbiModel.descripcion = parametros.descripcion
+        UbiModel.enlaceMaps = parametros.enlaceMaps
+        UbiModel.enlaceWaze = parametros.enlaceWaze
+        UbiModel.horario = parametros.horario
+        UbiModel.whatsapp = parametros.whatsapp
+    
+       
+            
+              UbiModel.imgPath = req.body.imgPath
+              UbiModel.idPublic = req.body.idPublic
+              UbiModel._id = req.body._id
+    
+              console.log(parametros)
+              UbiModel.save((err,valorSaved)=>{
+                if(err){
+                    return res.status(500).send({message:'error en la peticion 2 asdfas'})
+                }else if (valorSaved){
+                    return res.status(200).send({message:'se guardo correctamente',valorSaved})
+                }else {
+                    return res.status(200).send({message:'error al guardar'})
+                }
+             })
+            
+       
+    }
+
  
 
-    cloudinary.uploader.upload(req.file.path, function (err, result){
-        if(err) {
-          console.log(err);
-          return res.status(500).json({
-            success: false,
-            message: "Error"
-          })
-        }
-        else{
-          UbiModel.imgPath = result.url
-          UbiModel.idPublic = result.public_id
 
-          console.log(parametros)
-          UbiModel.save((err,valorSaved)=>{
-            if(err){
-                return res.status(500).send({message:'error en la peticion 2 asdfas'})
-            }else if (valorSaved){
-                return res.status(200).send({message:'se guardo correctamente',data : valorSaved})
-            }else {
-                return res.status(200).send({message:'error al guardar'})
-            }
-         })
-        }
-    })
 }
 
 
