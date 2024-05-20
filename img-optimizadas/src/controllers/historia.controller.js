@@ -183,6 +183,8 @@ function EditarFondo(req,res){
     })
 }
 
+
+
 function editarFondoMovile(req,res){
     let  idHistoria = req.params.idHistoria
     let parametros = req.body
