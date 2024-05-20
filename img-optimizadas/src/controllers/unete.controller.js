@@ -63,33 +63,40 @@ function CrearEmpleo (req,res){
     uneteModel.descripcion = req.body.descripcion
     uneteModel.visibilidad = req.body.visibilidad
 
-    cloudinary.uploader.upload(req.file.path , function(error, result) {
-      if(error){
-        console.log(err);
-        return res.status(500).json({
-          success: false,
-          message: "Error"
-        })
-      }else{
-        uneteModel.imgPath = result.url
-        uneteModel.idPublic = result.public_id
-
-        uneteModel.save((err,uneteGuardado)=>{
-          if(err){
-              return res.status(400).send({message:'error en la peticion'})
-          }else if(uneteGuardado){
-              return res.status(200).send({unete:uneteGuardado})
-          }else{
-              return res.status(200).send({message:'error al guardar el unete'})
-          }
+    console.log(req.body.ruta)
 
 
-        })
-      }
-
-
-    })
-
+    if(req.file){
+      cloudinary.uploader.upload(req.file.path , function(error, result) {
+        if(error){
+          console.log(err);
+          return res.status(500).json({
+            success: false,
+            message: "Error"
+          })
+        }else{
+          uneteModel.imgPath = result.url
+          uneteModel.idPublic = result.public_id
+  
+          uneteModel.save((err,uneteGuardado)=>{
+            if(err){
+                return res.status(400).send({message:'error en la peticion'})
+            }else if(uneteGuardado){
+                return res.status(200).send({unete:uneteGuardado})
+            }else{
+                return res.status(200).send({message:'error al guardar el unete'})
+            }
+  
+  
+          })
+        }
+  
+  
+      })
+    }else {
+      return res.status(200).send({message:'nice'})
+  
+    }
 }
 
 function obtenerUnete(req, res) {
