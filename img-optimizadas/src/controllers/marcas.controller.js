@@ -99,7 +99,7 @@ async function eliminarMarca(req, res) {
         await cloudinary.uploader.destroy(marca.idPublic);
 
         await Marcas.findByIdAndDelete(req.params.id);
-        res.status(200).json({ message: 'Marca eliminada correctamente' });
+        res.status(200).json({ data: req.bpdy });
     } catch (error) {
         console.error('Error al eliminar la marca:', error);
         res.status(500).json({ message: 'Error al eliminar la marca' });
@@ -141,7 +141,7 @@ function actualizarMarca(req, res) {
                     textMarca: req.body.textMarca
                 }, { new: true });
     
-                res.status(200).json({ marcaUpdated: marcaActualizada });
+                res.status(200).json({ data: marcaActualizada });
             } catch (error) {
                 console.error('Error al actualizar la marca:', error);
                 res.status(500).json({ message: 'Error al actualizar la marca' });
@@ -156,7 +156,7 @@ function actualizarMarca(req, res) {
                     textMarca: req.body.textMarca,
                 }, { new: true });
     
-                res.status(200).json({ marcaUpdated: marcaActualizada });
+                res.status(200).json({ data: marcaActualizada });
             } catch (error) {
                 console.error('Error al actualizar la marca:', error);
                 res.status(500).json({ message: 'Error al actualizar la marca' });

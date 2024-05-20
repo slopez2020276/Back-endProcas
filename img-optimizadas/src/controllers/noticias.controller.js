@@ -67,6 +67,7 @@ function agregarNoticias(req,res){
     let imgPatha = req.file.path
     noticiasmodel.imgPhat = imgPatha
 
+
     cloudinary.uploader.upload(req.file.path, function (err, result){
         if(err) {
           console.log(err);
@@ -75,7 +76,6 @@ function agregarNoticias(req,res){
             message: "Error"
           })
         }
-        else{
          
         noticiasmodel.imgPhat = result.url
         noticiasmodel.idPulic = result.public_id
@@ -88,7 +88,7 @@ function agregarNoticias(req,res){
                 return res.status(200).send({message:'error al crear la noticia'})
             }
         })
-        }
+        
       })
       
    }else{

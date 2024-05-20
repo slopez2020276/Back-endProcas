@@ -167,7 +167,9 @@ async function verificarDisponibilidad() {
                     metodoHTTP = 'put';
                 } else if (accion.metodo === 'POST') {
                     metodoHTTP = 'post';
-                } else {
+                } else if (accion.metodo === 'DELETE'){
+                    metodoHTTP = 'delete';
+                }else {
                     console.error('Método de solicitud no soportado:', accion.metodo);
                     continue; // Pasar a la siguiente acción si el método no es PUT o POST
                 }
@@ -179,7 +181,7 @@ async function verificarDisponibilidad() {
                 
                 // Aquí puedes eliminar la acción de la cola si se ejecutó con éxito
             } catch (error) {
-                console.error('Error al enviar la acción al servidor 2:', error);
+                console.error('Error al enviar la acción al servidor 2:');
             }
         }
 
@@ -189,7 +191,7 @@ async function verificarDisponibilidad() {
 
         console.log('Todas las acciones en la cola han sido ejecutadas y la cola ha sido vaciada.');
     } catch (error) {
-        console.error('Error al verificar disponibilidad y ejecutar acciones en la cola:', error);
+        console.error('Error al verificar disponibilidad y ejecutar acciones en la cola:');
     }
 }
 

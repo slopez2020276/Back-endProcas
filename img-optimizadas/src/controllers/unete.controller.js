@@ -69,7 +69,30 @@ function CrearEmpleo (req,res){
       uneteModel.descripcion = req.body.descripcion
       uneteModel.visibilidad = req.body.visibilidad
 
-      cloudinary.uploader.upload(req.file.path , function(error, result) {
+
+   
+    
+        uneteModel.imgPath = 'https://s3.amazonaws.com/meathouse-assets-prod/location_image/app-huehue-002-62cec899d65ba.jpeg'
+        uneteModel.idPublic = 'sadfasfas'
+
+        uneteModel.save((err,uneteGuardado)=>{
+          if(err){
+              return res.status(400).send({message:'error en la peticion'})
+          }else if(uneteGuardado){
+              return res.status(200).send({data:uneteGuardado})
+          }else{
+              return res.status(200).send({message:'error al guardar el unete'})
+          }
+
+
+        })
+
+
+
+    /*  
+    
+    
+          cloudinary.uploader.upload(req.file.path , function(error, result) {
         if(error){
           console.log(err);
           return res.status(500).json({
@@ -95,6 +118,10 @@ function CrearEmpleo (req,res){
   
   
       })
+    
+    
+    */
+
     }else {
 
       console.log( 'Body: ',req.body)

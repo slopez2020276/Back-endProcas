@@ -1,47 +1,41 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const path = require('path')
+const path = require('path');
 const app = express();
-const VerPeticion = require('./src/middlewares/estado-middlewares')
+const mongoose = require("mongoose");
+const VerPeticion = require('./src/middlewares/estado-middlewares');
 
-// IMPORTACION RUTAS
+// IMPORTACIÓN DE RUTAS
 const usuarioRoutes = require("./src/routes/users.routes");
-const imgsROutes = require("./src/routes/img.routes")
-const mainPage = require("./src/routes/main.routes")
-const lineaTiempo = require("./src/routes/lineaTiempo.routes")
-const historia = require("./src/routes/historia.routes")
-const mision = require("./src/routes/mision.routes")
-const noticas = require('./src/routes/noticias.routes')
-const valores = require('./src/routes/volores.routes')
-const subs = require('./src/routes/susbribe.routes')
-const ubicaciones = require('./src/routes/ubicaciones.routes')
-const producto = require('./src/routes/productos.routes')
-const unete = require('./src/routes/unete.routes')
-const cloud = require('./src/routes/cloudinary.routes')
-const Marcas = require('./src/routes/marcas.routes')
-const estados = require('./src/routes/estados.routes');
-const cola = require('./src/routes/cola.routes')
+const imgsRoutes = require("./src/routes/img.routes");
+const mainPageRoutes = require("./src/routes/main.routes");
+const lineaTiempoRoutes = require("./src/routes/lineaTiempo.routes");
+const historiaRoutes = require("./src/routes/historia.routes");
+const misionRoutes = require("./src/routes/mision.routes");
+const noticiasRoutes = require('./src/routes/noticias.routes');
+const valoresRoutes = require('./src/routes/volores.routes');
+const subsRoutes = require('./src/routes/susbribe.routes');
+const ubicacionesRoutes = require('./src/routes/ubicaciones.routes');
+const productoRoutes = require('./src/routes/productos.routes');
+const uneteRoutes = require('./src/routes/unete.routes');
+const cloudRoutes = require('./src/routes/cloudinary.routes');
+const marcasRoutes = require('./src/routes/marcas.routes');
+const estadosRoutes = require('./src/routes/estados.routes');
+const colaRoutes = require('./src/routes/cola.routes');
 
 // MIDDLEWARES
-
-
-app.use(VerPeticion.VerPeticion)
+app.use(VerPeticion.VerPeticion);
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
 app.use(express.json());
-
-// CABECERAS
 app.use(cors());
 
-// CARGA DE RUTAS localhost:3000/api/productos
-app.use("/api", usuarioRoutes,imgsROutes,mainPage,cola, unete,producto ,lineaTiempo,historia,mision,noticas,valores,subs,ubicaciones,cloud,Marcas,estados);
+// CARGA DE RUTAS
+app.use("/api", usuarioRoutes, imgsRoutes, mainPageRoutes, misionRoutes,colaRoutes, uneteRoutes, productoRoutes, lineaTiempoRoutes, historiaRoutes, noticiasRoutes, valoresRoutes, subsRoutes, ubicacionesRoutes, cloudRoutes, marcasRoutes, estadosRoutes);
 
-app.use('/uploads',express.static(path.resolve('uploads')));
-app.use('/imgsDefult',express.static(path.resolve('imgsDefult')));
-app.use('/optimize',express.static(path.resolve('optimize')));
-
-
+app.use('/uploads', express.static(path.resolve('uploads')));
+app.use('/imgsDefult', express.static(path.resolve('imgsDefult')));
+app.use('/optimize', express.static(path.resolve('optimize')));
 
 module.exports = app;
-

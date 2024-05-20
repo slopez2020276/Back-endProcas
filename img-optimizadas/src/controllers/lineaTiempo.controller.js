@@ -78,6 +78,8 @@ async function agregarEventoAlAnioPorId(req, res) {
 
 
       if(req.file){
+        
+        
         cloudinary.uploader.upload(req.file.path, async function (err, result){
             if(err) {
               console.log(err);
@@ -88,17 +90,22 @@ async function agregarEventoAlAnioPorId(req, res) {
             }
             else{
              
-            nuevoEvento.ImgPathLineaTiempo = result.url
-            nuevoEvento.idPublic = result.public_id
-    
-            console.log(nuevoEvento)
-            anioEncontrado.eventos.push(nuevoEvento);
-            const anioActualizado = await anioEncontrado.save();
-            res.status(200).json({ success: true, message: 'Evento agregado correctamente al año.', anioActualizado });
-    
+           
+          nuevoEvento.ImgPathLineaTiempo = result.url
+          nuevoEvento.idPublic = result.public_id
+  
+          console.log(nuevoEvento)
+          anioEncontrado.eventos.push(nuevoEvento);
+          const anioActualizado = await anioEncontrado.save();
+          let numeroEvento = anioActualizado.eventos.length - 1
+          res.status(200).json({ success: true, message: 'Evento agregado correctamente al año.', data: anioActualizado.eventos[numeroEvento] });
             
             }
           })
+
+           
+
+
       }else{
 
 
@@ -109,7 +116,9 @@ async function agregarEventoAlAnioPorId(req, res) {
         console.log(nuevoEvento)
         anioEncontrado.eventos.push(nuevoEvento);
         const anioActualizado = await anioEncontrado.save();
-        res.status(200).json({ success: true, message: 'Evento agregado correctamente al año.', anioActualizado });
+        console.log(anioActualizado)
+
+        res.status(200).json({ success: true, message: 'Evento agregado correctamente al año.', data:  anioActualizado });
 
 
       }
@@ -393,7 +402,7 @@ async function CrearAnio(req, res) {
       // Guardar el nuevo año en la base de datos
       await nuevoAnio.save();
 
-      return res.status(200).json({ success: true, message: 'Año creado exitosamente.', anio: nuevoAnio });
+      return res.status(200).json({ success: true, message: 'Año creado exitosamente.', data: nuevoAnio });
   } catch (error) {
       console.error('Error al crear el año:', error);
       return res.status(500).json({ success: false, message: 'Error al crear el año.' });
@@ -464,7 +473,7 @@ async function editarEvento(req, res) {
       // Buscar el evento dentro de la línea de tiempo por su ID
       const eventoExistente = lineaTiempo.eventos.find(evento => evento._id.toString() === eventoId);
       if (!eventoExistente) {
-          return res.status(404).send({ message: 'El evento no se encuentra registrado en esta línea de tiempo fffffffffffff' });
+          return res.status(404).send({ message: 'El evento no se encuentra registrado en esta línea de tiempo' });
       }
 
       if(eventoExistente.idPublic === 'NULL'){
@@ -485,17 +494,13 @@ async function editarEvento(req, res) {
 }
 
       }
-
-
-     
-
       // Actualizar las propiedades del evento
       Object.assign(eventoExistente, parametrosEvento);
 
       // Guardar los cambios en la línea de tiempo
       const lineaActualizada = await lineaTiempo.save();
 
-      return res.status(200).send({ message: 'Evento actualizado exitosamente', lineaActualizada });
+      return res.status(200).send({ message: 'Evento actualizado exitosamente', data:parametrosEvento });
   } catch (error) {
       console.error('Error al editar el evento:', error);
       return res.status(500).send({ message: 'Error al editar el evento' });
