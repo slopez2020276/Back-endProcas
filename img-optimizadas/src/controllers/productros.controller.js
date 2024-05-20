@@ -12,7 +12,6 @@ async function CrearProductos(req, res) {
         const productosmodel = new Productos()
     
 
-     
 
         productosmodel.nombreProducto = req.body.nombreProducto
           productosmodel.imgPath = 'https://meathouse-assets-prod.s3.amazonaws.com/media/cache/sylius_shop_product_original/43/5f/d2b88e7162b6f4f1c38b380c2a98.png'
@@ -54,7 +53,7 @@ async function CrearProductos(req, res) {
         })
         */
 
-      }else{
+  
 
 
         productosmodel.nombreProducto = req.body.nombreProducto
@@ -71,7 +70,7 @@ async function CrearProductos(req, res) {
                 return res.status(200).send({message:'error al crear la noticia'})
             }
         })
-      }
+      
      
 
        
@@ -80,7 +79,8 @@ async function CrearProductos(req, res) {
         console.error('Error al crear el producto:', error);
         return res.status(500).send({ message: 'Error interno del servidor' });
     }
-}
+
+  }
 
 
 function EliminarProductos(req,res){
@@ -562,6 +562,10 @@ async function editarItemEnCategoria(req, res) {
   }
   
 
+
+
+
+
 module.exports = {
     CrearProductos,
     CrearListaEnProducto,
@@ -577,7 +581,5 @@ module.exports = {
     EliminarItemEnCategoria,
     editarProductos,
     ObtenerCategoriasxID,
-    ObtenerItemsxCategoria,
-
-    
-};
+    ObtenerItemsxCategoria
+  };
