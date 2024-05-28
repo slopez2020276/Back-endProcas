@@ -14,7 +14,7 @@ api.post('/CrearAgenteMarketing',controladorUsuario.CrearAgenteMarketing);
 
 api.post('/login', controladorUsuario.Login);
 
-
+api.post('/loginnn', controladorUsuario.login2 );
 
 
 

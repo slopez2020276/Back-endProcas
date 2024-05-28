@@ -175,8 +175,8 @@ async function verificarDisponibilidad() {
                 }
 
                 // Enviar los datos al servidor 2 para que los guarde
-                console.log(`http://192.168.23.45:3009${accion.ruta}`)
-                const respuesta = await axios[metodoHTTP](`http://192.168.23.45:3009${accion.ruta}`, accion.respuesta.data);
+                console.log(`http://192.168.23.86:3009${accion.ruta}`)
+                const respuesta = await axios[metodoHTTP](`http://192.168.23.86:3009${accion.ruta}`, accion.respuesta.data);
                 console.log('Respuesta del servidor 2:', respuesta.data);
                 
                 // Aquí puedes eliminar la acción de la cola si se ejecutó con éxito
