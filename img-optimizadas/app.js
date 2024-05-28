@@ -25,7 +25,6 @@ const estadosRoutes = require('./src/routes/estados.routes');
 const colaRoutes = require('./src/routes/cola.routes');
 
 // MIDDLEWARES
-app.use(VerPeticion.VerPeticion);
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
 app.use(express.json());
