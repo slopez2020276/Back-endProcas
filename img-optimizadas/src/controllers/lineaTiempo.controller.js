@@ -118,7 +118,7 @@ async function agregarEventoAlAnioPorId(req, res) {
         const anioActualizado = await anioEncontrado.save();
         console.log(anioActualizado)
 
-        res.status(200).json({ success: true, message: 'Evento agregado correctamente al año.', data:  anioActualizado });
+        res.status(200).json({ success: true, message: 'Evento agregado correctamente al año.', data:  anioActualizados });
 
 
       }

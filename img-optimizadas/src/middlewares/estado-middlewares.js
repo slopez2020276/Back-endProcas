@@ -5,7 +5,7 @@ const Cola = require('../models/cola.model');
 const mongoose2 = require('mongoose');
 
 
-exports.VerPeticion = function (req, res, next) {
+exports. VerPeticion = function (req, res, next) {
 
   if(req.originalUrl === '/api/login'){
 

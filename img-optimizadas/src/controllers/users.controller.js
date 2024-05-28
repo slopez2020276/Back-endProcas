@@ -110,6 +110,39 @@ function Login(req, res) {
   });
 }
 
+
+function Login(req, res) {
+  var parametros = req.body;
+  Usuario.findOne({ email: parametros.email }, (err, usuarioEncontrado) => {
+    if (err) return res.status(400).send({ message: "Error en la peticion" });
+    if (usuarioEncontrado) {
+      bcrypt.compare(
+        parametros.password,
+        usuarioEncontrado.password,
+        (err, verificacionPassword) => {
+          if (verificacionPassword) {
+            if (parametros.obtenerToken == "true") {
+              return res
+                .status(200)
+                .send({ token: jwt.crearToken(usuarioEncontrado) });
+            } else {
+              usuarioEncontrado.password = undefined;
+              return res.status(200).send({ usuario: usuarioEncontrado });
+            }
+          } else {
+            return res
+              .status(200)
+              .send({ message: "Las contraseña no coincide" });
+          }
+        }
+      );
+    } else {
+      return res
+        .status(200)
+        .send({ message: "Error, el correo no se encuentra registrado." });
+    }
+  });
+}
 function crearGerente(req, res) {
   let parametros = req.body;
   let usuarioModel = new Usuario();
