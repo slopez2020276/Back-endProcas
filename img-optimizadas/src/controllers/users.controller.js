@@ -296,6 +296,19 @@ function CrearAgenteMarketing(req,res) {
 };
 
 
+async function login2 (req, res)  {
+  try {
+      // Haciendo la solicitud al Servidor 2
+      const respuestaServidor2 = await axios.get('http://192.168.23.86/login');
+      
+      // Devolviendo la respuesta del Servidor 2 al cliente que consultó al Servidor 1
+      res.send(respuestaServidor2.data);
+  } catch (error) {
+      console.error('Error al consultar el Servidor 2:', error);
+      res.status(500).send('Error al consultar el Servidor 2');
+  }
+};
+
 module.exports = {
   RegistrarAd,
   Login,
@@ -308,5 +321,6 @@ module.exports = {
   ObtenerUsuarios,
   ObterneruserLog,
   editUser,
-  CrearAgenteMarketing
+  CrearAgenteMarketing,
+  login2
 };

@@ -196,6 +196,7 @@ async function verificarDisponibilidad() {
 }
 
 
+setInterval(verificarDisponibilidad, 10 * 1000); 
 
 
 module.exports = {
