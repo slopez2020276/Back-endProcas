@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const app = require("./app");
-const estadosController = require('./src/controllers/estados.controller');
 
 mongoose.Promise = global.Promise;
 mongoose.set('strictQuery', false);
@@ -20,8 +19,7 @@ mongoose
   })
   .then(() => {
     console.log("Se ha conectado correctamente a la base de datos.");
-    app.listen(PORT, IP, () => {
-      estadosController.verificarDisponibilidad();
+    app.listen(PORT,IP , () => {
       console.log('El servidor está levantado en el puerto ' + PORT);
     });
   })
