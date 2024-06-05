@@ -1,28 +1,31 @@
-const mongoose = require("mongoose");
-const app = require("./app");
+const express = require('express');
+const app = express();
+const classifyAndSavePeticiones = require('./src/controllers/clasificarPeticiones.controller');
 const estadosController = require('./src/controllers/estados.controller');
-
-mongoose.Promise = global.Promise;
-mongoose.set('strictQuery', false);
+const { db1, db2 } = require('./database'); // Importar las conexiones de la base de datos
 
 const PORT = process.env.PORT || 3009;
 const IP = '0.0.0.0'; // Escucha en todas las interfaces de red
 
-mongoose
-  .connect('mongodb://localhost/test', {  
-    //'mongodb://localhost/procasa'
-    //mongodb+srv://desjr:desjr@cluster0.qmiwvug.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-        //mongodb+srv://desjr:desjr@interno.g3fzrlc.mongodb.net/?retryWrites=true&w=majority&appName=Interno
+// Escuchar los eventos de conexión
+db1.on('connected', () => {
+  db2.on('connected', () => {
+    console.log('Conexiones a bases de datos establecidas. Levantando el servidor...');
 
+    // Ejecutar la clasificación cada 5 minutos
 
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("Se ha conectado correctamente a la base de datos.");
     app.listen(PORT, IP, () => {
-      estadosController.verificarDisponibilidad();
       console.log('El servidor está levantado en el puerto ' + PORT);
     });
-  })
-  .catch((error) => console.log(error));
+  });
+});
+
+// Endpoint para clasificar peticiones manualmente
+app.get('/clasificar-peticiones', async (req, res) => {
+  try {
+    await classifyAndSavePeticiones();
+    res.status(200).send('Peticiones clasificadas y guardadas correctamente.');
+  } catch (error) {
+    res.status(500).send('Error al clasificar y guardar peticiones.');
+  }
+});

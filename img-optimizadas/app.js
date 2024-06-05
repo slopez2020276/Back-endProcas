@@ -23,6 +23,7 @@ const cloudRoutes = require('./src/routes/cloudinary.routes');
 const marcasRoutes = require('./src/routes/marcas.routes');
 const estadosRoutes = require('./src/routes/estados.routes');
 const colaRoutes = require('./src/routes/cola.routes');
+const clasificaicon = require('./src/routes/clasificacion.routes')
 
 // MIDDLEWARES
 app.use(VerPeticion.VerPeticion);
@@ -32,7 +33,7 @@ app.use(express.json());
 app.use(cors());
 
 // CARGA DE RUTAS
-app.use("/api", usuarioRoutes, imgsRoutes, mainPageRoutes, misionRoutes,colaRoutes, uneteRoutes, productoRoutes, lineaTiempoRoutes, historiaRoutes, noticiasRoutes, valoresRoutes, subsRoutes, ubicacionesRoutes, cloudRoutes, marcasRoutes, estadosRoutes);
+app.use("/api", usuarioRoutes, imgsRoutes, mainPageRoutes,clasificaicon, misionRoutes,colaRoutes, uneteRoutes, productoRoutes, lineaTiempoRoutes, historiaRoutes, noticiasRoutes, valoresRoutes, subsRoutes, ubicacionesRoutes, cloudRoutes, marcasRoutes, estadosRoutes);
 
 app.use('/uploads', express.static(path.resolve('uploads')));
 app.use('/imgsDefult', express.static(path.resolve('imgsDefult')));
