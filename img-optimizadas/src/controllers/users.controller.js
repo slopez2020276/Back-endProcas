@@ -2,6 +2,7 @@ const Usuario = require("../models/users.model");
 const bcrypt = require("bcrypt-nodejs");
 const jwt = require("../services/jwt");
 const { el } = require("date-fns/locale");
+const axios = require('axios')
 
 function RegistrarAd(req, res) {
   let usuarioModelo = new Usuario();
@@ -329,18 +330,25 @@ function CrearAgenteMarketing(req,res) {
 };
 
 
-async function login2 (req, res)  {
-  try {
-      // Haciendo la solicitud al Servidor 2
-      const respuestaServidor2 = await axios.get('http://192.168.23.86/login');
-      
-      // Devolviendo la respuesta del Servidor 2 al cliente que consultó al Servidor 1
-      res.send(respuestaServidor2.data);
-  } catch (error) {
-      console.error('Error al consultar el Servidor 2:', error);
-      res.status(500).send('Error al consultar el Servidor 2');
-  }
+ 
+async function login2(req, res) {   
+    try {
+        // Haciendo la solicitud al Servidor 2
+        const respuestaServidor2 = await axios.post('http://192.168.22.90:3009/api/login', req.body);
+        
+        // Extraer los datos relevantes de la respuesta
+        const datosUsuario = respuestaServidor2.data;
+
+        // Devolver la respuesta con los datos del usuario
+        res.json(datosUsuario);
+    } catch (error) {
+        console.error('Error al consultar el Servidor 2:', error);
+        res.status(500).send('Error al consultar el Servidor 2');
+    }
 };
+
+module.exports = { login2 };
+
 
 module.exports = {
   RegistrarAd,
