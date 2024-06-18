@@ -15,6 +15,5 @@ app.get('/clasificar-peticiones', async (req, res) => {
 });
 
 // Ejecutar la clasificación cada 5 minutos
-setInterval( clasificacion.classifyAndSavePeticiones, 1 * 1000);
 
 module.exports = app;

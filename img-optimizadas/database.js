@@ -1,3 +1,4 @@
+// database.js
 const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
@@ -35,7 +36,8 @@ db2.on('error', (error) => {
 const ColaServidor1 = db1.models.Cola || require('./src/models/cola.model')(db1);
 const PeticionClasificada = db2.models.PeticionClasificada || require('./src/models/peticiones.model')(db2);
 const PeticionPendiente = db2.models.PeticionPendiente || require('./src/models/peticiionesPendientes.model')(db2);
+const Respuesta = db2.models.Respuesta || require('./src/models/respuesta.model')(db2); // Nuevo modelo de respuesta
 
 console.log('Modelos importados correctamente');
 
-module.exports = { db1, db2, ColaServidor1, PeticionClasificada, PeticionPendiente };
+module.exports = { db1, db2, ColaServidor1, PeticionClasificada, PeticionPendiente, Respuesta };

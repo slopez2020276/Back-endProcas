@@ -1,10 +1,11 @@
+// app.js
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const path = require('path');
-const app = express();
-const mongoose = require("mongoose");
 const VerPeticion = require('./src/middlewares/estado-middlewares');
+
+const app = express();
 
 // IMPORTACIÓN DE RUTAS
 const usuarioRoutes = require("./src/routes/users.routes");
@@ -24,16 +25,21 @@ const marcasRoutes = require('./src/routes/marcas.routes');
 const estadosRoutes = require('./src/routes/estados.routes');
 const colaRoutes = require('./src/routes/cola.routes');
 const clasificaicon = require('./src/routes/clasificacion.routes')
+const respuestasRoutes = require('./src/routes/respuestas.routes');
 
 // MIDDLEWARES
-app.use(VerPeticion.VerPeticion);
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
 
 // CARGA DE RUTAS
-app.use("/api", usuarioRoutes, imgsRoutes, mainPageRoutes,clasificaicon, misionRoutes,colaRoutes, uneteRoutes, productoRoutes, lineaTiempoRoutes, historiaRoutes, noticiasRoutes, valoresRoutes, subsRoutes, ubicacionesRoutes, cloudRoutes, marcasRoutes, estadosRoutes);
+app.use("/api", 
+  usuarioRoutes, imgsRoutes, mainPageRoutes, clasificaicon, respuestasRoutes,
+  misionRoutes, colaRoutes, uneteRoutes, productoRoutes, lineaTiempoRoutes,
+  historiaRoutes, noticiasRoutes, valoresRoutes, subsRoutes, ubicacionesRoutes,
+  cloudRoutes, marcasRoutes, estadosRoutes
+);
 
 app.use('/uploads', express.static(path.resolve('uploads')));
 app.use('/imgsDefult', express.static(path.resolve('imgsDefult')));
