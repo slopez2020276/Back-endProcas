@@ -22,6 +22,7 @@ async function copiarBaseDatos(req, res) {
     const origenClient = new MongoClient(origenURI);
     const destinoClient = new MongoClient(destinoURI);
 
+
     try {
         await origenClient.connect();
         await destinoClient.connect();

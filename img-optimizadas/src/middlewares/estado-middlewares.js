@@ -10,6 +10,7 @@ exports. VerPeticion = function (req, res, next) {
   if(req.originalUrl === '/api/login'){
 
 
+
   }else{
 
 
@@ -47,7 +48,7 @@ exports. VerPeticion = function (req, res, next) {
         let respuesta = res.locals.responseBody;
         if (typeof respuesta === 'string') {
           try {
-            respuesta = JSON.parse(respuesta);
+            respuesta = JSON.parse(req.body);
           } catch (error) {
             // Si hay un error al analizar JSON, se mantiene como cadena de texto
           }

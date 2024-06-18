@@ -9,4 +9,5 @@ app.listen(PORT, IP, () => {
   console.log(`Servidor 3 está corriendo en el puerto ${PORT}.`);
 
   // Ejecutar procesarCola cada 10 segundos (ajusta según sea necesario)
+  setInterval(procesarCola, 10000);
 });

@@ -28,15 +28,19 @@ db3.on('error', (error) => {
   console.error('Error al conectar a la base de datos del servidor 3:', error);
 });
 
+// Definir modelos para db2
 const ColaServidor2 = db2.model('Cola', require('./src/models/cola.model').schema);
 const PeticionPendienteServidor2 = db2.model('PeticionPendiente', require('./src/models/peticionesPendientes.mode').schema);
 
+// Definir modelos para db3
 const ColaServidor3 = db3.model('Cola', require('./src/models/cola.model').schema);
 const PeticionPendienteServidor3 = db3.model('PeticionPendiente', require('./src/models/peticionesPendientes.mode').schema);
+const HistoriaServidor3 = db3.model('Historia', require('./src/models/historia.model').schema);  // Añadir el modelo Historia
 
 module.exports = {
   ColaServidor2,
   PeticionPendienteServidor2,
   ColaServidor3,
   PeticionPendienteServidor3,
+  HistoriaServidor3,  // Exportar el modelo Historia
 };
