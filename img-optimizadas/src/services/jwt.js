@@ -7,8 +7,14 @@ exports.crearToken = function (usuario) {
         sub: usuario._id,
         email: usuario.email,
         rol: usuario.rol,
+        puesto: usuario.puesto,
+        dpi: usuario.dpi,
+        departamento: usuario.departamento,
+        cuenta: usuario.cuenta,
+        
         iat: moment().unix(),
-        exp: moment().day(7, 'days').unix()
+
+        exp: moment().day(10, 'days').unix()
     }
 
     return jwt_simple.encode(payload, claveSecreta);

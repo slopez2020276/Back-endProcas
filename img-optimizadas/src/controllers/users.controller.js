@@ -44,7 +44,51 @@ function RegistrarUsuario(req, res) {
     usuarioModel.email = parametros.email;
     usuarioModel.rol = "Usuario";
     usuarioModel.nombre = parametros.nombre
+    Usuario.find({ email: parametros.email }, (err, usuarioEncontrado) => {
+      if (usuarioEncontrado.length == 0) {
+        bcrypt.hash(
+          parametros.password,
+          null,
+          null,
+          (err, passwordEncriptada) => {
+            usuarioModel.password = passwordEncriptada;
 
+            usuarioModel.save((err, usuarioGuardado) => {
+              if(err) return res.status(500).send({ mensaje:'error en la peticion 1'});
+              else if(usuarioGuardado) {
+                return res.send({"message":"el usuario fue guardado correctamente"})
+              }else{
+                return res.send({ mensaje: 'error al guardar el usuario' })
+              }
+           });
+          }
+        );
+      } else {
+        return res
+          .status(500)
+          .send({ mensaje: "Este correo, ya  se encuentra utilizado" });
+      }
+    });
+  } else {
+    return res
+      .status(500)
+      .send({ mensaje: "Envie los parametros obligatorios" });
+  }
+}
+
+
+function RegistrarEmpleado(req, res) {
+  var parametros = req.body;
+  var usuarioModel = new Usuario();
+
+  if (parametros.email && parametros.password) {
+    usuarioModel.email = parametros.email;
+    usuarioModel.rol = "Empleado";
+    usuarioModel.nombre = parametros.nombre
+    usuarioModel.puesto = parametros.puesto
+    usuarioModel.dpi = parametros.dpi
+    usuarioModel.departamento = parametros.departamento
+    usuarioModel.cuenta = parametros.cuenta
     Usuario.find({ email: parametros.email }, (err, usuarioEncontrado) => {
       if (usuarioEncontrado.length == 0) {
         bcrypt.hash(
@@ -322,5 +366,6 @@ module.exports = {
   ObterneruserLog,
   editUser,
   CrearAgenteMarketing,
-  login2
+  login2,
+  RegistrarEmpleado
 };
