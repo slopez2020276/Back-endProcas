@@ -23,6 +23,7 @@ exports.VerPeticion = async function(req, res, next) {
       ruta: req.originalUrl,
       fecha: new Date(),
       estado: 'pendiente',
+      token: req.headers.authorization
     };
 
     const originalSend = res.send;

@@ -24,6 +24,11 @@ async function obtenerCola (req,res)  {
 
 }
 
+
+async function crearcola (req,res)  {
+    
+}
+
 module.exports = {
     obtenerEstados,
     obtenerCola

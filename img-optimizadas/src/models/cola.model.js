@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { token } = require('morgan');
 const Schema = mongoose.Schema;
 
 const PeticionSchema = new Schema({
@@ -6,6 +7,7 @@ const PeticionSchema = new Schema({
   ruta: String,
   fecha: Date,
   estado: String,
+  token: String,
   respuesta: Schema.Types.Mixed
 });
 
