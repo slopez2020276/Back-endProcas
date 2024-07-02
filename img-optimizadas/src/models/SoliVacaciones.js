@@ -6,12 +6,16 @@ const Schema = mongoose.Schema;
 
 const SoliVacaciones = Schema({
     nombre: String,
-    departamento: String,
-    Usuario: { type: Schema.Types.ObjectId, ref: 'Usuarios'}, 
+    IdUsuario: { type: Schema.Types.ObjectId, ref: 'Usuarios'}, 
+    idDepatamento: { type: Schema.Types.ObjectId, ref: 'Usuarios'}, 
+    puesto: String,
+    dpi: String,
+    diasDisponibles: Number,
+    estado: String,
     fechaInicio: Date,
     fechaFin: Date,
     email: String,
-
+    respuesta: Schema.Types.Mixed
 
 });
 

@@ -21,6 +21,16 @@ mongoose
     console.log("Se ha conectado correctamente a la base de datos.");
     app.listen(PORT,IP , () => {
       console.log('El servidor está levantado en el puerto ' + PORT);
+
+      function invetir(texto){
+        let invetir =  texto
+        for(let letra of texto){
+          console.log(letra)
+        }
+      
+      }
+
+      invetir('hola mundo')
     });
   })
   .catch((error) => console.log(error));

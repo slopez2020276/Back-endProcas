@@ -4,6 +4,8 @@ const md_auteticacion = require("../middlewares/autenticacion")
 
 const api = express.Router();
 
+api.post('/crearEmpleado', controladorUsuario.RegistrarEmpleado);
+
 api.post('/registrarUsuario', controladorUsuario.RegistrarUsuario);
 api.get("/obtenerUsuarios",controladorUsuario.ObtenerUsuarios);
 api.get("/obtenerUsuarioId/:idUsuario",controladorUsuario.ObtenerUsuarioId);

@@ -2,6 +2,7 @@ const Usuario = require("../models/users.model");
 const bcrypt = require("bcrypt-nodejs");
 const jwt = require("../services/jwt");
 const { el } = require("date-fns/locale");
+const usersModel = require("../models/users.model");
 
 function RegistrarAd(req, res) {
   let usuarioModelo = new Usuario();
@@ -110,48 +111,7 @@ function Login(req, res) {
   });
 }
 
-function crearGerente(req, res) {
-  let parametros = req.body;
-  let usuarioModel = new Usuario();
 
-  if (parametros.nombre && parametros.email) {
-    Usuario.find({ email: parametros.email }, (err, gerenteEncontrado) => {
-      if (gerenteEncontrado.length > 0) {
-        return res
-          .status(400)
-          .send({ message: "Este correo esta en uso por otro administrador" });
-      } else {
-        usuarioModel.nombre = parametros.nombre;
-        usuarioModel.email = parametros.email;
-        usuarioModel.rol = "Gerente";
-        bcrypt.hash(
-          parametros.password,
-          null,
-          null,
-          (err, passwordEncriptada) => {
-            usuarioModel.password = passwordEncriptada;
-
-            usuarioModel.save((err, gerenteGuardado) => {
-              if (err)
-                return res
-                  .status(400)
-                  .send({ mensaje: "Error en la peticion" });
-              if (!gerenteGuardado)
-                return res
-                  .status(400)
-                  .send({ mensaje: "Error al guardar el gerente" });
-              return res.status(200).send({ gerente: "gerenteGuardado" });
-            });
-          }
-        );
-      }
-    });
-  } else {
-    return res
-      .status(404)
-      .send({ mensaje: "Debe ingresar los parametros obligatorios" });
-  }
-}
 
 function EditarUsuario(req, res) {
   var idUser = req.params.idUser;
@@ -309,6 +269,53 @@ async function login2 (req, res)  {
   }
 };
 
+function RegistrarEmpleado(req, res) {
+  var parametros = req.body;
+  var usuarioModel = new Usuario();
+
+  if (parametros.email && parametros.password && parametros.username && parametros.ID_departamento) {
+    usuarioModel.email = parametros.email;
+    usuarioModel.rol = "Empleado";
+    usuarioModel.nombre = parametros.nombre
+    usuarioModel.puesto = parametros.puesto
+    usuarioModel.dpi = parametros.dpi
+    usuarioModel.ID_departamento = parametros.ID_departamento
+    usuarioModel.username = parametros.username;
+    usuarioModel.diasDisponibles = parametros.diasDisponibles; 
+    Usuario.find({ email: parametros.email }, (err, usuarioEncontrado) => {
+      if (usuarioEncontrado.length == 0) {
+        bcrypt.hash(
+          parametros.password,
+          null,
+          null,
+          (err, passwordEncriptada) => {
+            usuarioModel.password = passwordEncriptada;
+
+            usuarioModel.save((err, usuarioGuardado) => {
+              if(err) return res.status(500).send({ mensaje:'error en la peticion 1'});
+              else if(usuarioGuardado) {
+                return res.send({"message":"el usuario fue guardado correctamente"})
+              }else{
+                return res.send({ mensaje: 'error al guardar el usuario' })
+              }
+           });
+          }
+        );
+      } else {
+        return res
+          .status(400)
+          .send({ mensaje: "Este correo, ya  se encuentra utilizado" });
+      }
+    });
+  } else {
+    return res
+      .status(404)
+      .send({ mensaje: "Envie los parametros obligatorios" });
+  }
+}
+
+
+
 module.exports = {
   RegistrarAd,
   Login,
@@ -317,10 +324,10 @@ module.exports = {
   ObtenerUsuario,
   ObtenerUsuarioId,
   eliminarUsuario,
-  crearGerente,
   ObtenerUsuarios,
   ObterneruserLog,
   editUser,
   CrearAgenteMarketing,
-  login2
+  login2,
+  RegistrarEmpleado
 };

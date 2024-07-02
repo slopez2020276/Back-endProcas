@@ -5,6 +5,8 @@ const api = express.Router();
 
 
 api.post('/soliVacaciones',md_auteticacion.Auth,SoliController.crearSoliVacaciones)
+api.get('/soliVacaciones',md_auteticacion.Auth,SoliController.obtenerSoliVacacionesxIdentidad)
+
 
 
 

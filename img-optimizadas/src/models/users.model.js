@@ -9,9 +9,10 @@ const UsuarioSchema = Schema({
   rol: String,
   puesto: String,
   dpi: String,
-  departamento: String,
+  ID_departamento: { type: Schema.Types.ObjectId, ref: 'Departametos'},
   puesto: String,
-  cuenta: String,
+  username: String,
+  diasDisponibles: Number,
 });
 
 module.exports = mongoose.model("Usuarios", UsuarioSchema);

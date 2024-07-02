@@ -14,16 +14,32 @@ function crearSoliVacaciones(req,res){
         if(err){
             return res.status(500).send({message:'error en la peticion'})
         }else if(SoliVacacionesGuardado){
-            return res.status(200).send({SoliVacacionesGuardado})
+            return res.status(200).send({data:SoliVacacionesGuardado})
         }else{
             return res.status(404).send({message:'no se pudo guardar'})
         }
     })
+} 
+
+
+function obtenerSoliVacacionesxIdentidad(req,res){
+let idUser = req.user.sub;
+
+SoliVacaciones.find({Usuario:idUser},(err,SoliVacacionesFinded)=>{
+    if(err){
+        return res.status(500).send({message:'error en la peticion'})
+    }else if(SoliVacacionesFinded){
+        return res.status(200).send({data:SoliVacacionesFinded})
+    }else{
+        return res.status(404).send({message:'no se encontro la solicitud'})
+    }
+})
+
 }
 
 
-
-module.exports = {
-    crearSoliVacaciones
+module.exports = { 
+    crearSoliVacaciones,
+    obtenerSoliVacacionesxIdentidad
 }
 
